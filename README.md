@@ -1,4 +1,7 @@
 # Kassets
+
+[![openupm](https://img.shields.io/npm/v/com.kadinche.kassets?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.kadinche.kassets/)
+
 Kassets is an [UniTask](https://github.com/Cysharp/UniTask) powered Scriptable Object Architecture capable of Async/Await.
 
 Scriptable Object Architecture provides a clean and decoupled code architecture in Unity. Based on [Ryan Hipple talk on Unite Austin 2017](https://youtu.be/raQ3iHhE_Kk).
@@ -24,10 +27,32 @@ References:
 ## Installation
 
 <details>
-<summary>Add package from GitHub</summary>
+<summary>Add from OpenUPM | <em>import via scoped registry, update from Package Manager</em></summary>
+
+To add OpenUPM to your project, including UniTask as dependency:
+
+- open `Edit/Project Settings/Package Manager`
+- add a new Scoped Registry:
+```
+Name: OpenUPM
+URL:  https://package.openupm.com/
+Scope(s): com.kadinche
+          com.cysharp.unitask
+
+```
+
+- click <kbd>Save</kbd>
+- open Package Manager
+- Select ``My Registries`` in dropdown top left
+- Select ``UniTask`` and click ``Install``
+- Select ``Kassets`` and click ``Install``
+</details>
+
+<details>
+<summary>Add from GitHub | <em>cannot updates through Package Manager</em></summary>
 
 Add package directly from GitHub on Unity 2019.4+.
-Note that you won't be able to receive updates through Package Manager this way, you'll have to update manually.
+You won't be able to receive updates through Package Manager this way, you'll have to update manually.
 
 - open Package Manager
 - click <kbd>+</kbd>
@@ -48,6 +73,17 @@ Update changes to/from github directly just like usual github project.
 - clone this project using ssh: git@github.com:kadinche/Kassets.git
 - clone this project to YourUnityProject/Packages/
 </details>
+
+<details>
+<summary><em>❗Note that UniTask need to be added as dependency❗</em></summary>
+
+UniTask can be added either from OpenUPM or GitHub.
+
+- scope on openupm: [com.cysharp.unitask](https://openupm.com/packages/com.cysharp.unitask/)
+- package link on github: https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask
+- for more detailed information, please look at [UniTask github page](https://github.com/Cysharp/UniTask).
+</details>
+
 
 ## Creating Kassets' ScriptableObjects
 
