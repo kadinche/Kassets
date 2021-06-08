@@ -40,7 +40,6 @@ Scope(s): com.kadinche
           com.cysharp.unitask
 
 ```
-
 - click <kbd>Save</kbd>
 - open Package Manager
 - Select ``My Registries`` in dropdown top left
