@@ -36,11 +36,8 @@ To add OpenUPM to your project, including UniTask as dependency:
 ```
 Name: OpenUPM
 URL:  https://package.openupm.com/
-Scope(s): com.kadinche
-          com.cysharp.unitask
-
+Scope(s): com.kadinche, com.cysharp.unitask
 ```
-
 - click <kbd>Save</kbd>
 - open Package Manager
 - Select ``My Registries`` in dropdown top left
@@ -68,6 +65,7 @@ Clone this repository to Unity Project's Packages directory.
 
 Modify source codes from containing Unity Project.
 Update changes to/from github directly just like usual github project.
+You can also clone the project as Submodule.
 
 - clone this project using https: https://github.com/kadinche/Kassets.git
 - clone this project using ssh: git@github.com:kadinche/Kassets.git
