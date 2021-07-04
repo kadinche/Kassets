@@ -36,9 +36,7 @@ To add OpenUPM to your project, including UniTask as dependency:
 ```
 Name: OpenUPM
 URL:  https://package.openupm.com/
-Scope(s): com.kadinche
-          com.cysharp.unitask
-
+Scope(s): com.kadinche, com.cysharp.unitask
 ```
 - click <kbd>Save</kbd>
 - open Package Manager
