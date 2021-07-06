@@ -43,7 +43,9 @@ namespace VirtualHandshake.Utilities
 #if !UNITY_2020_1_OR_NEWER
             // fallback to older API
             Debug.LogWarning("Recenter fallback to old api");
+#pragma warning disable 618
             InputTracking.Recenter();
+#pragma warning restore 618
 #endif
         }
     }
