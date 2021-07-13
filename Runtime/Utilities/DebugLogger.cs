@@ -287,7 +287,7 @@ public static class Debug
     }
 }
 
-namespace Kassets.Utilities
+namespace Kadinche.Kassets.Utilities
 {
     public static class DebugLogExtension
     {

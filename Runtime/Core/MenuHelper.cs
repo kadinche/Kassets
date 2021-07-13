@@ -1,4 +1,4 @@
-namespace Kassets
+namespace Kadinche.Kassets
 {
     public class MenuHelper
     {

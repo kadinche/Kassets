@@ -1,10 +1,10 @@
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
-using Kassets.VariableSystem;
+using Kadinche.Kassets.VariableSystem;
 using TMPro;
 using UnityEngine;
 
-namespace Kassets.UnityTextMeshPro
+namespace Kadinche.Kassets.UnityTextMeshPro
 {
     public class IntTextMeshProBinder : MonoBehaviour
     {

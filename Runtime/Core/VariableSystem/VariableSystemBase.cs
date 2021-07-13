@@ -6,7 +6,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 #endif
 
-namespace Kassets.VariableSystem
+namespace Kadinche.Kassets.VariableSystem
 {
 
     /// <summary>

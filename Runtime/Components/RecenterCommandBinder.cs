@@ -1,9 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
-using Kassets.EventSystem;
+using Kadinche.Kassets.EventSystem;
 using UnityEngine;
 using VirtualHandshake.Utilities;
 
-namespace Kassets.Components
+namespace Kadinche.Kassets.Components
 {
     public class RecenterCommandBinder : MonoBehaviour
     {

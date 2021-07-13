@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kassets.VariableSystem
+namespace Kadinche.Kassets.VariableSystem
 {
     [CreateAssetMenu(fileName = "BoolVariable", menuName = MenuHelper.DefaultVariableMenu + "Bool")]
     public class BoolVariable : VariableSystemBase<bool>

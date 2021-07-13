@@ -4,7 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Kassets.ExchangeSystem
+namespace Kadinche.Kassets.ExchangeSystem
 {
     [CreateAssetMenu(fileName = "ExchangeEvent", menuName = MenuHelper.DefaultExchangeEventMenu + "ExchangeEvent")]
     public class ExchangeEvent : ScriptableObject, ISerializationCallbackReceiver, IDisposable

@@ -9,7 +9,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 #endif
 
-namespace Kassets.EventSystem
+namespace Kadinche.Kassets.EventSystem
 {
     /// <summary>
     /// Game Event System using Asynchronous Pattern (UniTask) as core system.

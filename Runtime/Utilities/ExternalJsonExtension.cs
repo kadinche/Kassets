@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEngine;
 
-namespace Kassets.Utilities
+namespace Kadinche.Kassets.Utilities
 {
     public static class ExternalJsonExtension
     {

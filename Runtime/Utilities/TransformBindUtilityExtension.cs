@@ -2,10 +2,10 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
-using Kassets.VariableSystem;
+using Kadinche.Kassets.VariableSystem;
 using UnityEngine;
 
-namespace Kassets.Utilities
+namespace Kadinche.Kassets.Utilities
 {
     [Flags]
     public enum BindingType

@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
-using Kassets.Utilities;
-using Kassets.VariableSystem;
+using Kadinche.Kassets.Utilities;
+using Kadinche.Kassets.VariableSystem;
 using UnityEngine;
 
-namespace Kassets.UnityComponents
+namespace Kadinche.Kassets.UnityComponents
 {
     public class TransformBinder : MonoBehaviour
     {

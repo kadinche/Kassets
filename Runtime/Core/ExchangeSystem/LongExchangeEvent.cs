@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kassets.ExchangeSystem
+namespace Kadinche.Kassets.ExchangeSystem
 {
     [CreateAssetMenu(fileName = "LongExchangeEvent", menuName = MenuHelper.DefaultExchangeEventMenu + "LongExchangeEvent")]
     public class LongExchangeEvent : ExchangeEvent<long>

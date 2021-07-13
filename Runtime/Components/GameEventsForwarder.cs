@@ -1,8 +1,8 @@
 using Cysharp.Threading.Tasks;
-using Kassets.EventSystem;
+using Kadinche.Kassets.EventSystem;
 using UnityEngine;
 
-namespace Kassets.Components
+namespace Kadinche.Kassets.Components
 {
     public class GameEventsForwarder : MonoBehaviour
     {

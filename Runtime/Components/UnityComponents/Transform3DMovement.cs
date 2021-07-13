@@ -1,13 +1,13 @@
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
-using Kassets.EventSystem;
-using Kassets.VariableSystem;
+using Kadinche.Kassets.EventSystem;
+using Kadinche.Kassets.VariableSystem;
 using UnityEngine;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
 #endif
 
-namespace Kassets.UnityComponents
+namespace Kadinche.Kassets.UnityComponents
 {
     public class Transform3DMovement : MonoBehaviour
     {

@@ -11,7 +11,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 #endif
 
-namespace Kassets.Collection
+namespace Kadinche.Kassets.Collection
 {
     
     #if ODIN_INSPECTOR

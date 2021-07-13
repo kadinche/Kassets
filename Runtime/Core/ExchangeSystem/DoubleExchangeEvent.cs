@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kassets.ExchangeSystem
+namespace Kadinche.Kassets.ExchangeSystem
 {
     [CreateAssetMenu(fileName = "DoubleExchangeEvent", menuName = MenuHelper.DefaultExchangeEventMenu + "DoubleExchangeEvent")]
     public class DoubleExchangeEvent : ExchangeEvent<double>

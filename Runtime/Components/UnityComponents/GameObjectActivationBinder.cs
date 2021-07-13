@@ -1,9 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
-using Kassets.Utilities;
-using Kassets.VariableSystem;
+using Kadinche.Kassets.VariableSystem;
+using Kadinche.Kassets.Utilities;
 using UnityEngine;
 
-namespace Kassets.UnityComponents
+namespace Kadinche.Kassets.UnityComponents
 {
     public class GameObjectActivationBinder : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kassets.Utilities
+namespace Kadinche.Kassets.Utilities
 {
     public abstract class PersistentScriptableObject : ScriptableObject
     {

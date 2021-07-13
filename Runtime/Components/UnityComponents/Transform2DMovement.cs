@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kassets.UnityComponents
+namespace Kadinche.Kassets.UnityComponents
 {
     public class Transform2DMovement : Transform3DMovement
     {

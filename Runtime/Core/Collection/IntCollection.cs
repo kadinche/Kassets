@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kassets.Collection
+namespace Kadinche.Kassets.Collection
 {
     [CreateAssetMenu(fileName = "IntCollection", menuName = MenuHelper.DefaultCollectionMenu + "IntCollection")]
     public class IntCollection : Collection<int>

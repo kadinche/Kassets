@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Kassets.Utilities
+namespace Kadinche.Kassets.Utilities
 {
     public static class FileLoadUtility
     {

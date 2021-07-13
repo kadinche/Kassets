@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Kassets.UnityComponents
+namespace Kadinche.Kassets.UnityComponents
 {
     public class OnDestroyCallbackComponent : MonoBehaviour
     {

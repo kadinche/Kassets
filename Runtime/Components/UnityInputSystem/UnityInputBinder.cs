@@ -4,13 +4,13 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
-using Kassets.EventSystem;
-using Kassets.VariableSystem;
+using Kadinche.Kassets.EventSystem;
+using Kadinche.Kassets.VariableSystem;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-namespace Kassets.UnityInputSystem
+namespace Kadinche.Kassets.UnityInputSystem
 {
     [Flags]
     internal enum EventInputTypeEnum

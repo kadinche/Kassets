@@ -1,9 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
-using Kassets.VariableSystem;
+using Kadinche.Kassets.VariableSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Kassets.UnityComponents
+namespace Kadinche.Kassets.UnityComponents
 {
     public class TextBinder : MonoBehaviour
     {

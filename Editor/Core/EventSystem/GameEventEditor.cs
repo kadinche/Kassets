@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Kassets.EventSystem
+namespace Kadinche.Kassets.EventSystem
 {
     [CustomEditor(typeof(GameEvent), true)]
     public class GameEventEditor : Editor

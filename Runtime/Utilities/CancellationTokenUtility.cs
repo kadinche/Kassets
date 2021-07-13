@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace Kassets.Utilities
+namespace Kadinche.Kassets.Utilities
 {
     public static class CancellationTokenUtility
     {

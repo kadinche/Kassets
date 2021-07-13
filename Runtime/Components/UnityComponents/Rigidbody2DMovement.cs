@@ -1,9 +1,9 @@
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
-using Kassets.EventSystem;
+using Kadinche.Kassets.EventSystem;
 using UnityEngine;
 
-namespace Kassets.UnityComponents
+namespace Kadinche.Kassets.UnityComponents
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class Rigidbody2DMovement : MonoBehaviour

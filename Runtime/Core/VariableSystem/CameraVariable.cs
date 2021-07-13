@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kassets.VariableSystem
+namespace Kadinche.Kassets.VariableSystem
 {
     [CreateAssetMenu(fileName = "CameraVariable", menuName = MenuHelper.DefaultVariableMenu + "Camera")]
     public class CameraVariable : VariableSystemBase<Camera>
