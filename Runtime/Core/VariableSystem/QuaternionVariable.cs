@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace Kadinche.Kassets.VariableSystem
+namespace Kadinche.Kassets.Variable
 {
     [CreateAssetMenu(fileName = "QuaternionVariable", menuName = MenuHelper.DefaultVariableMenu + "Quaternion")]
-    public class QuaternionVariable : VariableSystemBase<Quaternion>
+    public class QuaternionVariable : VariableBase<Quaternion>
     {
     }
 }

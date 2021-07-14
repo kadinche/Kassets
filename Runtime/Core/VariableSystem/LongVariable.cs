@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace Kadinche.Kassets.VariableSystem
+namespace Kadinche.Kassets.Variable
 {
     [CreateAssetMenu(fileName = "LongVariable", menuName = MenuHelper.DefaultVariableMenu + "Long")]
-    public class LongVariable : VariableSystemBase<long>
+    public class LongVariable : VariableBase<long>
     {
     }
 }

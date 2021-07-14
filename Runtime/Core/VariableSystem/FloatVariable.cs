@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace Kadinche.Kassets.VariableSystem
+namespace Kadinche.Kassets.Variable
 {
     [CreateAssetMenu(fileName = "FloatVariable", menuName = MenuHelper.DefaultVariableMenu + "Float")]
-    public class FloatVariable : VariableSystemBase<float>
+    public class FloatVariable : VariableBase<float>
     {
     }
 }

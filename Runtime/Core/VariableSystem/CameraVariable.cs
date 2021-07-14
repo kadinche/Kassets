@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace Kadinche.Kassets.VariableSystem
+namespace Kadinche.Kassets.Variable
 {
     [CreateAssetMenu(fileName = "CameraVariable", menuName = MenuHelper.DefaultVariableMenu + "Camera")]
-    public class CameraVariable : VariableSystemBase<Camera>
+    public class CameraVariable : VariableBase<Camera>
     {
         [SerializeField] private CameraFallback _fallbackType;
 
