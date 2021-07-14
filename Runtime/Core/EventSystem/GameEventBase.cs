@@ -49,7 +49,7 @@ namespace Kadinche.Kassets.EventSystem
     {
         protected T bufferedValue = default;
         
-        public IDisposable Subscribe(Action<T> action)
+        public virtual IDisposable Subscribe(Action<T> action)
         {
             var subscriber = new Subscription<T>(action, disposables);
             if (!disposables.Contains(subscriber))
