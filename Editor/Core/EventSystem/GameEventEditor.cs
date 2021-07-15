@@ -14,7 +14,7 @@ namespace Kadinche.Kassets.EventSystem
 
             var e = (GameEvent) target;
             if (GUILayout.Button("Raise"))
-                e.RaiseEditor();
+                e.Raise();
         }
     }
 }

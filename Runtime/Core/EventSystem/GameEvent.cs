@@ -4,9 +4,17 @@ using UnityEngine;
 
 namespace Kadinche.Kassets.EventSystem
 {
+    /// <summary>
+    /// Core Game Event System.
+    /// </summary>
     [CreateAssetMenu(fileName = "GameEvent", menuName = MenuHelper.DefaultEventMenu + "GameEvent")]
-    public class GameEvent : GameEventBase, IEventRaiser
+    public class GameEvent : KassetsBase, IEventRaiser, IEventHandler
     {
+        [Tooltip("Whether to subscribe to previous event upon registration")]
+        [SerializeField] protected bool buffered;
+        
+        protected readonly IList<IDisposable> disposables = new List<IDisposable>();
+        
         /// <summary>
         /// Raise the event.
         /// </summary>
@@ -14,14 +22,38 @@ namespace Kadinche.Kassets.EventSystem
         {
             foreach (var disposable in disposables)
             {
-                if (disposable is Subscription listener)
+                if (disposable is Subscription subscription)
                 {
-                    listener.Invoke();
+                    subscription.Invoke();
                 }
             }
         }
 
-        public virtual void RaiseEditor() => Raise();
+        public IDisposable Subscribe(Action action)
+        {
+            var subscription = new Subscription(action, disposables);
+            if (!disposables.Contains(subscription))
+            {
+                disposables.Add(subscription);
+                
+                if (buffered)
+                {
+                    subscription.Invoke();
+                }
+            }
+
+            return subscription;
+        }
+
+        public override void Dispose()
+        {
+            foreach (var disposable in disposables)
+            {
+                disposable?.Dispose();
+            }
+            
+            disposables.Clear();
+        }
     }
 
     /// <summary>
@@ -30,46 +62,46 @@ namespace Kadinche.Kassets.EventSystem
     /// <typeparam name="T">Parameter type for the event system</typeparam>
     public abstract class GameEvent<T> : GameEvent, IEventRaiser<T>, IEventHandler<T>
     {
-        [SerializeField] protected T inspectorRaiseValue;
-        
-        public override void Raise()
-        {
-            base.Raise();
-            Raise(inspectorRaiseValue);
-        }
+        [SerializeField] protected T _value;
 
         /// <summary>
         /// Raise the event with parameter.
         /// </summary>
         /// /// <param name="param"></param>
-        public void Raise(T param)
+        public virtual void Raise(T param)
         {
-            inspectorRaiseValue = param;
+            _value = param;
+            base.Raise();
             foreach (var disposable in disposables)
             {
-                if (disposable is Subscription<T> listener)
+                if (disposable is Subscription<T> subscription)
                 {
-                    listener.Invoke(inspectorRaiseValue);
+                    subscription.Invoke(_value);
                 }
             }
         }
         
-        public override void RaiseEditor() => Raise(inspectorRaiseValue);
-        
+        public override void Raise() => Raise(_value);
+
         public IDisposable Subscribe(Action<T> action)
         {
-            var listener = new Subscription<T>(action, disposables);
-            if (!disposables.Contains(listener))
+            var subscription = new Subscription<T>(action, disposables);
+            if (!disposables.Contains(subscription))
             {
-                disposables.Add(listener);
+                disposables.Add(subscription);
                 
                 if (buffered)
                 {
-                    listener.Invoke(inspectorRaiseValue);
+                    subscription.Invoke(_value);
                 }
             }
 
-            return listener;
+            return subscription;
+        }
+
+        public override void OnAfterDeserialize()
+        {
+            _value = default;
         }
     }
     
@@ -80,15 +112,15 @@ namespace Kadinche.Kassets.EventSystem
     [Serializable]
     public class GameEventCollection : IEventRaiser, IEventHandler, IDisposable
     {
-        [SerializeField] private List<GameEventBase> _gameEventBases;
+        [SerializeField] private List<GameEvent> _gameEvents;
 
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
 
         public IDisposable Subscribe(Action onAnyEvent)
         {
-            foreach (var gameEventBase in _gameEventBases)
+            foreach (var gameEvent in _gameEvents)
             {
-                _compositeDisposable.Add(gameEventBase.Subscribe(onAnyEvent));
+                _compositeDisposable.Add(gameEvent.Subscribe(onAnyEvent));
             }
 
             return _compositeDisposable;
@@ -96,16 +128,77 @@ namespace Kadinche.Kassets.EventSystem
 
         public void Raise()
         {
-            foreach (var gameEventBase in _gameEventBases)
+            foreach (var gameEvent in _gameEvents)
             {
-                if (gameEventBase is GameEvent gameEvent)
-                    gameEvent.Raise();
+                gameEvent.Raise();
             }
         }
 
         public void Dispose()
         {
             _compositeDisposable.Dispose();
+        }
+    }
+    
+    internal class Subscription : IDisposable
+    {
+        private readonly Action _action;
+        private readonly IList<IDisposable> _disposables;
+        
+        public Subscription(
+            Action action,
+            IList<IDisposable> disposables)
+        {
+            _action = action;
+            _disposables = disposables;
+        }
+
+        public void Invoke() => _action.Invoke();
+        
+        public void Dispose()
+        {
+            if (_disposables.Contains(this))
+            {
+                _disposables.Remove(this);
+            }
+        }
+    }
+    
+    internal class Subscription<T> : IDisposable
+    {
+        private readonly Action<T> _action;
+        private readonly IList<IDisposable> _disposables;
+        
+        public Subscription(
+            Action<T> action,
+            IList<IDisposable> disposables)
+        {
+            _action = action;
+            _disposables = disposables;
+        }
+
+        public void Invoke(T param) => _action.Invoke(param);
+        
+        public void Dispose()
+        {
+            if (_disposables.Contains(this))
+            {
+                _disposables.Remove(this);
+            }
+        }
+    }
+
+    internal class CompositeDisposable : IDisposable
+    {
+        private readonly IList<IDisposable> _disposables = new List<IDisposable>();
+        public void Add(IDisposable disposable) => _disposables.Add(disposable);
+
+        public void Dispose()
+        {
+            foreach (var disposable in _disposables)
+            {
+                disposable.Dispose();
+            }
         }
     }
 }
