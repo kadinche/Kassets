@@ -1,74 +1,81 @@
 ﻿using Kadinche.Kassets.EventSystem;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Kadinche.Kassets.Variable
 {
-
     /// <summary>
-    /// Basic Variable System which value can be handled Asynchronously with UniTask as core system.
+    /// Variable System Basics.
     /// </summary>
     /// <typeparam name="T">Type to use on variable system</typeparam>
-    public abstract class VariableBase<T> : GameEventBase<T>, IVariable<T>
+    public abstract class VariableBase<T> : GameEvent<T>, IVariable<T>
     {
-        /// <summary>
-        /// Initial Value of the Variable. Value is initialized on deserialize.
-        /// </summary>
-        [Tooltip("Value of the Variable.")]
-        [SerializeField] private T _value;
+        [Tooltip("Set how variable event behave.\nValue Assign: Raise when value is assigned regardless of value.\nValue Changed: Raise only when value is changed.")]
+        [SerializeField] private VariableEventType _variableEventType;
 
-        /// <summary>
-        /// Set to true to reset value on serialize.
-        /// </summary>
         [Tooltip("If true will reset value when play mode end. Otherwise, keep runtime value.")]
         [SerializeField] private bool _autoResetValue;
-        
+
         public virtual T Value
         {
-            get => bufferedValue;
-            set
-            {
-                bufferedValue = value;
-                if (!_autoResetValue)
-                {
-                    _value = value;
-                }
-                Raise();
-            }
+            get => _value;
+            set => Raise(value);
         }
 
-        private void Raise()
+        public override void Raise(T value)
         {
-            foreach (var disposable in disposables)
-            {
-                if (disposable is Subscription<T> valueSubscriber)
-                {
-                    valueSubscriber.Invoke(bufferedValue);
-                }
-                else if (disposable is Subscription subscriber)
-                {
-                    subscriber.Invoke();
-                }
-            }
+            if (_variableEventType == VariableEventType.ValueChange && _value.Equals(value))
+                return;
+            
+            base.Raise(value);
         }
 
-        /// <summary>
-        /// Get initial value at play mode started.
-        /// </summary>
         public T InitialValue { get; private set; }
 
-        /// <summary>
-        /// Implicit cast to base type
-        /// </summary>
-        /// <param name="variable">variable system to cast</param>
-        /// <returns>base type of variable system</returns>
         public static implicit operator T(VariableBase<T> variable) => variable.Value;
 
-        public override string ToString() => bufferedValue.ToString();
-        
+        public override string ToString() => Value.ToString();
+
         public override void OnAfterDeserialize()
         {
-            bufferedValue = _value;
             InitialValue = _value;
         }
+
+        /// <summary>
+        /// Reset value to InitialValue
+        /// </summary>
+        public void ResetValue()
+        {
+            _value = InitialValue;
+        }
+        
+#if UNITY_EDITOR
+        private void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+        {
+            if (_autoResetValue && stateChange == PlayModeStateChange.ExitingPlayMode)
+            {
+                ResetValue();
+            }
+        }
+
+        private void OnEnable()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+        
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+#endif
+    }
+
+    internal enum VariableEventType
+    {
+        ValueAssign,
+        ValueChange
     }
 }
