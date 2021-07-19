@@ -25,6 +25,12 @@ namespace Kadinche.Kassets.EventSystem
                 }
             }
         }
+        
+        public void Request(Action onResponse)
+        {
+            Raise();
+            onResponse?.Invoke();
+        }
 
         public IDisposable Subscribe(Action action) => Subscribe(action, false);
 
