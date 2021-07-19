@@ -10,9 +10,6 @@ namespace Kadinche.Kassets.EventSystem
     [CreateAssetMenu(fileName = "GameEvent", menuName = MenuHelper.DefaultEventMenu + "GameEvent")]
     public class GameEvent : KassetsBase, IEventRaiser, IEventHandler
     {
-        [Tooltip("Whether to subscribe to previous event upon registration")]
-        [SerializeField] protected bool buffered;
-        
         protected readonly IList<IDisposable> disposables = new List<IDisposable>();
         
         /// <summary>
@@ -29,14 +26,16 @@ namespace Kadinche.Kassets.EventSystem
             }
         }
 
-        public IDisposable Subscribe(Action action)
+        public IDisposable Subscribe(Action action) => Subscribe(action, false);
+
+        public IDisposable Subscribe(Action action, bool withBuffer)
         {
             var subscription = new Subscription(action, disposables);
             if (!disposables.Contains(subscription))
             {
                 disposables.Add(subscription);
                 
-                if (buffered)
+                if (withBuffer)
                 {
                     subscription.Invoke();
                 }
@@ -83,14 +82,15 @@ namespace Kadinche.Kassets.EventSystem
         
         public override void Raise() => Raise(_value);
 
-        public IDisposable Subscribe(Action<T> action)
+        public IDisposable Subscribe(Action<T> action) => Subscribe(action, false);
+        public IDisposable Subscribe(Action<T> action, bool withBuffer)
         {
             var subscription = new Subscription<T>(action, disposables);
             if (!disposables.Contains(subscription))
             {
                 disposables.Add(subscription);
                 
-                if (buffered)
+                if (withBuffer)
                 {
                     subscription.Invoke(_value);
                 }
@@ -116,11 +116,18 @@ namespace Kadinche.Kassets.EventSystem
 
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
 
-        public IDisposable Subscribe(Action onAnyEvent)
+        public IDisposable Subscribe(Action action) => Subscribe(action, false);
+
+        public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
         {
             foreach (var gameEvent in _gameEvents)
             {
                 _compositeDisposable.Add(gameEvent.Subscribe(onAnyEvent));
+            }
+
+            if (withBuffer)
+            {
+                onAnyEvent.Invoke();
             }
 
             return _compositeDisposable;
@@ -195,10 +202,20 @@ namespace Kadinche.Kassets.EventSystem
 
         public void Dispose()
         {
-            foreach (var disposable in _disposables)
+            _disposables.Dispose();
+        }
+    }
+
+    internal static class DisposableExtension
+    {
+        internal static void Dispose(this IList<IDisposable> disposables)
+        {
+            foreach (var disposable in disposables)
             {
-                disposable.Dispose();
+                disposable?.Dispose();
             }
+            
+            disposables.Clear();
         }
     }
 }
