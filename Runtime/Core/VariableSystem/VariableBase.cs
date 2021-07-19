@@ -14,10 +14,10 @@ namespace Kadinche.Kassets.Variable
     public abstract class VariableBase<T> : GameEvent<T>, IVariable<T>
     {
         [Tooltip("Set how variable event behave.\nValue Assign: Raise when value is assigned regardless of value.\nValue Changed: Raise only when value is changed.")]
-        [SerializeField] private VariableEventType _variableEventType;
+        [SerializeField] internal VariableEventType _variableEventType;
 
         [Tooltip("If true will reset value when play mode end. Otherwise, keep runtime value.")]
-        [SerializeField] private bool _autoResetValue;
+        [SerializeField] protected bool _autoResetValue;
 
         public virtual T Value
         {
@@ -33,7 +33,7 @@ namespace Kadinche.Kassets.Variable
             base.Raise(value);
         }
 
-        public T InitialValue { get; private set; }
+        public T InitialValue { get; protected set; }
 
         public static implicit operator T(VariableBase<T> variable) => variable.Value;
 
@@ -49,28 +49,29 @@ namespace Kadinche.Kassets.Variable
         /// </summary>
         public void ResetValue()
         {
-            _value = InitialValue;
+            Value = InitialValue;
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+#if UNITY_EDITOR
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+
+        private void Awake()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
         
-#if UNITY_EDITOR
         private void OnPlayModeStateChanged(PlayModeStateChange stateChange)
         {
             if (_autoResetValue && stateChange == PlayModeStateChange.ExitingPlayMode)
             {
                 ResetValue();
             }
-        }
-
-        private void OnEnable()
-        {
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-        }
-        
-        private void OnDisable()
-        {
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-        }
 #endif
+        }
     }
 
     internal enum VariableEventType

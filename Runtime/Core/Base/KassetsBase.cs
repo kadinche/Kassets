@@ -8,6 +8,6 @@ namespace Kadinche.Kassets
         public virtual void OnBeforeSerialize() {}
         public virtual void OnAfterDeserialize() {}
         public abstract void Dispose();
-        private void OnDestroy() => Dispose();
+        protected virtual void OnDestroy() => Dispose();
     }
 }
