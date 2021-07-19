@@ -3,424 +3,420 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Kadinche.Kassets.EventSystem;
-using UnityEngine;
+using Kadinche.Kassets.Variable;
 
 namespace Kadinche.Kassets.Collection
 {
-    public abstract class Collection<T> : GameEventBase<T>, IList<T>
+    public abstract class Collection<T> : VariableBase<List<T>>, IList<T>
     {
-        [SerializeField] private List<T> _values = new List<T>();
-        private readonly List<T> _nonSerializedValues = new List<T>();
+        #region Property
 
-        [Tooltip("If true will reset collection contents when play mode end.")]
-        [SerializeField] private bool _autoResetValues;
-        
-        private IList<T> ActiveList => _autoResetValues ? _nonSerializedValues : _values;
-
-        private readonly IList<Subscription<T>> _onAddSubscribers = new List<Subscription<T>>();
-        private readonly IList<Subscription<T>> _onRemoveSubscribers = new List<Subscription<T>>();
-        private readonly IList<Subscription> _onClearSubscribers = new List<Subscription>();
-        
-        public IDisposable SubscribeOnAdd(Action<T> action)
+        public override List<T> Value
         {
-            var subscriber = new Subscription<T>(action, disposables);
-            if (!_onAddSubscribers.Contains(subscriber) && !disposables.Contains(subscriber))
-            {
-                _onAddSubscribers.Add(subscriber);
-                disposables.Add(subscriber);
-            }
-
-            return subscriber;
+            get => this;
+            set => Copy(value);
         }
 
-        public IDisposable SubscribeOnRemove(Action<T> action)
+        #endregion
+
+        #region Event Handling
+
+        private readonly IList<IDisposable> _onAddSubscriptions = new List<IDisposable>();
+        private readonly IList<IDisposable> _onRemoveSubscriptions = new List<IDisposable>();
+        private readonly IList<IDisposable> _onClearSubscriptions = new List<IDisposable>();
+        private readonly IDictionary<int, IList<IDisposable>> _elementSubscriptions = new Dictionary<int, IList<IDisposable>>();
+
+        private T _lastRemoved;
+
+        public IDisposable SubscribeOnAdd(Action<T> action) => SubscribeOnAdd(action, false);
+        public IDisposable SubscribeOnAdd(Action<T> action, bool withBuffer)
         {
-            var subscriber = new Subscription<T>(action, disposables);
-            if (!_onRemoveSubscribers.Contains(subscriber) && !disposables.Contains(subscriber))
+            var subscription = new Subscription<T>(action, _onAddSubscriptions);
+            if (!_onAddSubscriptions.Contains(subscription))
             {
-                _onRemoveSubscribers.Add(subscriber);
-                disposables.Add(subscriber);
+                _onAddSubscriptions.Add(subscription);
+                if (withBuffer)
+                {
+                    subscription.Invoke(_value.LastOrDefault());
+                }
             }
 
-            return subscriber;
+            return subscription;
         }
-        
-        public IDisposable SubscribeOnClear(Action action)
+
+        public IDisposable SubscribeOnRemove(Action<T> action) => SubscribeOnRemove(action, false);
+        public IDisposable SubscribeOnRemove(Action<T> action, bool withBuffer)
         {
-            var subscriber = new Subscription(action, disposables);
-            if (!_onClearSubscribers.Contains(subscriber) && !disposables.Contains(subscriber))
+            var subscription = new Subscription<T>(action, _onRemoveSubscriptions);
+            if (!_onRemoveSubscriptions.Contains(subscription))
             {
-                _onClearSubscribers.Add(subscriber);
-                disposables.Add(subscriber);
+                _onRemoveSubscriptions.Add(subscription);
+                if (withBuffer)
+                {
+                    subscription.Invoke(_lastRemoved);
+                }
             }
 
-            return subscriber;
+            return subscription;
         }
 
-        public override IDisposable Subscribe(Action<T> action)
+        public IDisposable SubscribeOnClear(Action action) => SubscribeOnClear(action, false);
+        public IDisposable SubscribeOnClear(Action action, bool withBuffer)
         {
-            var compositeDisposable = new CompositeDisposable();
-                compositeDisposable.Add(SubscribeOnAdd(action));
-                compositeDisposable.Add(SubscribeOnRemove(action));
-                compositeDisposable.Add(SubscribeOnClear(() => action.Invoke(bufferedValue)));
-                
-            return compositeDisposable;
+            var subscription = new Subscription(action, _onClearSubscriptions);
+            if (!_onClearSubscriptions.Contains(subscription))
+            {
+                _onClearSubscriptions.Add(subscription);
+                if (withBuffer)
+                {
+                    subscription.Invoke();
+                }
+            }
+
+            return subscription;
+        }
+
+        public IDisposable SubscribeToElementAt(int index, Action<T> action) => SubscribeToElementAt(index, action, false);
+        public IDisposable SubscribeToElementAt(int index, Action<T> action, bool withBuffer)
+        {
+            if (!_elementSubscriptions.TryGetValue(index, out var subscriptions))
+            {
+                subscriptions = new List<IDisposable>();
+                _elementSubscriptions.Add(index, subscriptions);
+            }
+            
+            var subscription = new Subscription<T>(action, subscriptions);
+            if (!subscriptions.Contains(subscription))
+            {
+                subscriptions.Add(subscription);
+                if (_value[index] != null && withBuffer)
+                {
+                    subscription.Invoke(_value[index]);
+                }
+            }
+
+            return subscription;
         }
 
         private void RaiseOnAdd(T addedValue)
         {
-            foreach (var subscriber in _onAddSubscribers)
+            foreach (var disposable in _onAddSubscriptions)
             {
-                subscriber.Invoke(addedValue);
+                if (disposable is Subscription<T> valueSubscription)
+                    valueSubscription.Invoke(addedValue);
             }
         }
         
         private void RaiseOnRemove(T removedValue)
         {
-            foreach (var subscriber in _onRemoveSubscribers)
+            foreach (var disposable in _onRemoveSubscriptions)
             {
-                subscriber.Invoke(removedValue);
+                if (disposable is Subscription<T> valueSubscription)
+                    valueSubscription.Invoke(removedValue);
             }
         }
         
         private void RaiseOnClear()
         {
-            foreach (var subscriber in _onClearSubscribers)
+            foreach (var disposable in _onClearSubscriptions)
             {
-                subscriber.Invoke();
+                if (disposable is Subscription subscription)
+                    subscription.Invoke();
             }
         }
-        
-        public IEnumerator<T> GetEnumerator() => ActiveList.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => ActiveList.GetEnumerator();
 
-        public void Add(T item)
+        private void RaiseElementAt(int index, T value)
         {
-            bufferedValue = item;
-            ActiveList.Add(item);
+            if (_variableEventType == VariableEventType.ValueChange && _value[index].Equals(value))
+                return;
+
+            if (_elementSubscriptions.TryGetValue(index, out var subscriptions))
+            {
+                foreach (var disposable in subscriptions)
+                {
+                    if (disposable is Subscription<T> valueSubscription)
+                        valueSubscription.Invoke(value);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Interface Implementation
+
+        public IEnumerator<T> GetEnumerator() => _value.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _value.GetEnumerator();
+
+        public virtual void Add(T item)
+        {
+            _value.Add(item);
             RaiseOnAdd(item);
+            var index = _value.Count - 1;
+            RaiseElementAt(index, item);
         }
 
-        public void Copy(IEnumerable<T> others)
+        public virtual void Copy(IEnumerable<T> others)
         {
-            ActiveList.Clear();
-            foreach (var other in others)
-            {
-                ActiveList.Add(other);
-            }
+            _value.Clear();
+            _value.AddRange(others);
         }
         
-        public void Clear()
+        public virtual void Clear()
         {
-            // TODO: per element subscription removal
-            // foreach (var value in _reactiveElements.Values)
-            // {
-            //     value.Dispose();
-            // }
-            // _reactiveElements.Clear();
-            bufferedValue = ActiveList[0];
-            ActiveList.Clear();
+            foreach (var subscriptions in _elementSubscriptions.Values)
+            {
+                foreach (var disposable in subscriptions)
+                {
+                    disposable.Dispose();
+                }
+                subscriptions.Clear();
+            }
+            _elementSubscriptions.Clear();
+            _value.Clear();
             RaiseOnClear();
         }
         
-        public bool Remove(T item)
+        public virtual bool Remove(T item)
         {
-            // var idx = ActiveList.IndexOf(item);
-            bufferedValue = item;
-            var removed = ActiveList.Remove(item);
+            var idx = _value.IndexOf(item);
+            var removed = _value.Remove(item);
             if (removed)
             {
-                // TODO: per element subscription removal
-                // if (_reactiveElements.ContainsKey(idx))
-                //     _reactiveElements.Remove(idx);
+                if (_elementSubscriptions.ContainsKey(idx))
+                {
+                    _elementSubscriptions.Remove(idx);
+                }
                 RaiseOnRemove(item);
+                _lastRemoved = item;
             }
             return removed;
         }
         
-        public void Insert(int index, T item)
+        public virtual void Insert(int index, T item)
         {
-            bufferedValue = item;
-            ActiveList.Insert(index, item);
+            _value.Insert(index, item);
             RaiseOnAdd(item);
         }
 
-        public void RemoveAt(int index)
+        public virtual void RemoveAt(int index)
         {
-            var item = ActiveList[index];
-            bufferedValue = item;
-            ActiveList.RemoveAt(index);
-            // TODO: per element subscription removal
-            // if (_reactiveElements.ContainsKey(index))
-            //     _reactiveElements.Remove(index);
-            RaiseOnRemove(item);
+            _lastRemoved = _value[index];
+            _value.RemoveAt(index);
+            if (_elementSubscriptions.ContainsKey(index))
+            {
+                _elementSubscriptions.Remove(index);
+            }
+            RaiseOnRemove(_lastRemoved);
         }
 
         public T this[int index]
         {
-            get => ActiveList[index];
+            get => _value[index];
             set
             {
-                bufferedValue = value;
-                ActiveList[index] = value;
-                // TODO : per element raise
-                // if (_reactiveElements.ContainsKey(index)) 
-                //     _reactiveElements[index].Value = value;
+                _value[index] = value;
+                RaiseElementAt(index, value);
             }
         }
 
-        public bool Contains(T item) => ActiveList.Contains(item);
-        public void CopyTo(T[] array, int arrayIndex) => ActiveList.CopyTo(array, arrayIndex);
-        public int Count => ActiveList.Count;
-        bool ICollection<T>.IsReadOnly => ActiveList.ToArray().IsReadOnly;
-        public int IndexOf(T item) => ActiveList.IndexOf(item);
+        public bool Contains(T item) => _value.Contains(item);
+        public void CopyTo(T[] array, int arrayIndex) => _value.CopyTo(array, arrayIndex);
+        public int Count => _value.Count;
+        bool ICollection<T>.IsReadOnly => _value.ToArray().IsReadOnly;
+        public int IndexOf(T item) => _value.IndexOf(item);
 
-        // private readonly AsyncReactiveProperty<T> _onAdd = new AsyncReactiveProperty<T>(default);
-        // private readonly AsyncReactiveProperty<T> _onRemove = new AsyncReactiveProperty<T>(default);
-        // private readonly AsyncReactiveProperty<AsyncUnit> _onClear = new AsyncReactiveProperty<AsyncUnit>(default);
-        // private readonly Dictionary<int, AsyncReactiveProperty<T>> _reactiveElements = new Dictionary<int, AsyncReactiveProperty<T>>();
-        //
-        // private CancellationTokenSource _cts = new CancellationTokenSource();
-        //
-        // public IUniTaskAsyncEnumerable<T> OnAddAsUniTaskAsyncEnumerable() => _onAdd.WithoutCurrent();
-        // public IUniTaskAsyncEnumerable<T> OnRemoveAsUniTaskAsyncEnumerable() => _onRemove.WithoutCurrent();
-        // public IUniTaskAsyncEnumerable<AsyncUnit> OnClearAsUniTaskAsyncEnumerable() => _onClear.WithoutCurrent();
-        // public IUniTaskAsyncEnumerable<T> ElementAtAsUniTaskAsyncEnumerable(int index, bool skipCurrentValue = false)
-        // {
-        //     if (!_reactiveElements.ContainsKey(index))
-        //     {
-        //         var reactive = new AsyncReactiveProperty<T>(this[index]);
-        //         _reactiveElements.Add(index, reactive);
-        //     }
-        //     
-        //     if (skipCurrentValue)
-        //         return _reactiveElements[index].WithoutCurrent();
-        //     return _reactiveElements[index];
-        // }
+        #endregion
 
-        // public UniTask<T> OnAddAsync(CancellationToken token) => _onAdd.WaitAsync(token);
-        // public UniTask<T> OnAddAsync() => OnAddAsync(_cts.Token);
-        // public UniTask<T> OnRemoveAsync(CancellationToken token) => _onRemove.WaitAsync(token);
-        // public UniTask<T> OnRemoveAsync() => OnRemoveAsync(_cts.Token);
-        // public UniTask OnClearAsync(CancellationToken token) => _onClear.WaitAsync(token);
-        // public UniTask OnClearAsync() => OnClearAsync(_cts.Token);
-        
-        // public UniTask<T> ElementAtAsync(int index, CancellationToken token)
-        // {
-        //     if (!_reactiveElements.ContainsKey(index))
-        //     {
-        //         var reactive = new AsyncReactiveProperty<T>(this[index]);
-        //         _reactiveElements.Add(index, reactive);
-        //     }
-        //
-        //     return _reactiveElements[index].WaitAsync(token);
-        // }
-        //
-        // public UniTask<T> ElementAtAsync(int index) => ElementAtAsync(index, _cts.Token);
-        //
-        // public IDisposable SubscribeToElementAt(int index, Action<T> action, bool skipCurrentValue = false) => 
-        //     ElementAtAsUniTaskAsyncEnumerable(index, skipCurrentValue).Subscribe(action);
-        // public IDisposable SubscribeToElementAt(int index, Action<int, T> action, bool skipCurrentValue = false) => 
-        //     ElementAtAsUniTaskAsyncEnumerable(index, skipCurrentValue).Subscribe(value => action.Invoke(index, value));
-        //
-        // public void SubscribeToElementAt(int index, Action<T> action, CancellationToken token, bool skipCurrentValue = false) => 
-        //     ElementAtAsUniTaskAsyncEnumerable(index, skipCurrentValue).Subscribe(action, token);
-        // public void SubscribeToElementAt(int index, Action<int, T> action, CancellationToken token, bool skipCurrentValue = false) => 
-        //     ElementAtAsUniTaskAsyncEnumerable(index, skipCurrentValue).Subscribe(value => action.Invoke(index, value), token);
-        
+        #region Method Overload
+
         public override void OnAfterDeserialize()
         {
-            _nonSerializedValues.Clear();
-            if (_autoResetValues)
-                _nonSerializedValues.AddRange(_values);
+            InitialValue.Clear();
+            InitialValue.AddRange(_value);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _onAddSubscriptions.Dispose();
+            _onRemoveSubscriptions.Dispose();
+            _onClearSubscriptions.Dispose();
+            foreach (var disposableList in _elementSubscriptions.Values)
+            {
+                disposableList.Dispose();
+            }
+            _elementSubscriptions.Clear();
+        }
+
+        #endregion
+    }
+    
+    public abstract class Collection<TKey, TValue> : Collection<SerializedKeyValuePair<TKey, TValue>>, IDictionary<TKey, TValue>
+    {
+        #region Field and Property
+
+        private readonly Dictionary<TKey, TValue> _activeDictionary = new Dictionary<TKey, TValue>();
+
+        public override List<SerializedKeyValuePair<TKey, TValue>> Value
+        {
+            get => _value;
+            set
+            {
+                _value.Clear();
+                _value.AddRange(value);
+                
+                _activeDictionary.Clear();
+                foreach (var pair in value)
+                {
+                    _activeDictionary.Add(pair.key, pair.value);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Event Handling
+
+        private readonly IDictionary<TKey, IList<IDisposable>> _elementSubscriptions = new Dictionary<TKey, IList<IDisposable>>();
+
+        public IDisposable SubscribeOnAdd(Action<TKey, TValue> action) => SubscribeOnAdd(action, false);
+        public IDisposable SubscribeOnAdd(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnAdd(pair => action.Invoke(pair.key, pair.value), withBuffer);
+
+        public IDisposable SubscribeOnRemove(Action<TKey, TValue> action) => SubscribeOnRemove(action, false);
+        public IDisposable SubscribeOnRemove(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnRemove(pair => action.Invoke(pair.key, pair.value), withBuffer);
+        
+        public IDisposable SubscribeToValue(TKey key, Action<TValue> action) => SubscribeToValue(key, action, false);
+        public IDisposable SubscribeToValue(TKey key, Action<TValue> action, bool withBuffer)
+        {
+            if (!_elementSubscriptions.TryGetValue(key, out var subscriptions))
+            {
+                subscriptions = new List<IDisposable>();
+                _elementSubscriptions.Add(key, subscriptions);
+            }
+            
+            var subscription = new Subscription<TValue>(action, subscriptions);
+            if (!subscriptions.Contains(subscription))
+            {
+                subscriptions.Add(subscription);
+                if (_activeDictionary[key] != null && withBuffer)
+                {
+                    subscription.Invoke(_activeDictionary[key]);
+                }
+            }
+
+            return subscription;
+        }
+
+        private void RaiseValue(TKey key, TValue value)
+        {
+            if (_variableEventType == VariableEventType.ValueChange && _activeDictionary[key].Equals(value))
+                return;
+
+            if (_elementSubscriptions.TryGetValue(key, out var subscriptions))
+            {
+                foreach (var disposable in subscriptions)
+                {
+                    if (disposable is Subscription<TValue> valueSubscription)
+                        valueSubscription.Invoke(value);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Interface Implementation
+
+        public override void Add(SerializedKeyValuePair<TKey, TValue> item)
+        {
+            _activeDictionary.Add(item.key, item.value);
+            base.Add(item);
+            RaiseValue(item.key, item.value);
+        }
+
+        public void Add(TKey key, TValue value) => Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
+        
+        public override void Clear()
+        {
+            foreach (var subscriptions in _elementSubscriptions.Values)
+            {
+                foreach (var disposable in subscriptions)
+                {
+                    disposable.Dispose();
+                }
+                subscriptions.Clear();
+            }
+            _elementSubscriptions.Clear();
+            Value.Clear();
+            base.Clear();
+        }
+
+        public override bool Remove(SerializedKeyValuePair<TKey, TValue> item)
+        {
+            var removed = _activeDictionary.Remove(item.key);
+            return removed && base.Remove(item);
+        }
+        
+        public bool Remove(TKey key)
+        {
+            var toRemove = _value.First(pair => pair.key.Equals(key));
+            return Remove(toRemove);
+        }
+        
+        public bool TryGetValue(TKey key, out TValue value) => _activeDictionary.TryGetValue(key, out value);
+        
+        public TValue this[TKey key]
+        {
+            get => _activeDictionary[key];
+            set
+            {
+                _activeDictionary[key] = value;
+                var _ = _value.First(p => p.key.Equals(key));
+                _.value = value;
+                RaiseValue(key, value);
+            }
+        }
+        
+        public new int Count => Value.Count;
+        public bool ContainsKey(TKey key) => _activeDictionary.ContainsKey(key);
+        public bool ContainsValue(TValue value) => _activeDictionary.ContainsValue(value);
+        
+        public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _activeDictionary.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => Value.GetEnumerator();
+        
+        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
+        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) => _activeDictionary.ContainsKey(item.Key) && _activeDictionary.ContainsValue(item.Value);
+        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) { _activeDictionary.ToList().CopyTo(array, arrayIndex); }
+        bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => _activeDictionary.ToArray().IsReadOnly;
+        
+        public ICollection<TKey> Keys => _activeDictionary.Keys;
+        public ICollection<TValue> Values => _activeDictionary.Values;
+
+        #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            foreach (var disposableList in _elementSubscriptions.Values)
+            {
+                disposableList.Dispose();
+            }
+            _elementSubscriptions.Clear();
         }
     }
     
-    // public abstract class Collection<TKey, TValue> : ScriptableObject, IDictionary<TKey, TValue>, ISerializationCallbackReceiver, IDisposable
-    // {
-    //     [SerializeField] private List<SerializedKeyValuePair<TKey, TValue>> _keyValuePairs = new List<SerializedKeyValuePair<TKey, TValue>>();
-    //     protected readonly Dictionary<TKey, TValue> activeDictionary = new Dictionary<TKey, TValue>();
-    //
-    //     private readonly AsyncReactiveProperty<KeyValuePair<TKey, TValue>> _onAdd = new AsyncReactiveProperty<KeyValuePair<TKey, TValue>>(default);
-    //     private readonly AsyncReactiveProperty<KeyValuePair<TKey, TValue>> _onRemove = new AsyncReactiveProperty<KeyValuePair<TKey, TValue>>(default);
-    //     private readonly AsyncReactiveProperty<AsyncUnit> _onClear = new AsyncReactiveProperty<AsyncUnit>(default);
-    //     private readonly Dictionary<TKey, AsyncReactiveProperty<TValue>> _reactiveElements = new Dictionary<TKey, AsyncReactiveProperty<TValue>>();
-    //     
-    //     private CancellationTokenSource _cts = new CancellationTokenSource();
-    //
-    //     public IUniTaskAsyncEnumerable<KeyValuePair<TKey, TValue>> OnAddAsUniTaskAsyncEnumerable() => _onAdd.WithoutCurrent();
-    //     public IUniTaskAsyncEnumerable<KeyValuePair<TKey, TValue>> OnRemoveAsUniTaskAsyncEnumerable() => _onRemove.WithoutCurrent();
-    //     public IUniTaskAsyncEnumerable<AsyncUnit> OnClearAsUniTaskAsyncEnumerable() => _onClear.WithoutCurrent();
-    //     public IUniTaskAsyncEnumerable<TValue> ValueAsUniTaskAsyncEnumerable(TKey key, bool skipCurrentValue = false)
-    //     {
-    //         if (!_reactiveElements.ContainsKey(key))
-    //         {
-    //             var reactive = new AsyncReactiveProperty<TValue>(this[key]);
-    //             _reactiveElements.Add(key, reactive);
-    //         }
-    //         
-    //         if (skipCurrentValue)
-    //             return _reactiveElements[key].WithoutCurrent();
-    //         return _reactiveElements[key];
-    //     }
-    //
-    //     public void Add(TKey key, TValue value)
-    //     {
-    //         activeDictionary.Add(key, value);
-    //         _onAdd.Value = new KeyValuePair<TKey, TValue>(key, value);
-    //     }
-    //     
-    //     public void Clear()
-    //     {
-    //         foreach (var value in _reactiveElements.Values)
-    //         {
-    //             value.Dispose();
-    //         }
-    //         _reactiveElements.Clear();
-    //         activeDictionary.Clear();
-    //         _onClear.Value = AsyncUnit.Default;
-    //     }
-    //     
-    //     public bool Remove(TKey key)
-    //     {
-    //         var value = activeDictionary[key];
-    //         var removed = activeDictionary.Remove(key);
-    //         _onRemove.Value = new KeyValuePair<TKey, TValue>(key, value);
-    //         return removed;
-    //     }
-    //
-    //     public bool TryGetValue(TKey key, out TValue value) => activeDictionary.TryGetValue(key, out value);
-    //
-    //     public TValue this[TKey key]
-    //     {
-    //         get => activeDictionary[key];
-    //         set
-    //         {
-    //             activeDictionary[key] = value;
-    //             if (_reactiveElements.ContainsKey(key))
-    //                 _reactiveElements[key].Value = value;
-    //         }
-    //     }
-    //     
-    //     public int Count => activeDictionary.Count;
-    //     public bool ContainsKey(TKey key) => activeDictionary.ContainsKey(key);
-    //     public bool ContainsValue(TValue value) => activeDictionary.ContainsValue(value);
-    //
-    //     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => activeDictionary.GetEnumerator();
-    //     IEnumerator IEnumerable.GetEnumerator() => activeDictionary.GetEnumerator();
-    //
-    //     void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
-    //     bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) => activeDictionary.ContainsKey(item.Key) && activeDictionary.ContainsValue(item.Value);
-    //     void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) { activeDictionary.ToList().CopyTo(array, arrayIndex); }
-    //     bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
-    //     bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => activeDictionary.ToArray().IsReadOnly;
-    //
-    //     public ICollection<TKey> Keys => activeDictionary.Keys;
-    //     public ICollection<TValue> Values => activeDictionary.Values;
-    //     
-    //     public UniTask<KeyValuePair<TKey, TValue>> OnAddAsync(CancellationToken token) => _onAdd.WaitAsync(token);
-    //     public UniTask<KeyValuePair<TKey, TValue>> OnAddAsync() => OnAddAsync(_cts.Token);
-    //     public UniTask<KeyValuePair<TKey, TValue>> OnRemoveAsync(CancellationToken token) => _onRemove.WaitAsync(token);
-    //     public UniTask<KeyValuePair<TKey, TValue>> OnRemoveAsync() => OnRemoveAsync(_cts.Token);
-    //     public UniTask OnClearAsync(CancellationToken token) => _onClear.WaitAsync(token);
-    //     public UniTask OnClearAsync() => OnClearAsync(_cts.Token);
-    //
-    //     public UniTask<TValue> ValueAsync(TKey key, CancellationToken token)
-    //     {
-    //         if (!_reactiveElements.ContainsKey(key))
-    //         {
-    //             var reactive = new AsyncReactiveProperty<TValue>(this[key]);
-    //             _reactiveElements.Add(key, reactive);
-    //         }
-    //
-    //         return _reactiveElements[key].WaitAsync(token);
-    //     }
-    //     
-    //     public UniTask<TValue> ValueAsync(TKey key) => ValueAsync(key, _cts.Token);
-    //
-    //     public IDisposable SubscribeOnAdd(Action<KeyValuePair<TKey, TValue>> action) => OnAddAsUniTaskAsyncEnumerable().Subscribe(action);
-    //     public IDisposable SubscribeOnRemove(Action<KeyValuePair<TKey, TValue>> action) => OnRemoveAsUniTaskAsyncEnumerable().Subscribe(action);
-    //     public IDisposable SubscribeOnClear(Action action) => OnClearAsUniTaskAsyncEnumerable().Subscribe(_ => action.Invoke());
-    //     public void SubscribeOnAdd(Action<KeyValuePair<TKey, TValue>> action, CancellationToken token) => OnAddAsUniTaskAsyncEnumerable().Subscribe(action, token);
-    //     public void SubscribeOnRemove(Action<KeyValuePair<TKey, TValue>> action, CancellationToken token) => OnRemoveAsUniTaskAsyncEnumerable().Subscribe(action, token);
-    //     public void SubscribeOnClear(Action action, CancellationToken token) => OnClearAsUniTaskAsyncEnumerable().Subscribe(_ => action.Invoke(), token);
-    //     
-    //     public IDisposable SubscribeToValue(TKey key, Action<TValue> action, bool skipCurrentValue = false) => 
-    //         ValueAsUniTaskAsyncEnumerable(key, skipCurrentValue).Subscribe(action);
-    //     
-    //     public IDisposable SubscribeToValue(TKey key, Action<TKey, TValue> action, bool skipCurrentValue = false) => 
-    //         ValueAsUniTaskAsyncEnumerable(key, skipCurrentValue).Subscribe(value => action.Invoke(key, value));
-    //
-    //     public void SubscribeToValue(TKey key, Action<TValue> action, CancellationToken token, bool skipCurrentValue = false) => 
-    //         ValueAsUniTaskAsyncEnumerable(key, skipCurrentValue).Subscribe(action, token);
-    //
-    //     public void SubscribeToValue(TKey key, Action<TKey, TValue> action, CancellationToken token, bool skipCurrentValue = false) => 
-    //         ValueAsUniTaskAsyncEnumerable(key, skipCurrentValue).Subscribe(value => action.Invoke(key, value), token);
-    //
-    //     public void OnAfterDeserialize()
-    //     {
-    //         Cancel();
-    //         
-    //         foreach (var value in _reactiveElements.Values) 
-    //             value.Dispose();
-    //         _reactiveElements.Clear();
-    //         
-    //         SetActiveDictionary();
-    //     }
-    //
-    //     protected virtual void SetActiveDictionary()
-    //     {
-    //         activeDictionary.Clear();
-    //         foreach (var pair in _keyValuePairs) 
-    //             activeDictionary.Add(pair.key, pair.value);
-    //     }
-    //
-    //     public void OnBeforeSerialize() { }
-    //
-    //     public void Cancel(bool reset = true)
-    //     {
-    //         try
-    //         {
-    //             _cts?.Cancel();
-    //             _cts?.Dispose();
-    //
-    //             if (reset)
-    //                 _cts = new CancellationTokenSource();
-    //         }
-    //         catch (Exception)
-    //         {
-    //             //
-    //         }
-    //     }
-    //
-    //     public void Dispose()
-    //     {
-    //         _onAdd?.Dispose();
-    //         _onRemove?.Dispose();
-    //         _onClear?.Dispose();
-    //         
-    //         foreach (var value in _reactiveElements.Values) 
-    //             value.Dispose();
-    //         
-    //         _reactiveElements.Clear();
-    //         activeDictionary.Clear();
-    //         
-    //         Cancel(false);
-    //     }
-    //
-    //     private void OnDestroy() => Dispose();
-    // }
-    //
-    // [Serializable]
-    // public class SerializedKeyValuePair<TKey, TValue>
-    // {
-    //     public TKey key;
-    //     public TValue value;
-    //
-    //     public SerializedKeyValuePair(TKey key, TValue value)
-    //     {
-    //         this.key = key;
-    //         this.value = value;
-    //     }
-    // }
+    [Serializable]
+    public struct SerializedKeyValuePair<TKey, TValue>
+    {
+        public TKey key;
+        public TValue value;
+    
+        public SerializedKeyValuePair(TKey key, TValue value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+        
+        public static implicit operator KeyValuePair<TKey, TValue>(SerializedKeyValuePair<TKey, TValue> serializedKeyValuePair) => new KeyValuePair<TKey, TValue>(serializedKeyValuePair.key, serializedKeyValuePair.value);
+    }
 }
