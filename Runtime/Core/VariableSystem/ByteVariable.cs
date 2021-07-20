@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace Kassets.VariableSystem
+namespace Kadinche.Kassets.Variable
 {
     [CreateAssetMenu(fileName = "ByteVariable", menuName = MenuHelper.DefaultVariableMenu + "Byte")]
-    public class ByteVariable : VariableSystemBase<byte>
+    public class ByteVariable : VariableBase<byte>
     {
     }
 }

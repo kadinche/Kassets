@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace Kassets.VariableSystem
+namespace Kadinche.Kassets.Variable
 {
     [CreateAssetMenu(fileName = "GameObjectVariable", menuName = MenuHelper.DefaultVariableMenu + "GameObject")]
-    public class GameObjectVariable : VariableSystemBase<GameObject>
+    public class GameObjectVariable : VariableBase<GameObject>
     {
     }
 }

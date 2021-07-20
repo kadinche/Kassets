@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Kassets.Collection
+namespace Kadinche.Kassets.Collection
 {
     [CreateAssetMenu(fileName = "StringCollection", menuName = MenuHelper.DefaultCollectionMenu + "StringCollection")]
     public class StringCollection : Collection<string>

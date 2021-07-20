@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kassets.EventSystem
+namespace Kadinche.Kassets.EventSystem
 {
     [CreateAssetMenu(fileName = "QuaternionEvent", menuName = MenuHelper.DefaultEventMenu + "QuaternionEvent")]
     public class QuaternionEvent : GameEvent<Quaternion>

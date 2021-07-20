@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace Kassets.VariableSystem
+namespace Kadinche.Kassets.Variable
 {
     [CreateAssetMenu(fileName = "ColorVariable", menuName = MenuHelper.DefaultVariableMenu + "Color")]
-    public class ColorVariable : VariableSystemBase<Color>
+    public class ColorVariable : VariableBase<Color>
     {
     }
 }

@@ -1,166 +1,145 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using Cysharp.Threading.Tasks;
-using Cysharp.Threading.Tasks.Linq;
 using UnityEngine;
 
-#if ODIN_INSPECTOR
-using Sirenix.OdinInspector;
-#endif
-
-namespace Kassets.EventSystem
+namespace Kadinche.Kassets.EventSystem
 {
     /// <summary>
-    /// Game Event System using Asynchronous Pattern (UniTask) as core system.
+    /// Core Game Event System.
     /// </summary>
-    #if ODIN_INSPECTOR
-    [InlineEditor()]
-    #endif
-    [CreateAssetMenu(fileName = "Event", menuName = MenuHelper.DefaultEventMenu + "GameEvent")]
-    public class GameEvent : ScriptableObject, ISerializationCallbackReceiver, IDisposable
+    [CreateAssetMenu(fileName = "GameEvent", menuName = MenuHelper.DefaultEventMenu + "GameEvent")]
+    public class GameEvent : KassetsBase, IEventRaiser, IEventHandler
     {
-        [Tooltip("Whether to listen to previous event on subscribe")]
-        [SerializeField] protected bool buffered;
-        
-        /// <summary>
-        /// Asynchronous reactive property (to self) as core event system.
-        /// </summary>
-        protected readonly AsyncReactiveProperty<GameEvent> onEventRaise = new AsyncReactiveProperty<GameEvent>(default);
-        protected CancellationTokenSource cts = new CancellationTokenSource();
+        protected readonly IList<IDisposable> disposables = new List<IDisposable>();
         
         /// <summary>
         /// Raise the event.
         /// </summary>
-        public virtual void Raise() => onEventRaise.Value = this;
-
-        /// <summary>
-        /// Raise event on editor.
-        /// </summary>
-        public virtual void RaiseEditor() => Raise();
-        
-        /// <summary>
-        /// Wait for event asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public UniTask EventAsync(CancellationToken cancellationToken) => onEventRaise.WaitAsync(cancellationToken);
-        public UniTask EventAsync() => EventAsync(cts.Token);
-
-        /// <summary>
-        /// Use IUniTaskAsyncEnumerable to further make use of UniTask's Asynchronous LINQ
-        /// </summary>
-        /// <returns></returns>
-        public IUniTaskAsyncEnumerable<GameEvent> AsUniTaskAsyncEnumerable() => buffered ? onEventRaise : onEventRaise.WithoutCurrent();
-        
-        /// <summary>
-        /// Manually implemented Subscribe method since GameEvent base class doesn't derived from IUniTaskAsyncEnumerable.
-        /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
-        public IDisposable Subscribe(Action action) => AsUniTaskAsyncEnumerable().Subscribe(_ => action.Invoke());
-        public void Subscribe(Action action, CancellationToken cancellationToken) => 
-            AsUniTaskAsyncEnumerable().Subscribe(_ => action.Invoke(), cancellationToken);
-
-        public override string ToString() => onEventRaise.ToString();
-
-        public virtual void OnBeforeSerialize() { }
-        public virtual void OnAfterDeserialize() => Cancel();
-        
-        public void Cancel(bool reset = true)
+        public virtual void Raise()
         {
-            try
+            foreach (var disposable in disposables)
             {
-                cts?.Cancel();
-                cts?.Dispose();
-
-                if (reset)
-                    cts = new CancellationTokenSource();
-            }
-            catch (Exception)
-            {
-                //
+                if (disposable is Subscription subscription)
+                {
+                    subscription.Invoke();
+                }
             }
         }
-
-        public virtual void Dispose()
+        
+        public void Request(Action onResponse)
         {
-            Cancel(false);
-            onEventRaise?.Dispose();
+            Raise();
+            onResponse?.Invoke();
         }
 
-        private void OnDestroy() => Dispose();
+        public IDisposable Subscribe(Action action) => Subscribe(action, false);
+
+        public IDisposable Subscribe(Action action, bool withBuffer)
+        {
+            var subscription = new Subscription(action, disposables);
+            if (!disposables.Contains(subscription))
+            {
+                disposables.Add(subscription);
+                
+                if (withBuffer)
+                {
+                    subscription.Invoke();
+                }
+            }
+
+            return subscription;
+        }
+
+        public override void Dispose()
+        {
+            foreach (var disposable in disposables)
+            {
+                disposable?.Dispose();
+            }
+            
+            disposables.Clear();
+        }
     }
-    
+
     /// <summary>
     /// Generic base class for event system with parameter.
     /// </summary>
     /// <typeparam name="T">Parameter type for the event system</typeparam>
-    public class GameEvent<T> : GameEvent, IUniTaskAsyncEnumerable<T>
+    public abstract class GameEvent<T> : GameEvent, IEventRaiser<T>, IEventHandler<T>
     {
-        [SerializeField] private T _inspectorRaiseValue;
-
-        protected new readonly AsyncReactiveProperty<T> onEventRaise = new AsyncReactiveProperty<T>(default);
-
-        public override void Raise() => Raise(onEventRaise.Value);
+        [SerializeField] protected T _value;
 
         /// <summary>
         /// Raise the event with parameter.
         /// </summary>
         /// /// <param name="param"></param>
-        public void Raise(T param)
+        public virtual void Raise(T param)
         {
-            onEventRaise.Value = param;
-            base.onEventRaise.Value = this;
+            _value = param;
+            base.Raise();
+            foreach (var disposable in disposables)
+            {
+                if (disposable is Subscription<T> subscription)
+                {
+                    subscription.Invoke(_value);
+                }
+            }
         }
         
-        public override void RaiseEditor() => Raise(_inspectorRaiseValue);
+        public override void Raise() => Raise(_value);
 
-        /// <summary>
-        /// Wait for event asynchronously.
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        public new UniTask<T> EventAsync(CancellationToken cancellationToken) => onEventRaise.WaitAsync(cancellationToken);
-        public new UniTask<T> EventAsync() => EventAsync(cts.Token);
-        
-        private IUniTaskAsyncEnumerable<T> UniTaskAsyncEnumerable => buffered ? onEventRaise : onEventRaise.WithoutCurrent();
-        public IUniTaskAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken) => UniTaskAsyncEnumerable.GetAsyncEnumerator(cancellationToken);
-        public IUniTaskAsyncEnumerator<T> GetAsyncEnumerator() => UniTaskAsyncEnumerable.GetAsyncEnumerator(cts.Token);
-
-        public IDisposable Subscribe(Action<T> action) => onEventRaise.WithoutCurrent().Subscribe(action.Invoke);
-
-        public override string ToString() => onEventRaise.ToString();
-
-        public override void Dispose()
+        public IDisposable Subscribe(Action<T> action) => Subscribe(action, false);
+        public IDisposable Subscribe(Action<T> action, bool withBuffer)
         {
-            base.Dispose();
-            onEventRaise?.Dispose();
+            var subscription = new Subscription<T>(action, disposables);
+            if (!disposables.Contains(subscription))
+            {
+                disposables.Add(subscription);
+                
+                if (withBuffer)
+                {
+                    subscription.Invoke(_value);
+                }
+            }
+
+            return subscription;
+        }
+
+        public override void OnAfterDeserialize()
+        {
+            _value = default;
         }
     }
-
+    
     /// <summary>
     /// An event that contains collection of events. Get raised whenever any event is raised.
     /// Made it possible to listen to many events at once.
     /// </summary>
     [Serializable]
-    public class GameEventCollection : IDisposable
+    public class GameEventCollection : IEventRaiser, IEventHandler, IDisposable
     {
         [SerializeField] private List<GameEvent> _gameEvents;
-        private CancellationTokenSource _cts = new CancellationTokenSource();
 
-        public UniTask<int> AnyEventAsync(CancellationToken cancellationToken) => UniTask.WhenAny(_gameEvents.Select(gameEvent => gameEvent.EventAsync(cancellationToken)));
-        public UniTask<int> AnyEventAsync() => AnyEventAsync(_cts.Token);
-        
-        public void SubscribeAnyEvent(Action onAnyEvent, CancellationToken cancellationToken)
+        private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
+
+        public IDisposable Subscribe(Action action) => Subscribe(action, false);
+
+        public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
         {
             foreach (var gameEvent in _gameEvents)
             {
-                gameEvent.Subscribe(onAnyEvent, cancellationToken);
+                _compositeDisposable.Add(gameEvent.Subscribe(onAnyEvent));
             }
+
+            if (withBuffer)
+            {
+                onAnyEvent.Invoke();
+            }
+
+            return _compositeDisposable;
         }
 
-        public void RaiseAllEvents()
+        public void Raise()
         {
             foreach (var gameEvent in _gameEvents)
             {
@@ -168,44 +147,81 @@ namespace Kassets.EventSystem
             }
         }
 
-        public void OnBeforeSerialize() { }
-
-        public void OnAfterDeserialize() => Cancel();
-        
-        public void Cancel(bool reset = true)
+        public void Dispose()
         {
-            try
-            {
-                _cts?.Cancel();
-                _cts?.Dispose();
-
-                if (reset)
-                    _cts = new CancellationTokenSource();
-            }
-            catch (Exception)
-            {
-                //
-            }
+            _compositeDisposable.Dispose();
         }
-
-        public void Dispose() => Cancel(false);
     }
     
-    public static class GameEventAsyncExtension
+    internal class Subscription : IDisposable
     {
-        public static UniTask.Awaiter GetAwaiter(this GameEvent source)
-        {
-            return source.EventAsync().GetAwaiter();
-        }
+        private readonly Action _action;
+        private readonly IList<IDisposable> _disposables;
         
-        public static UniTask<T>.Awaiter GetAwaiter<T>(this GameEvent<T> source)
+        public Subscription(
+            Action action,
+            IList<IDisposable> disposables)
         {
-            return source.EventAsync().GetAwaiter();
+            _action = action;
+            _disposables = disposables;
         }
 
-        public static UniTask<int>.Awaiter GetAwaiter(this GameEventCollection source)
+        public void Invoke() => _action.Invoke();
+        
+        public void Dispose()
         {
-            return source.AnyEventAsync().GetAwaiter();
+            if (_disposables.Contains(this))
+            {
+                _disposables.Remove(this);
+            }
         }
-    } 
+    }
+    
+    internal class Subscription<T> : IDisposable
+    {
+        private readonly Action<T> _action;
+        private readonly IList<IDisposable> _disposables;
+        
+        public Subscription(
+            Action<T> action,
+            IList<IDisposable> disposables)
+        {
+            _action = action;
+            _disposables = disposables;
+        }
+
+        public void Invoke(T param) => _action.Invoke(param);
+        
+        public void Dispose()
+        {
+            if (_disposables.Contains(this))
+            {
+                _disposables.Remove(this);
+            }
+        }
+    }
+
+    internal class CompositeDisposable : IDisposable
+    {
+        private readonly IList<IDisposable> _disposables = new List<IDisposable>();
+        public void Add(IDisposable disposable) => _disposables.Add(disposable);
+
+        public void Dispose()
+        {
+            _disposables.Dispose();
+        }
+    }
+
+    internal static class DisposableExtension
+    {
+        internal static void Dispose(this IList<IDisposable> disposables)
+        {
+            foreach (var disposable in disposables)
+            {
+                disposable?.Dispose();
+            }
+            
+            disposables.Clear();
+        }
+    }
 }
