@@ -5,25 +5,18 @@ using UnityEngine;
 
 namespace Kadinche.Kassets.RequestResponseSystem
 {
-    public abstract class RequestResponseEvent<TRequest, TResponse> : GameEvent<TRequest>
+    public abstract partial class RequestResponseEvent<TRequest, TResponse> : GameEvent<TRequest>
     {
         private readonly Queue<Tuple<TRequest, Action<TResponse>>> _requests = new Queue<Tuple<TRequest, Action<TResponse>>>();
-            
-        private ResponseSubscription<TRequest, TResponse> _responseSubscription;
-        
+
+        internal IDisposable responseSubscription;
+
         public void Request(TRequest param, Action<TResponse> onResponse)
         {
-            if (_responseSubscription is {disposed: false})
-            {
-                var response = _responseSubscription.Invoke(param);
-                onResponse.Invoke(response);
-            }
-            else
-            {
-                _requests.Enqueue(new Tuple<TRequest, Action<TResponse>>(param, onResponse));
-            }
+            _requests.Enqueue(new Tuple<TRequest, Action<TResponse>>(param, onResponse));
+            TryRespond();
         }
-
+        
         public void Response(Func<TRequest, TResponse> responseFunc)
         {
             if (_requests.Count <= 0) return;
@@ -32,35 +25,47 @@ namespace Kadinche.Kassets.RequestResponseSystem
             var response = responseFunc.Invoke(request.Item1);
             request.Item2.Invoke(response);
         }
-
+        
         public IDisposable SubscribeResponse(Func<TRequest, TResponse> responseFunc, bool overrideResponse = true)
         {
-            if (!overrideResponse && _responseSubscription != null)
+            if (!overrideResponse && responseSubscription != null)
             {
                 Debug.LogWarning("Responder already exist.");
-                return _responseSubscription;
+                return responseSubscription;
             }
             
-            _responseSubscription?.Dispose();
-
-            if (_responseSubscription == null || _responseSubscription.disposed)
-            {
-                _responseSubscription = new ResponseSubscription<TRequest, TResponse>(responseFunc);
-            }
+            responseSubscription?.Dispose();
+            
+            responseSubscription ??= HandleSubscribe(responseFunc);
 
             while (_requests.Count > 0)
             {
                 Response(responseFunc);
             }
 
-            return _responseSubscription;
+            return responseSubscription;
         }
+
+#if !KASSETS_UNIRX
+        private void TryRespond()
+        {
+            if (responseSubscription is ResponseSubscription<TRequest, TResponse> subscription)
+            {
+                Response(subscription.Invoke);
+            }
+        }
+
+        private IDisposable HandleSubscribe(Func<TRequest, TResponse> responseFunc)
+        {
+            return new ResponseSubscription<TRequest, TResponse>(this, responseFunc);
+        }
+#endif
 
         public override void Dispose()
         {
             base.Dispose();
             _requests.Clear();
-            _responseSubscription?.Dispose();
+            responseSubscription?.Dispose();
         }
     }
 
@@ -70,12 +75,14 @@ namespace Kadinche.Kassets.RequestResponseSystem
     
     internal class ResponseSubscription<TRequest, TResponse> : IDisposable
     {
-        private readonly Func<TRequest, TResponse> _responseFunc;
-        public bool disposed;
+        private RequestResponseEvent<TRequest, TResponse> _source;
+        private Func<TRequest, TResponse> _responseFunc;
         
         public ResponseSubscription(
+            RequestResponseEvent<TRequest, TResponse> source,
             Func<TRequest, TResponse> responseFunc)
         {
+            _source = source;
             _responseFunc = responseFunc;
         }
 
@@ -83,7 +90,9 @@ namespace Kadinche.Kassets.RequestResponseSystem
         
         public void Dispose()
         {
-            disposed = true;
+            _responseFunc = null;
+            _source.responseSubscription = null;
+            _source = null;
         }
     }
 }
