@@ -8,7 +8,7 @@ namespace Kadinche.Kassets.EventSystem
     /// Core Game Event System.
     /// </summary>
     [CreateAssetMenu(fileName = "GameEvent", menuName = MenuHelper.DefaultEventMenu + "GameEvent")]
-    public class GameEvent : KassetsBase, IEventRaiser, IEventHandler
+    public partial class GameEvent : KassetsBase, IEventRaiser, IEventHandler
     {
         [Tooltip("Whether to listen to previous event upon subscription.")]
         [SerializeField] protected bool buffered;
@@ -23,6 +23,7 @@ namespace Kadinche.Kassets.EventSystem
             }
         }
         
+#if !KASSETS_UNIRX
         protected readonly IList<IDisposable> disposables = new List<IDisposable>();
 
         /// <summary>
@@ -56,18 +57,20 @@ namespace Kadinche.Kassets.EventSystem
         }
 
         public override void Dispose() => disposables.Dispose();
+#endif
     }
 
     /// <summary>
     /// Generic base class for event system with parameter.
     /// </summary>
     /// <typeparam name="T">Parameter type for the event system</typeparam>
-    public abstract class GameEvent<T> : GameEvent, IEventRaiser<T>, IEventHandler<T>
+    public abstract partial class GameEvent<T> : GameEvent, IEventRaiser<T>, IEventHandler<T>
     {
         [SerializeField] protected T _value;
 
         public override void Raise() => Raise(_value);
 
+#if !KASSETS_UNIRX
         /// <summary>
         /// Raise the event with parameter.
         /// </summary>
@@ -102,6 +105,7 @@ namespace Kadinche.Kassets.EventSystem
 
             return subscription;
         }
+#endif
         
         public override void OnAfterDeserialize()
         {
@@ -114,12 +118,14 @@ namespace Kadinche.Kassets.EventSystem
     /// Made it possible to listen to many events at once.
     /// </summary>
     [Serializable]
-    public class GameEventCollection : IEventRaiser, IEventHandler, IDisposable
+    public partial class GameEventCollection : IEventRaiser, IEventHandler, IDisposable
     {
         [SerializeField] private List<GameEvent> _gameEvents;
         [SerializeField] protected bool buffered;
 
+#if !KASSETS_UNIRX
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
+#endif
 
         public IDisposable Subscribe(Action action) => Subscribe(action, buffered);
 
