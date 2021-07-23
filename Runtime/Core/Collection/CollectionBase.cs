@@ -6,7 +6,7 @@ using Kadinche.Kassets.Variable;
 
 namespace Kadinche.Kassets.Collection
 {
-    public abstract class Collection<T> : VariableBase<List<T>>, IList<T>
+    public abstract partial class Collection<T> : VariableBase<List<T>>, IList<T>
     {
         #region Property
 
@@ -19,12 +19,7 @@ namespace Kadinche.Kassets.Collection
         #endregion
 
         #region Event Handling
-
-        private readonly IList<IDisposable> _onAddSubscriptions = new List<IDisposable>();
-        private readonly IList<IDisposable> _onRemoveSubscriptions = new List<IDisposable>();
-        private readonly IList<IDisposable> _onClearSubscriptions = new List<IDisposable>();
-        private readonly IDictionary<int, IList<IDisposable>> _valueSubscriptions = new Dictionary<int, IList<IDisposable>>();
-
+        
         private T _lastRemoved;
         
         public IDisposable SubscribeOnAdd(Action<T> action) => SubscribeOnAdd(action, buffered);
@@ -32,6 +27,12 @@ namespace Kadinche.Kassets.Collection
         public IDisposable SubscribeOnClear(Action action) => SubscribeOnClear(action, buffered);
         public IDisposable SubscribeToValueAt(int index, Action<T> action) => SubscribeToValueAt(index, action, buffered);
         
+#if !KASSETS_UNIRX
+        private readonly IList<IDisposable> _onAddSubscriptions = new List<IDisposable>();
+        private readonly IList<IDisposable> _onRemoveSubscriptions = new List<IDisposable>();
+        private readonly IList<IDisposable> _onClearSubscriptions = new List<IDisposable>();
+        private readonly IDictionary<int, IList<IDisposable>> _valueSubscriptions = new Dictionary<int, IList<IDisposable>>();
+
         public IDisposable SubscribeOnAdd(Action<T> action, bool withBuffer)
         {
             var subscription = new Subscription<T>(action, _onAddSubscriptions);
@@ -169,6 +170,7 @@ namespace Kadinche.Kassets.Collection
             _onClearSubscriptions.Dispose();
             ClearValueSubscriptions();
         }
+#endif
         
         #endregion
 
@@ -185,7 +187,7 @@ namespace Kadinche.Kassets.Collection
             RaiseValueAt(index, item);
         }
 
-        public void Copy(IEnumerable<T> others)
+        public virtual void Copy(IEnumerable<T> others)
         {
             _value.Clear();
             _value.AddRange(others);
@@ -260,7 +262,7 @@ namespace Kadinche.Kassets.Collection
         #endregion
     }
     
-    public abstract class Collection<TKey, TValue> : Collection<SerializedKeyValuePair<TKey, TValue>>, IDictionary<TKey, TValue>
+    public abstract partial class Collection<TKey, TValue> : Collection<SerializedKeyValuePair<TKey, TValue>>, IDictionary<TKey, TValue>
     {
         #region Field and Property
 
@@ -286,15 +288,16 @@ namespace Kadinche.Kassets.Collection
 
         #region Event Handling
 
-        private readonly IDictionary<TKey, IList<IDisposable>> _valueSubscriptions = new Dictionary<TKey, IList<IDisposable>>();
-        
         public IDisposable SubscribeOnAdd(Action<TKey, TValue> action) => SubscribeOnAdd(action, buffered);
         public IDisposable SubscribeOnAdd(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnAdd(pair => action.Invoke(pair.key, pair.value), withBuffer);
         public IDisposable SubscribeOnRemove(Action<TKey, TValue> action) => SubscribeOnRemove(action, buffered);
         public IDisposable SubscribeOnRemove(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnRemove(pair => action.Invoke(pair.key, pair.value), withBuffer);
         
         public IDisposable SubscribeToValue(TKey key, Action<TValue> action) => SubscribeToValue(key, action, buffered);
-
+        
+#if !KASSETS_UNIRX
+        private readonly IDictionary<TKey, IList<IDisposable>> _valueSubscriptions = new Dictionary<TKey, IList<IDisposable>>();
+        
         public IDisposable SubscribeToValue(TKey key, Action<TValue> action, bool withBuffer)
         {
             if (!_valueSubscriptions.TryGetValue(key, out var subscriptions))
@@ -352,6 +355,7 @@ namespace Kadinche.Kassets.Collection
                 _valueSubscriptions.Remove(key);
             }
         }
+#endif
 
         #endregion
 

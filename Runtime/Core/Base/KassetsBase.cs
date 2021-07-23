@@ -12,6 +12,7 @@ namespace Kadinche.Kassets
         protected virtual void OnDestroy() => Dispose();
     }
     
+#if !KASSETS_UNIRX
     internal class Subscription : IDisposable
     {
         private Action _action;
@@ -89,4 +90,5 @@ namespace Kadinche.Kassets
             disposables.Clear();
         }
     }
+#endif
 }
