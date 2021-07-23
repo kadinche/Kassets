@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Kadinche.Kassets.EventSystem;
 using Kadinche.Kassets.Variable;
 
 namespace Kadinche.Kassets.Collection
@@ -24,11 +23,15 @@ namespace Kadinche.Kassets.Collection
         private readonly IList<IDisposable> _onAddSubscriptions = new List<IDisposable>();
         private readonly IList<IDisposable> _onRemoveSubscriptions = new List<IDisposable>();
         private readonly IList<IDisposable> _onClearSubscriptions = new List<IDisposable>();
-        private readonly IDictionary<int, IList<IDisposable>> _elementSubscriptions = new Dictionary<int, IList<IDisposable>>();
+        private readonly IDictionary<int, IList<IDisposable>> _valueSubscriptions = new Dictionary<int, IList<IDisposable>>();
 
         private T _lastRemoved;
-
-        public IDisposable SubscribeOnAdd(Action<T> action) => SubscribeOnAdd(action, false);
+        
+        public IDisposable SubscribeOnAdd(Action<T> action) => SubscribeOnAdd(action, buffered);
+        public IDisposable SubscribeOnRemove(Action<T> action) => SubscribeOnRemove(action, buffered);
+        public IDisposable SubscribeOnClear(Action action) => SubscribeOnClear(action, buffered);
+        public IDisposable SubscribeToValueAt(int index, Action<T> action) => SubscribeToValueAt(index, action, buffered);
+        
         public IDisposable SubscribeOnAdd(Action<T> action, bool withBuffer)
         {
             var subscription = new Subscription<T>(action, _onAddSubscriptions);
@@ -44,7 +47,6 @@ namespace Kadinche.Kassets.Collection
             return subscription;
         }
 
-        public IDisposable SubscribeOnRemove(Action<T> action) => SubscribeOnRemove(action, false);
         public IDisposable SubscribeOnRemove(Action<T> action, bool withBuffer)
         {
             var subscription = new Subscription<T>(action, _onRemoveSubscriptions);
@@ -60,7 +62,6 @@ namespace Kadinche.Kassets.Collection
             return subscription;
         }
 
-        public IDisposable SubscribeOnClear(Action action) => SubscribeOnClear(action, false);
         public IDisposable SubscribeOnClear(Action action, bool withBuffer)
         {
             var subscription = new Subscription(action, _onClearSubscriptions);
@@ -76,13 +77,12 @@ namespace Kadinche.Kassets.Collection
             return subscription;
         }
 
-        public IDisposable SubscribeToElementAt(int index, Action<T> action) => SubscribeToElementAt(index, action, false);
-        public IDisposable SubscribeToElementAt(int index, Action<T> action, bool withBuffer)
+        public IDisposable SubscribeToValueAt(int index, Action<T> action, bool withBuffer)
         {
-            if (!_elementSubscriptions.TryGetValue(index, out var subscriptions))
+            if (!_valueSubscriptions.TryGetValue(index, out var subscriptions))
             {
                 subscriptions = new List<IDisposable>();
-                _elementSubscriptions.Add(index, subscriptions);
+                _valueSubscriptions.Add(index, subscriptions);
             }
             
             var subscription = new Subscription<T>(action, subscriptions);
@@ -97,7 +97,7 @@ namespace Kadinche.Kassets.Collection
 
             return subscription;
         }
-
+        
         private void RaiseOnAdd(T addedValue)
         {
             foreach (var disposable in _onAddSubscriptions)
@@ -125,12 +125,12 @@ namespace Kadinche.Kassets.Collection
             }
         }
 
-        private void RaiseElementAt(int index, T value)
+        private void RaiseValueAt(int index, T value)
         {
             if (_variableEventType == VariableEventType.ValueChange && _value[index].Equals(value))
                 return;
 
-            if (_elementSubscriptions.TryGetValue(index, out var subscriptions))
+            if (_valueSubscriptions.TryGetValue(index, out var subscriptions))
             {
                 foreach (var disposable in subscriptions)
                 {
@@ -139,7 +139,37 @@ namespace Kadinche.Kassets.Collection
                 }
             }
         }
+        
+        private void ClearValueSubscriptions()
+        {
+            foreach (var subscriptions in _valueSubscriptions.Values)
+            {
+                foreach (var disposable in subscriptions)
+                {
+                    disposable.Dispose();
+                }
+                subscriptions.Clear();
+            }
+            _valueSubscriptions.Clear();
+        }
+        
+        private void RemoveValueSubscription(int index)
+        {
+            if (_valueSubscriptions.TryGetValue(index, out var subscriptions))
+            {
+                subscriptions.Dispose();
+                _valueSubscriptions.Remove(index);
+            }
+        }
 
+        private void DisposeSubscriptions()
+        {
+            _onAddSubscriptions.Dispose();
+            _onRemoveSubscriptions.Dispose();
+            _onClearSubscriptions.Dispose();
+            ClearValueSubscriptions();
+        }
+        
         #endregion
 
         #region Interface Implementation
@@ -152,10 +182,10 @@ namespace Kadinche.Kassets.Collection
             _value.Add(item);
             RaiseOnAdd(item);
             var index = _value.Count - 1;
-            RaiseElementAt(index, item);
+            RaiseValueAt(index, item);
         }
 
-        public virtual void Copy(IEnumerable<T> others)
+        public void Copy(IEnumerable<T> others)
         {
             _value.Clear();
             _value.AddRange(others);
@@ -163,15 +193,7 @@ namespace Kadinche.Kassets.Collection
         
         public virtual void Clear()
         {
-            foreach (var subscriptions in _elementSubscriptions.Values)
-            {
-                foreach (var disposable in subscriptions)
-                {
-                    disposable.Dispose();
-                }
-                subscriptions.Clear();
-            }
-            _elementSubscriptions.Clear();
+            ClearValueSubscriptions();
             _value.Clear();
             RaiseOnClear();
         }
@@ -182,10 +204,7 @@ namespace Kadinche.Kassets.Collection
             var removed = _value.Remove(item);
             if (removed)
             {
-                if (_elementSubscriptions.ContainsKey(idx))
-                {
-                    _elementSubscriptions.Remove(idx);
-                }
+                RemoveValueSubscription(idx);
                 RaiseOnRemove(item);
                 _lastRemoved = item;
             }
@@ -202,10 +221,7 @@ namespace Kadinche.Kassets.Collection
         {
             _lastRemoved = _value[index];
             _value.RemoveAt(index);
-            if (_elementSubscriptions.ContainsKey(index))
-            {
-                _elementSubscriptions.Remove(index);
-            }
+            RemoveValueSubscription(index);
             RaiseOnRemove(_lastRemoved);
         }
 
@@ -215,7 +231,7 @@ namespace Kadinche.Kassets.Collection
             set
             {
                 _value[index] = value;
-                RaiseElementAt(index, value);
+                RaiseValueAt(index, value);
             }
         }
 
@@ -238,14 +254,7 @@ namespace Kadinche.Kassets.Collection
         public override void Dispose()
         {
             base.Dispose();
-            _onAddSubscriptions.Dispose();
-            _onRemoveSubscriptions.Dispose();
-            _onClearSubscriptions.Dispose();
-            foreach (var disposableList in _elementSubscriptions.Values)
-            {
-                disposableList.Dispose();
-            }
-            _elementSubscriptions.Clear();
+            DisposeSubscriptions();
         }
 
         #endregion
@@ -277,21 +286,21 @@ namespace Kadinche.Kassets.Collection
 
         #region Event Handling
 
-        private readonly IDictionary<TKey, IList<IDisposable>> _elementSubscriptions = new Dictionary<TKey, IList<IDisposable>>();
-
-        public IDisposable SubscribeOnAdd(Action<TKey, TValue> action) => SubscribeOnAdd(action, false);
+        private readonly IDictionary<TKey, IList<IDisposable>> _valueSubscriptions = new Dictionary<TKey, IList<IDisposable>>();
+        
+        public IDisposable SubscribeOnAdd(Action<TKey, TValue> action) => SubscribeOnAdd(action, buffered);
         public IDisposable SubscribeOnAdd(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnAdd(pair => action.Invoke(pair.key, pair.value), withBuffer);
-
-        public IDisposable SubscribeOnRemove(Action<TKey, TValue> action) => SubscribeOnRemove(action, false);
+        public IDisposable SubscribeOnRemove(Action<TKey, TValue> action) => SubscribeOnRemove(action, buffered);
         public IDisposable SubscribeOnRemove(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnRemove(pair => action.Invoke(pair.key, pair.value), withBuffer);
         
-        public IDisposable SubscribeToValue(TKey key, Action<TValue> action) => SubscribeToValue(key, action, false);
+        public IDisposable SubscribeToValue(TKey key, Action<TValue> action) => SubscribeToValue(key, action, buffered);
+
         public IDisposable SubscribeToValue(TKey key, Action<TValue> action, bool withBuffer)
         {
-            if (!_elementSubscriptions.TryGetValue(key, out var subscriptions))
+            if (!_valueSubscriptions.TryGetValue(key, out var subscriptions))
             {
                 subscriptions = new List<IDisposable>();
-                _elementSubscriptions.Add(key, subscriptions);
+                _valueSubscriptions.Add(key, subscriptions);
             }
             
             var subscription = new Subscription<TValue>(action, subscriptions);
@@ -306,19 +315,41 @@ namespace Kadinche.Kassets.Collection
 
             return subscription;
         }
-
+        
         private void RaiseValue(TKey key, TValue value)
         {
             if (_variableEventType == VariableEventType.ValueChange && _activeDictionary[key].Equals(value))
                 return;
 
-            if (_elementSubscriptions.TryGetValue(key, out var subscriptions))
+            if (_valueSubscriptions.TryGetValue(key, out var subscriptions))
             {
                 foreach (var disposable in subscriptions)
                 {
                     if (disposable is Subscription<TValue> valueSubscription)
                         valueSubscription.Invoke(value);
                 }
+            }
+        }
+
+        private void ClearValueSubscriptions()
+        {
+            foreach (var subscriptions in _valueSubscriptions.Values)
+            {
+                foreach (var disposable in subscriptions)
+                {
+                    disposable.Dispose();
+                }
+                subscriptions.Clear();
+            }
+            _valueSubscriptions.Clear();
+        }
+
+        private void RemoveValueSubscription(TKey key)
+        {
+            if (_valueSubscriptions.TryGetValue(key, out var subscriptions))
+            {
+                subscriptions.Dispose();
+                _valueSubscriptions.Remove(key);
             }
         }
 
@@ -337,15 +368,7 @@ namespace Kadinche.Kassets.Collection
         
         public override void Clear()
         {
-            foreach (var subscriptions in _elementSubscriptions.Values)
-            {
-                foreach (var disposable in subscriptions)
-                {
-                    disposable.Dispose();
-                }
-                subscriptions.Clear();
-            }
-            _elementSubscriptions.Clear();
+            ClearValueSubscriptions();
             Value.Clear();
             base.Clear();
         }
@@ -353,12 +376,14 @@ namespace Kadinche.Kassets.Collection
         public override bool Remove(SerializedKeyValuePair<TKey, TValue> item)
         {
             var removed = _activeDictionary.Remove(item.key);
+            RemoveValueSubscription(item.key);
             return removed && base.Remove(item);
         }
         
         public bool Remove(TKey key)
         {
             var toRemove = _value.First(pair => pair.key.Equals(key));
+            RemoveValueSubscription(key);
             return Remove(toRemove);
         }
         
@@ -397,11 +422,7 @@ namespace Kadinche.Kassets.Collection
         public override void Dispose()
         {
             base.Dispose();
-            foreach (var disposableList in _elementSubscriptions.Values)
-            {
-                disposableList.Dispose();
-            }
-            _elementSubscriptions.Clear();
+            ClearValueSubscriptions();
         }
     }
     
