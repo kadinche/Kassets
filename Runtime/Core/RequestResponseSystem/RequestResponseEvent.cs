@@ -73,6 +73,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
     {
     }
     
+#if !KASSETS_UNIRX
     internal class ResponseSubscription<TRequest, TResponse> : IDisposable
     {
         private RequestResponseEvent<TRequest, TResponse> _source;
@@ -95,4 +96,5 @@ namespace Kadinche.Kassets.RequestResponseSystem
             _source = null;
         }
     }
+#endif
 }
