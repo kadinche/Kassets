@@ -24,7 +24,7 @@ namespace Kadinche.Kassets.EventSystem
         {
             using (Subscribe(onResponse))
             {
-                Raise();   
+                Raise();
             }
         }
         
@@ -74,7 +74,7 @@ namespace Kadinche.Kassets.EventSystem
 
         public override void Raise() => Raise(_value);
 
-#if !KASSETS_UNIRX
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
         /// <summary>
         /// Raise the event with parameter.
         /// </summary>
@@ -164,9 +164,11 @@ namespace Kadinche.Kassets.EventSystem
             }
         }
 
+#if !KASSETS_UNITASK
         public void Dispose()
         {
             _compositeDisposable.Dispose();
         }
+#endif
     }
 }

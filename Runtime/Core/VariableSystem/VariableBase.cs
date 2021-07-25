@@ -1,4 +1,5 @@
 ﻿using Kadinche.Kassets.EventSystem;
+using Kadinche.Kassets.Utilities;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -35,6 +36,14 @@ namespace Kadinche.Kassets.Variable
 
         public T InitialValue { get; protected set; }
 
+        /// <summary>
+        /// Reset value to InitialValue
+        /// </summary>
+        public void ResetValue()
+        {
+            Value = InitialValue;
+        }
+        
         public static implicit operator T(VariableBase<T> variable) => variable.Value;
 
         public override string ToString() => Value.ToString();
@@ -43,35 +52,17 @@ namespace Kadinche.Kassets.Variable
         {
             InitialValue = _value;
         }
-
-        /// <summary>
-        /// Reset value to InitialValue
-        /// </summary>
-        public void ResetValue()
-        {
-            Value = InitialValue;
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-#if UNITY_EDITOR
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-        }
-
-        private void Awake()
-        {
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-        }
         
-        private void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+#if UNITY_EDITOR
+        protected override void OnPlayModeStateChanged(PlayModeStateChange stateChange)
         {
+            base.OnPlayModeStateChanged(stateChange);
             if (_autoResetValue && stateChange == PlayModeStateChange.ExitingPlayMode)
             {
                 ResetValue();
             }
-#endif
         }
+#endif
     }
 
     internal enum VariableEventType
