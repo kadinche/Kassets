@@ -8,8 +8,10 @@ namespace Kadinche.Kassets.EventSystem
     /// Core Game Event System.
     /// </summary>
     [CreateAssetMenu(fileName = "GameEvent", menuName = MenuHelper.DefaultEventMenu + "GameEvent")]
-    public partial class GameEvent : KassetsBase, IEventRaiser, IEventHandler
+    public partial class GameEvent : CommandBase, IEventRaiser, IEventHandler
     {
+        public override void Execute() => Raise();
+            
         [Tooltip("Whether to listen to previous event upon subscription.")]
         [SerializeField] protected bool buffered;
         
