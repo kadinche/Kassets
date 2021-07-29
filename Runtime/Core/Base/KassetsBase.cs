@@ -66,29 +66,5 @@ namespace Kadinche.Kassets
             _disposables = null;
         }
     }
-
-    internal class CompositeDisposable : IDisposable
-    {
-        private readonly IList<IDisposable> _disposables = new List<IDisposable>();
-        public void Add(IDisposable disposable) => _disposables.Add(disposable);
-
-        public void Dispose()
-        {
-            _disposables.Dispose();
-        }
-    }
-
-    internal static class DisposableExtension
-    {
-        internal static void Dispose(this IList<IDisposable> disposables)
-        {
-            foreach (var disposable in disposables)
-            {
-                disposable?.Dispose();
-            }
-            
-            disposables.Clear();
-        }
-    }
 #endif
 }
