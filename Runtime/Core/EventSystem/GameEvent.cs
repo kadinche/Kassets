@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Kadinche.Kassets.CommandSystem;
+using Kadinche.Kassets.Utilities;
 using UnityEngine;
 
 namespace Kadinche.Kassets.EventSystem
@@ -12,6 +14,7 @@ namespace Kadinche.Kassets.EventSystem
     {
         public override void Execute() => Raise();
             
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
         [Tooltip("Whether to listen to previous event upon subscription.")]
         [SerializeField] protected bool buffered;
         
@@ -25,7 +28,6 @@ namespace Kadinche.Kassets.EventSystem
             }
         }
         
-#if !KASSETS_UNIRX
         protected readonly IList<IDisposable> disposables = new List<IDisposable>();
 
         /// <summary>
@@ -135,7 +137,7 @@ namespace Kadinche.Kassets.EventSystem
         {
             foreach (var gameEvent in _gameEvents)
             {
-                _compositeDisposable.Add(gameEvent.Subscribe(onAnyEvent));
+                gameEvent.Subscribe(onAnyEvent).AddTo(_compositeDisposable);
             }
 
             if (withBuffer)
