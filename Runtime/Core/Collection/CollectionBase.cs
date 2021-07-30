@@ -23,7 +23,7 @@ namespace Kadinche.Kassets.Collection
         
         private T _lastRemoved;
 
-#if !KASSETS_UNIRX
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
         private readonly IList<IDisposable> _onAddSubscriptions = new List<IDisposable>();
         private readonly IList<IDisposable> _onRemoveSubscriptions = new List<IDisposable>();
         private readonly IList<IDisposable> _onClearSubscriptions = new List<IDisposable>();
@@ -289,14 +289,15 @@ namespace Kadinche.Kassets.Collection
 
         #region Event Handling
 
-        public IDisposable SubscribeOnAdd(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnAdd(pair => action.Invoke(pair.key, pair.value), withBuffer);
-        public IDisposable SubscribeOnRemove(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnRemove(pair => action.Invoke(pair.key, pair.value), withBuffer);
-        
-#if !KASSETS_UNIRX
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
         private readonly IDictionary<TKey, IList<IDisposable>> _valueSubscriptions = new Dictionary<TKey, IList<IDisposable>>();
 
+        public IDisposable SubscribeOnAdd(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnAdd(pair => action.Invoke(pair.key, pair.value), withBuffer);
         public IDisposable SubscribeOnAdd(Action<TKey, TValue> action) => SubscribeOnAdd(action, buffered);
+        
+        public IDisposable SubscribeOnRemove(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnRemove(pair => action.Invoke(pair.key, pair.value), withBuffer);
         public IDisposable SubscribeOnRemove(Action<TKey, TValue> action) => SubscribeOnRemove(action, buffered);
+        
         public IDisposable SubscribeToValue(TKey key, Action<TValue> action) => SubscribeToValue(key, action, buffered);
 
         public IDisposable SubscribeToValue(TKey key, Action<TValue> action, bool withBuffer)
