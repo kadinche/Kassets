@@ -2,6 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+// TODO : move to editor folder?
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Kadinche.Kassets
 {
     public abstract class KassetsBase : ScriptableObject, ISerializationCallbackReceiver, IDisposable
@@ -9,10 +14,26 @@ namespace Kadinche.Kassets
         public virtual void OnBeforeSerialize() {}
         public virtual void OnAfterDeserialize() {}
         public abstract void Dispose();
-        protected virtual void OnDestroy() => Dispose();
+        
+        protected virtual void OnDestroy()
+        {
+            Dispose();
+#if UNITY_EDITOR
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+
+        private void Awake()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        protected virtual void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+        {
+#endif
+        }
     }
     
-#if !KASSETS_UNIRX
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
     internal class Subscription : IDisposable
     {
         private Action _action;
