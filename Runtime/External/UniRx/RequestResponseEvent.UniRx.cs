@@ -17,6 +17,14 @@ namespace Kadinche.Kassets.RequestResponseSystem
         {
             return _requestSubject.Subscribe(_ => Response(responseFunc));
         }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _requests.Clear();
+            responseSubscription?.Dispose();
+            _requestSubject.Dispose();
+        }
     }
 }
 #endif

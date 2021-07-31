@@ -10,22 +10,15 @@ namespace Kadinche.Kassets.RequestResponseSystem
         private readonly Queue<Tuple<TRequest, Action<TResponse>>> _requests = new Queue<Tuple<TRequest, Action<TResponse>>>();
 
         internal IDisposable responseSubscription;
+        
+        public void Request(Action onResponse) => Request(default, _ => onResponse.Invoke());
 
         public void Request(TRequest param, Action<TResponse> onResponse)
         {
             _requests.Enqueue(new Tuple<TRequest, Action<TResponse>>(param, onResponse));
             TryRespond();
         }
-        
-        public void Response(Func<TRequest, TResponse> responseFunc)
-        {
-            if (_requests.Count <= 0) return;
-            
-            var request = _requests.Dequeue();
-            var response = responseFunc.Invoke(request.Item1);
-            request.Item2.Invoke(response);
-        }
-        
+
         public IDisposable SubscribeResponse(Func<TRequest, TResponse> responseFunc, bool overrideResponse = true)
         {
             if (!overrideResponse && responseSubscription != null)
@@ -40,13 +33,24 @@ namespace Kadinche.Kassets.RequestResponseSystem
 
             while (_requests.Count > 0)
             {
-                Response(responseFunc);
+                TryRespond();
             }
 
             return responseSubscription;
         }
+        
+#if !KASSETS_UNITASK
+        public void Response(Func<TRequest, TResponse> responseFunc)
+        {
+            if (_requests.Count <= 0) return;
+            
+            var request = _requests.Dequeue();
+            var response = responseFunc.Invoke(request.Item1);
+            request.Item2.Invoke(response);
+        }
+#endif
 
-#if !KASSETS_UNIRX
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
         private void TryRespond()
         {
             if (responseSubscription is ResponseSubscription<TRequest, TResponse> subscription)
@@ -59,7 +63,6 @@ namespace Kadinche.Kassets.RequestResponseSystem
         {
             return new ResponseSubscription<TRequest, TResponse>(this, responseFunc);
         }
-#endif
 
         public override void Dispose()
         {
@@ -67,13 +70,14 @@ namespace Kadinche.Kassets.RequestResponseSystem
             _requests.Clear();
             responseSubscription?.Dispose();
         }
+#endif
     }
 
     public abstract class RequestResponseEvent<T> : RequestResponseEvent<T, T>
     {
     }
     
-#if !KASSETS_UNIRX
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
     internal class ResponseSubscription<TRequest, TResponse> : IDisposable
     {
         private RequestResponseEvent<TRequest, TResponse> _source;

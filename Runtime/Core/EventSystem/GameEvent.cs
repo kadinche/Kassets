@@ -20,14 +20,6 @@ namespace Kadinche.Kassets.EventSystem
         
         public IDisposable Subscribe(Action action) => Subscribe(action, buffered);
         
-        public void Request(Action onResponse)
-        {
-            using (Subscribe(onResponse))
-            {
-                Raise();
-            }
-        }
-        
         protected readonly IList<IDisposable> disposables = new List<IDisposable>();
 
         /// <summary>
