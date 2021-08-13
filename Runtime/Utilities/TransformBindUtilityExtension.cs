@@ -75,7 +75,7 @@ namespace Kassets.Utilities
             if (bindingType.HasFlag(BindingType.In) || bindingType.HasFlag(BindingType.InLocal))
             {
                 rotationVariable
-                    .Where(newRotation => newRotation == (bindingType.HasFlag(BindingType.In) ? target.rotation : target.localRotation))
+                    .Where(newRotation => newRotation != (bindingType.HasFlag(BindingType.In) ? target.rotation : target.localRotation))
                     .Subscribe(newRotation =>
                     {
                         if (bindingType.HasFlag(BindingType.In))
