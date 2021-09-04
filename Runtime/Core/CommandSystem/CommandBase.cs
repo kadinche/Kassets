@@ -4,6 +4,7 @@ namespace Kadinche.Kassets.CommandSystem
     {
 #if !KASSETS_UNITASK
         public abstract void Execute();
+        public override void Dispose() { }
 #endif
     }
 
