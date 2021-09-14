@@ -13,8 +13,63 @@ namespace Kadinche.Kassets.EventSystem
     public partial class GameEvent : CommandBase, IEventRaiser, IEventHandler
     {
         public override void Execute() => Raise();
-            
+    }
+
+    /// <summary>
+    /// Generic base class for event system with parameter.
+    /// </summary>
+    /// <typeparam name="T">Parameter type for the event system</typeparam>
+    public abstract partial class GameEvent<T> : GameEvent, IEventRaiser<T>, IEventHandler<T>
+    {
+        [SerializeField] protected T _value;
+
+        public override void Raise() => Raise(_value);
+        
+        public override void OnAfterDeserialize()
+        {
+            _value = default;
+        }
+    }
+
+    /// <summary>
+    /// An event that contains collection of events. Get raised whenever any event is raised.
+    /// Made it possible to listen to many events at once.
+    /// </summary>
+    [Serializable]
+    public partial class GameEventCollection : IEventRaiser, IEventHandler, IDisposable
+    {
+        [SerializeField] private List<GameEvent> _gameEvents;
+        [SerializeField] protected bool buffered;
+
+        public IDisposable Subscribe(Action action) => Subscribe(action, buffered);
+
+        public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
+        {
+            foreach (IEventHandler gameEvent in _gameEvents)
+            {
+                gameEvent.Subscribe(onAnyEvent).AddTo(_compositeDisposable);
+            }
+
+            if (withBuffer)
+            {
+                onAnyEvent.Invoke();
+            }
+
+            return _compositeDisposable;
+        }
+
+        public void Raise()
+        {
+            foreach (IEventRaiser gameEvent in _gameEvents)
+            {
+                gameEvent.Raise();
+            }
+        }
+    }
+
 #if !KASSETS_UNIRX && !KASSETS_UNITASK
+    public partial class GameEvent
+    {
         [Tooltip("Whether to listen to previous event upon subscription.")]
         [SerializeField] protected bool buffered;
         
@@ -53,20 +108,10 @@ namespace Kadinche.Kassets.EventSystem
         }
 
         public override void Dispose() => disposables.Dispose();
-#endif
     }
 
-    /// <summary>
-    /// Generic base class for event system with parameter.
-    /// </summary>
-    /// <typeparam name="T">Parameter type for the event system</typeparam>
-    public abstract partial class GameEvent<T> : GameEvent, IEventRaiser<T>, IEventHandler<T>
+    public abstract partial class GameEvent<T>
     {
-        [SerializeField] protected T _value;
-
-        public override void Raise() => Raise(_value);
-
-#if !KASSETS_UNIRX && !KASSETS_UNITASK
         /// <summary>
         /// Raise the event with parameter.
         /// </summary>
@@ -85,14 +130,14 @@ namespace Kadinche.Kassets.EventSystem
         }
 
         public IDisposable Subscribe(Action<T> action) => Subscribe(action, buffered);
-        
+
         public IDisposable Subscribe(Action<T> action, bool withBuffer)
         {
             var subscription = new Subscription<T>(action, disposables);
             if (!disposables.Contains(subscription))
             {
                 disposables.Add(subscription);
-                
+
                 if (withBuffer)
                 {
                     subscription.Invoke(_value);
@@ -101,66 +146,20 @@ namespace Kadinche.Kassets.EventSystem
 
             return subscription;
         }
-#endif
-        
-        public override void OnAfterDeserialize()
-        {
-            _value = default;
-        }
     }
-    
-    /// <summary>
-    /// An event that contains collection of events. Get raised whenever any event is raised.
-    /// Made it possible to listen to many events at once.
-    /// </summary>
-    [Serializable]
-    public partial class GameEventCollection : IEventRaiser, IEventHandler, IDisposable
-    {
-        [SerializeField] private List<GameEvent> _gameEvents;
-        [SerializeField] protected bool buffered;
+#endif
 
+#if !KASSETS_UNITASK
+    public partial class GameEventCollection
+    {
 #if !KASSETS_UNIRX
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
 #endif
-
-        public IDisposable Subscribe(Action action) => Subscribe(action, buffered);
-
-        public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
-        {
-            foreach (var gameEvent in _gameEvents)
-            {
-                gameEvent.Subscribe(onAnyEvent).AddTo(_compositeDisposable);
-            }
-
-            if (withBuffer)
-            {
-                onAnyEvent.Invoke();
-            }
-
-            return _compositeDisposable;
-        }
-
-        public void Raise()
-        {
-            foreach (var gameEvent in _gameEvents)
-            {
-                gameEvent.Raise();
-            }
-        }
-
-        public void Request(Action onResponse)
-        {
-            using (Subscribe(onResponse))
-            {
-                Raise();
-            }
-        }
-
-#if !KASSETS_UNITASK
+        
         public void Dispose()
         {
             _compositeDisposable.Dispose();
         }
-#endif
     }
+#endif
 }
