@@ -1,8 +1,10 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-// TODO : move to editor folder?
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
+using System.Collections.Generic;
+#endif
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

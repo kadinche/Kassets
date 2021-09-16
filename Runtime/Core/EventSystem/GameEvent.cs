@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Kadinche.Kassets.CommandSystem;
-using Kadinche.Kassets.Utilities;
 using UnityEngine;
+
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
+using Kadinche.Kassets.Utilities;
+#endif
 
 namespace Kadinche.Kassets.EventSystem
 {
@@ -43,21 +46,6 @@ namespace Kadinche.Kassets.EventSystem
 
         public IDisposable Subscribe(Action action) => Subscribe(action, buffered);
 
-        public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
-        {
-            foreach (IEventHandler gameEvent in _gameEvents)
-            {
-                gameEvent.Subscribe(onAnyEvent).AddTo(_compositeDisposable);
-            }
-
-            if (withBuffer)
-            {
-                onAnyEvent.Invoke();
-            }
-
-            return _compositeDisposable;
-        }
-
         public void Raise()
         {
             foreach (IEventRaiser gameEvent in _gameEvents)
@@ -68,6 +56,7 @@ namespace Kadinche.Kassets.EventSystem
     }
 
 #if !KASSETS_UNIRX && !KASSETS_UNITASK
+
     public partial class GameEvent
     {
         [Tooltip("Whether to listen to previous event upon subscription.")]
@@ -154,6 +143,21 @@ namespace Kadinche.Kassets.EventSystem
     {
 #if !KASSETS_UNIRX
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
+        
+        public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
+        {
+            foreach (IEventHandler gameEvent in _gameEvents)
+            {
+                gameEvent.Subscribe(onAnyEvent).AddTo(_compositeDisposable);
+            }
+
+            if (withBuffer)
+            {
+                onAnyEvent.Invoke();
+            }
+
+            return _compositeDisposable;
+        }
 #endif
         
         public void Dispose()

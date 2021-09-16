@@ -2,8 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Kadinche.Kassets.Utilities;
 using Kadinche.Kassets.Variable;
+
+#if !KASSETS_UNIRX && !KASSETS_UNITASK
+using Kadinche.Kassets.Utilities;
+#endif
 
 namespace Kadinche.Kassets.Collection
 {
@@ -19,11 +22,218 @@ namespace Kadinche.Kassets.Collection
 
         #endregion
 
-        #region Event Handling
-        
         private T _lastRemoved;
 
+        #region Interface Implementation
+
+        public IEnumerator<T> GetEnumerator() => _value.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => _value.GetEnumerator();
+
+        public virtual void Add(T item)
+        {
+            _value.Add(item);
+            RaiseOnAdd(item);
+            var index = _value.Count - 1;
+            RaiseValueAt(index, item);
+        }
+
+        public virtual void Copy(IEnumerable<T> others)
+        {
+            _value.Clear();
+            _value.AddRange(others);
+        }
+
+        public virtual void Clear()
+        {
+            ClearValueSubscriptions();
+            _value.Clear();
+            RaiseOnClear();
+        }
+
+        public virtual bool Remove(T item)
+        {
+            var idx = _value.IndexOf(item);
+            var removed = _value.Remove(item);
+            if (removed)
+            {
+                RemoveValueSubscription(idx);
+                RaiseOnRemove(item);
+                _lastRemoved = item;
+            }
+
+            return removed;
+        }
+
+        public virtual void Insert(int index, T item)
+        {
+            _value.Insert(index, item);
+            RaiseOnAdd(item);
+        }
+
+        public virtual void RemoveAt(int index)
+        {
+            _lastRemoved = _value[index];
+            _value.RemoveAt(index);
+            RemoveValueSubscription(index);
+            RaiseOnRemove(_lastRemoved);
+        }
+
+        public T this[int index]
+        {
+            get => _value[index];
+            set
+            {
+                _value[index] = value;
+                RaiseValueAt(index, value);
+            }
+        }
+
+        public bool Contains(T item) => _value.Contains(item);
+        public void CopyTo(T[] array, int arrayIndex) => _value.CopyTo(array, arrayIndex);
+        public int Count => _value.Count;
+        bool ICollection<T>.IsReadOnly => _value.ToArray().IsReadOnly;
+        public int IndexOf(T item) => _value.IndexOf(item);
+
+        #endregion
+
+        #region Method Overload
+
+        public override void OnAfterDeserialize()
+        {
+            InitialValue.Clear();
+            InitialValue.AddRange(_value);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            DisposeSubscriptions();
+        }
+
+        #endregion
+    }
+
+    public abstract partial class Collection<TKey, TValue> : Collection<SerializedKeyValuePair<TKey, TValue>>,
+        IDictionary<TKey, TValue>
+    {
+        #region Field and Property
+
+        private readonly Dictionary<TKey, TValue> _activeDictionary = new Dictionary<TKey, TValue>();
+
+        public override List<SerializedKeyValuePair<TKey, TValue>> Value
+        {
+            get => _value;
+            set
+            {
+                _value.Clear();
+                _value.AddRange(value);
+
+                _activeDictionary.Clear();
+                foreach (var pair in value)
+                {
+                    _activeDictionary.Add(pair.key, pair.value);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Interface Implementation
+
+        public override void Add(SerializedKeyValuePair<TKey, TValue> item)
+        {
+            _activeDictionary.Add(item.key, item.value);
+            base.Add(item);
+            RaiseValue(item.key, item.value);
+        }
+
+        public void Add(TKey key, TValue value) => Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
+
+        public override void Clear()
+        {
+            ClearValueSubscriptions();
+            Value.Clear();
+            base.Clear();
+        }
+
+        public override bool Remove(SerializedKeyValuePair<TKey, TValue> item)
+        {
+            var removed = _activeDictionary.Remove(item.key);
+            RemoveValueSubscription(item.key);
+            return removed && base.Remove(item);
+        }
+
+        public bool Remove(TKey key)
+        {
+            var toRemove = _value.First(pair => pair.key.Equals(key));
+            RemoveValueSubscription(key);
+            return Remove(toRemove);
+        }
+
+        public bool TryGetValue(TKey key, out TValue value) => _activeDictionary.TryGetValue(key, out value);
+
+        public TValue this[TKey key]
+        {
+            get => _activeDictionary[key];
+            set
+            {
+                _activeDictionary[key] = value;
+                var _ = _value.First(p => p.key.Equals(key));
+                _.value = value;
+                RaiseValue(key, value);
+            }
+        }
+
+        public new int Count => Value.Count;
+        public bool ContainsKey(TKey key) => _activeDictionary.ContainsKey(key);
+        public bool ContainsValue(TValue value) => _activeDictionary.ContainsValue(value);
+
+        public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _activeDictionary.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => Value.GetEnumerator();
+
+        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
+
+        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) =>
+            _activeDictionary.ContainsKey(item.Key) && _activeDictionary.ContainsValue(item.Value);
+
+        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+        {
+            _activeDictionary.ToList().CopyTo(array, arrayIndex);
+        }
+
+        bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
+        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => _activeDictionary.ToArray().IsReadOnly;
+
+        public ICollection<TKey> Keys => _activeDictionary.Keys;
+        public ICollection<TValue> Values => _activeDictionary.Values;
+
+        #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            ClearValueSubscriptions();
+        }
+    }
+
+    [Serializable]
+    public struct SerializedKeyValuePair<TKey, TValue>
+    {
+        public TKey key;
+        public TValue value;
+    
+        public SerializedKeyValuePair(TKey key, TValue value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+        
+        public static implicit operator KeyValuePair<TKey, TValue>(SerializedKeyValuePair<TKey, TValue> serializedKeyValuePair) => new KeyValuePair<TKey, TValue>(serializedKeyValuePair.key, serializedKeyValuePair.value);
+    }
+
 #if !KASSETS_UNIRX && !KASSETS_UNITASK
+    public abstract partial class Collection<T>
+    {
         private readonly IList<IDisposable> _onAddSubscriptions = new List<IDisposable>();
         private readonly IList<IDisposable> _onRemoveSubscriptions = new List<IDisposable>();
         private readonly IList<IDisposable> _onClearSubscriptions = new List<IDisposable>();
@@ -171,125 +381,10 @@ namespace Kadinche.Kassets.Collection
             _onClearSubscriptions.Dispose();
             ClearValueSubscriptions();
         }
-#endif
-        
-        #endregion
-
-        #region Interface Implementation
-
-        public IEnumerator<T> GetEnumerator() => _value.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => _value.GetEnumerator();
-
-        public virtual void Add(T item)
-        {
-            _value.Add(item);
-            RaiseOnAdd(item);
-            var index = _value.Count - 1;
-            RaiseValueAt(index, item);
-        }
-
-        public virtual void Copy(IEnumerable<T> others)
-        {
-            _value.Clear();
-            _value.AddRange(others);
-        }
-        
-        public virtual void Clear()
-        {
-            ClearValueSubscriptions();
-            _value.Clear();
-            RaiseOnClear();
-        }
-        
-        public virtual bool Remove(T item)
-        {
-            var idx = _value.IndexOf(item);
-            var removed = _value.Remove(item);
-            if (removed)
-            {
-                RemoveValueSubscription(idx);
-                RaiseOnRemove(item);
-                _lastRemoved = item;
-            }
-            return removed;
-        }
-        
-        public virtual void Insert(int index, T item)
-        {
-            _value.Insert(index, item);
-            RaiseOnAdd(item);
-        }
-
-        public virtual void RemoveAt(int index)
-        {
-            _lastRemoved = _value[index];
-            _value.RemoveAt(index);
-            RemoveValueSubscription(index);
-            RaiseOnRemove(_lastRemoved);
-        }
-
-        public T this[int index]
-        {
-            get => _value[index];
-            set
-            {
-                _value[index] = value;
-                RaiseValueAt(index, value);
-            }
-        }
-
-        public bool Contains(T item) => _value.Contains(item);
-        public void CopyTo(T[] array, int arrayIndex) => _value.CopyTo(array, arrayIndex);
-        public int Count => _value.Count;
-        bool ICollection<T>.IsReadOnly => _value.ToArray().IsReadOnly;
-        public int IndexOf(T item) => _value.IndexOf(item);
-
-        #endregion
-
-        #region Method Overload
-
-        public override void OnAfterDeserialize()
-        {
-            InitialValue.Clear();
-            InitialValue.AddRange(_value);
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            DisposeSubscriptions();
-        }
-
-        #endregion
     }
     
-    public abstract partial class Collection<TKey, TValue> : Collection<SerializedKeyValuePair<TKey, TValue>>, IDictionary<TKey, TValue>
+    public abstract partial class Collection<TKey, TValue>
     {
-        #region Field and Property
-
-        private readonly Dictionary<TKey, TValue> _activeDictionary = new Dictionary<TKey, TValue>();
-
-        public override List<SerializedKeyValuePair<TKey, TValue>> Value
-        {
-            get => _value;
-            set
-            {
-                _value.Clear();
-                _value.AddRange(value);
-                
-                _activeDictionary.Clear();
-                foreach (var pair in value)
-                {
-                    _activeDictionary.Add(pair.key, pair.value);
-                }
-            }
-        }
-
-        #endregion
-
-        #region Event Handling
-
-#if !KASSETS_UNIRX && !KASSETS_UNITASK
         private readonly IDictionary<TKey, IList<IDisposable>> _valueSubscriptions = new Dictionary<TKey, IList<IDisposable>>();
 
         public IDisposable SubscribeOnAdd(Action<TKey, TValue> action, bool withBuffer) => SubscribeOnAdd(pair => action.Invoke(pair.key, pair.value), withBuffer);
@@ -357,93 +452,6 @@ namespace Kadinche.Kassets.Collection
                 _valueSubscriptions.Remove(key);
             }
         }
+    }
 #endif
-
-        #endregion
-
-        #region Interface Implementation
-
-        public override void Add(SerializedKeyValuePair<TKey, TValue> item)
-        {
-            _activeDictionary.Add(item.key, item.value);
-            base.Add(item);
-            RaiseValue(item.key, item.value);
-        }
-
-        public void Add(TKey key, TValue value) => Add(new SerializedKeyValuePair<TKey, TValue>(key, value));
-        
-        public override void Clear()
-        {
-            ClearValueSubscriptions();
-            Value.Clear();
-            base.Clear();
-        }
-
-        public override bool Remove(SerializedKeyValuePair<TKey, TValue> item)
-        {
-            var removed = _activeDictionary.Remove(item.key);
-            RemoveValueSubscription(item.key);
-            return removed && base.Remove(item);
-        }
-        
-        public bool Remove(TKey key)
-        {
-            var toRemove = _value.First(pair => pair.key.Equals(key));
-            RemoveValueSubscription(key);
-            return Remove(toRemove);
-        }
-        
-        public bool TryGetValue(TKey key, out TValue value) => _activeDictionary.TryGetValue(key, out value);
-        
-        public TValue this[TKey key]
-        {
-            get => _activeDictionary[key];
-            set
-            {
-                _activeDictionary[key] = value;
-                var _ = _value.First(p => p.key.Equals(key));
-                _.value = value;
-                RaiseValue(key, value);
-            }
-        }
-        
-        public new int Count => Value.Count;
-        public bool ContainsKey(TKey key) => _activeDictionary.ContainsKey(key);
-        public bool ContainsValue(TValue value) => _activeDictionary.ContainsValue(value);
-        
-        public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _activeDictionary.GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator() => Value.GetEnumerator();
-        
-        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
-        bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item) => _activeDictionary.ContainsKey(item.Key) && _activeDictionary.ContainsValue(item.Value);
-        void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) { _activeDictionary.ToList().CopyTo(array, arrayIndex); }
-        bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item) => Remove(item.Key);
-        bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => _activeDictionary.ToArray().IsReadOnly;
-        
-        public ICollection<TKey> Keys => _activeDictionary.Keys;
-        public ICollection<TValue> Values => _activeDictionary.Values;
-
-        #endregion
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            ClearValueSubscriptions();
-        }
-    }
-    
-    [Serializable]
-    public struct SerializedKeyValuePair<TKey, TValue>
-    {
-        public TKey key;
-        public TValue value;
-    
-        public SerializedKeyValuePair(TKey key, TValue value)
-        {
-            this.key = key;
-            this.value = value;
-        }
-        
-        public static implicit operator KeyValuePair<TKey, TValue>(SerializedKeyValuePair<TKey, TValue> serializedKeyValuePair) => new KeyValuePair<TKey, TValue>(serializedKeyValuePair.key, serializedKeyValuePair.value);
-    }
 }

@@ -1,5 +1,4 @@
 ﻿using Kadinche.Kassets.EventSystem;
-using Kadinche.Kassets.Utilities;
 using UnityEngine;
 
 #if UNITY_EDITOR
