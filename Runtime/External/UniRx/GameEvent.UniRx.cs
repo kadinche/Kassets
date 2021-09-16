@@ -12,18 +12,8 @@ namespace Kadinche.Kassets.EventSystem
         /// Raise the event.
         /// </summary>
         public virtual void Raise() => _subject.OnNext(this);
-
-        public IDisposable Subscribe(Action action, bool withBuffer)
-        {
-            var subscription = this.Subscribe(_ => action.Invoke());
-            
-            if (withBuffer)
-            {
-                action.Invoke();
-            }
-
-            return subscription;
-        }
+        
+        public IDisposable Subscribe(Action action) => this.Subscribe(_ => action.Invoke());
 
         void IObserver<object>.OnCompleted() => _subject.OnCompleted();
         void IObserver<object>.OnError(Exception error) => _subject.OnError(error);
@@ -48,19 +38,7 @@ namespace Kadinche.Kassets.EventSystem
             _subject.OnNext(param);
         }
 
-        IDisposable IEventHandler<T>.Subscribe(Action<T> action) => Subscribe(action, buffered);
-
-        public IDisposable Subscribe(Action<T> action, bool withBuffer)
-        {
-            var subscription = this.Subscribe(action);
-            
-            if (withBuffer)
-            {
-                action.Invoke(_value);
-            }
-
-            return subscription;
-        }
+        IDisposable IEventHandler<T>.Subscribe(Action<T> action) => this.Subscribe(action);
 
         void IObserver<T>.OnCompleted() => _subject.OnCompleted();
         void IObserver<T>.OnError(Exception error) => _subject.OnError(error);
@@ -71,6 +49,21 @@ namespace Kadinche.Kassets.EventSystem
     public partial class GameEventCollection
     {
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
+        
+        public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
+        {
+            foreach (IEventHandler gameEvent in _gameEvents)
+            {
+                gameEvent.Subscribe(onAnyEvent).AddTo(_compositeDisposable);
+            }
+
+            if (withBuffer)
+            {
+                onAnyEvent.Invoke();
+            }
+
+            return _compositeDisposable;
+        }
     }
 }
 
