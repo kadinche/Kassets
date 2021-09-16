@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Kadinche.Kassets.CommandSystem;
 using UnityEngine;
 
-#if !KASSETS_UNIRX && !KASSETS_UNITASK
+#if !KASSETS_UNIRX
 using Kadinche.Kassets.Utilities;
 #endif
 
@@ -138,12 +138,12 @@ namespace Kadinche.Kassets.EventSystem
     }
 #endif
 
-#if !KASSETS_UNITASK
+    
+#if !KASSETS_UNIRX
     public partial class GameEventCollection
     {
-#if !KASSETS_UNIRX
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
-        
+
         public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
         {
             foreach (IEventHandler gameEvent in _gameEvents)
@@ -158,8 +158,12 @@ namespace Kadinche.Kassets.EventSystem
 
             return _compositeDisposable;
         }
+    }
 #endif
-        
+
+#if !KASSETS_UNITASK
+    public partial class GameEventCollection
+    {
         public void Dispose()
         {
             _compositeDisposable.Dispose();
