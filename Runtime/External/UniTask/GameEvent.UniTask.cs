@@ -18,13 +18,6 @@ namespace Kadinche.Kassets.EventSystem
         private readonly AsyncReactiveProperty<object> _onEventRaise = new AsyncReactiveProperty<object>(default);
         protected readonly CancellationTokenSource cts = new CancellationTokenSource();
 
-        /// <summary>
-        /// Raise the event.
-        /// </summary>
-        public virtual void Raise() => _onEventRaise.Value = this;
-
-        public IDisposable Subscribe(Action action) => _onEventRaise.Subscribe(_ => action.Invoke());
-
         public void Subscribe(Action action, CancellationToken cancellationToken)
         {
             _onEventRaise.Subscribe(_ => action.Invoke(), cancellationToken);
@@ -33,7 +26,8 @@ namespace Kadinche.Kassets.EventSystem
         public UniTask EventAsync(CancellationToken cancellationToken) => _onEventRaise.WaitAsync(cancellationToken);
         public UniTask EventAsync() => EventAsync(cts.Token);
 
-        IUniTaskAsyncEnumerator<object> IUniTaskAsyncEnumerable<object>.GetAsyncEnumerator(CancellationToken cancellationToken) =>
+        IUniTaskAsyncEnumerator<object> IUniTaskAsyncEnumerable<object>.GetAsyncEnumerator(
+            CancellationToken cancellationToken) =>
             _onEventRaise.GetAsyncEnumerator(cancellationToken);
 
         public override void OnAfterDeserialize()
@@ -42,14 +36,11 @@ namespace Kadinche.Kassets.EventSystem
         }
 
         void ISerializationCallbackReceiver.OnAfterDeserialize() => OnAfterDeserialize();
-
-        public override void Dispose()
-        {
-            cts.CancelAndDispose();
-            _onEventRaise.Dispose();
-        }
-        
+    }
+    
 #if UNITY_EDITOR
+    public partial class GameEvent
+    {
         protected override void OnPlayModeStateChanged(PlayModeStateChange stateChange)
         {
             if (stateChange == PlayModeStateChange.ExitingPlayMode)
@@ -57,21 +48,13 @@ namespace Kadinche.Kassets.EventSystem
                 cts.RefreshToken();
             }
         }
-#endif
     }
+#endif
 
-    public partial class GameEvent<T> : IUniTaskAsyncEnumerable<T>
+    public abstract partial class GameEvent<T> : IUniTaskAsyncEnumerable<T>
     {
         private readonly AsyncReactiveProperty<T> _onEventRaise = new AsyncReactiveProperty<T>(default);
 
-        public virtual void Raise(T param)
-        {
-            _value = param;
-            base.Raise();
-            _onEventRaise.Value = param;
-        }
-
-        public IDisposable Subscribe(Action<T> action) => _onEventRaise.Subscribe(action);
         public void Subscribe(Action<T> action, CancellationToken cancellationToken) => _onEventRaise.Subscribe(action, cancellationToken);
 
         public new UniTask<T> EventAsync(CancellationToken cancellationToken) => _onEventRaise.WaitAsync(cancellationToken);
@@ -105,6 +88,68 @@ namespace Kadinche.Kassets.EventSystem
             cts.CancelAndDispose();
         }
     }
+    
+#if KASSETS_UNIRX
+    public partial class GameEvent
+    {
+        /// <summary>
+        /// Raise the event.
+        /// </summary>
+        private void Raise_UniTask() => _onEventRaise.Value = this;
+        private IDisposable Subscribe_UniTask(Action action) => _onEventRaise.Subscribe(_ => action.Invoke());
+        private void Dispose_UniTask()
+        {
+            cts.CancelAndDispose();
+            _onEventRaise.Dispose();
+        }
+    }
+    
+    public abstract partial class GameEvent<T>
+    {
+        /// <summary>
+        /// Raise the event with parameter.
+        /// </summary>
+        /// /// <param name="param"></param>
+        private void Raise_UniTask(T param)
+        {
+            _value = param;
+            base.Raise();
+            _onEventRaise.Value = param;
+        }
+
+        private IDisposable Subscribe_UniTask(Action<T> action) => _onEventRaise.Subscribe(action);
+    }
+#else
+    public partial class GameEvent
+    {
+        /// <summary>
+        /// Raise the event.
+        /// </summary>
+        public virtual void Raise() => _onEventRaise.Value = this;
+        public IDisposable Subscribe(Action action) => _onEventRaise.Subscribe(_ => action.Invoke());
+        public override void Dispose()
+        {
+            cts.CancelAndDispose();
+            _onEventRaise.Dispose();
+        }
+    }
+    
+    public abstract partial class GameEvent<T>
+    {
+        /// <summary>
+        /// Raise the event with parameter.
+        /// </summary>
+        /// /// <param name="param"></param>
+        public virtual void Raise(T param)
+        {
+            _value = param;
+            base.Raise();
+            _onEventRaise.Value = param;
+        }
+
+        public IDisposable Subscribe(Action<T> action) => _onEventRaise.Subscribe(action);
+    }
+#endif
 }
 
 #endif

@@ -7,10 +7,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
 {
     public abstract partial class RequestResponseEvent<TRequest, TResponse> : GameEvent<TRequest>
     {
-        private readonly Queue<Tuple<TRequest, Action<TResponse>>> _requests = new Queue<Tuple<TRequest, Action<TResponse>>>();
+        private readonly Queue<Tuple<TRequest, Action<TResponse>>> _requests =
+            new Queue<Tuple<TRequest, Action<TResponse>>>();
 
         internal IDisposable responseSubscription;
-        
+
         public void Request(Action onResponse) => Request(default, _ => onResponse.Invoke());
 
         public void Request(TRequest param, Action<TResponse> onResponse)
@@ -26,9 +27,9 @@ namespace Kadinche.Kassets.RequestResponseSystem
                 Debug.LogWarning("Responder already exist.");
                 return responseSubscription;
             }
-            
+
             responseSubscription?.Dispose();
-            
+
             responseSubscription ??= HandleSubscribe(responseFunc);
 
             while (_requests.Count > 0)
@@ -38,19 +39,29 @@ namespace Kadinche.Kassets.RequestResponseSystem
 
             return responseSubscription;
         }
-        
+    }
+
+    public abstract class RequestResponseEvent<T> : RequestResponseEvent<T, T>
+    {
+    }
+
 #if !KASSETS_UNITASK
+    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    {
         public void Response(Func<TRequest, TResponse> responseFunc)
         {
             if (_requests.Count <= 0) return;
-            
+
             var request = _requests.Dequeue();
             var response = responseFunc.Invoke(request.Item1);
             request.Item2.Invoke(response);
         }
+    }
 #endif
 
 #if !KASSETS_UNIRX && !KASSETS_UNITASK
+    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    {
         private void TryRespond()
         {
             if (responseSubscription is ResponseSubscription<TRequest, TResponse> subscription)
@@ -70,14 +81,8 @@ namespace Kadinche.Kassets.RequestResponseSystem
             _requests.Clear();
             responseSubscription?.Dispose();
         }
-#endif
-    }
-
-    public abstract class RequestResponseEvent<T> : RequestResponseEvent<T, T>
-    {
     }
     
-#if !KASSETS_UNIRX && !KASSETS_UNITASK
     internal class ResponseSubscription<TRequest, TResponse> : IDisposable
     {
         private RequestResponseEvent<TRequest, TResponse> _source;

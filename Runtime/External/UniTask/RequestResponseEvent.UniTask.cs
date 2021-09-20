@@ -10,12 +10,16 @@ namespace Kadinche.Kassets.RequestResponseSystem
 {
     public abstract partial class RequestResponseEvent<TRequest, TResponse>
     {
-        private readonly AsyncReactiveProperty<object> _requestReactiveProperty = new AsyncReactiveProperty<object>(default);
-        private readonly AsyncReactiveProperty<TResponse> _responseReactiveProperty = new AsyncReactiveProperty<TResponse>(default);
+        private readonly AsyncReactiveProperty<object> _requestReactiveProperty =
+            new AsyncReactiveProperty<object>(default);
+
+        private readonly AsyncReactiveProperty<TResponse> _responseReactiveProperty =
+            new AsyncReactiveProperty<TResponse>(default);
+
         private readonly Queue<TRequest> _asyncRequests = new Queue<TRequest>();
 
         public UniTask RequestAsync() => RequestAsync(default);
-        
+
         public UniTask<TResponse> RequestAsync(TRequest request)
         {
             var task = _responseReactiveProperty.WaitAsync(cts.Token);
@@ -23,7 +27,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
             TryRespond();
             return task;
         }
-        
+
         public void Response(Func<TRequest, TResponse> responseFunc)
         {
             if (_requests.Count > 0)
@@ -56,22 +60,19 @@ namespace Kadinche.Kassets.RequestResponseSystem
             }
         }
 
-        private void TryRespond()
-        {
-            _requestReactiveProperty.Value = this;
-        }
-        
-        public IDisposable SubscribeResponse(Func<TRequest, UniTask<TResponse>> responseFunc, bool overrideResponse = true)
+        public IDisposable SubscribeResponse(Func<TRequest, UniTask<TResponse>> responseFunc,
+            bool overrideResponse = true)
         {
             if (!overrideResponse && responseSubscription != null)
             {
                 Debug.LogWarning("Responder already exist.");
                 return responseSubscription;
             }
-            
+
             responseSubscription?.Dispose();
 
-            responseSubscription = _requestReactiveProperty.SubscribeAwait(async _ => await ResponseAsync(responseFunc));
+            responseSubscription =
+                _requestReactiveProperty.SubscribeAwait(async _ => await ResponseAsync(responseFunc));
 
             while (_requests.Count > 0)
             {
@@ -80,7 +81,37 @@ namespace Kadinche.Kassets.RequestResponseSystem
 
             return responseSubscription;
         }
+    }
+    
+#if KASSETS_UNIRX
+    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    {
+        private void TryRespond_UniTask()
+        {
+            _requestReactiveProperty.Value = this;
+        }
+
+        private IDisposable HandleSubscribe_UniTask(Func<TRequest, TResponse> responseFunc)
+        {
+            return _requestReactiveProperty.Subscribe(_ => Response(responseFunc));
+        }
         
+        private void Dispose_UniTask()
+        {
+            base.Dispose();
+            _requests.Clear();
+            responseSubscription?.Dispose();
+            _requestReactiveProperty.Dispose();
+        }
+    }
+#else
+    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    {
+        private void TryRespond()
+        {
+            _requestReactiveProperty.Value = this;
+        }
+
         private IDisposable HandleSubscribe(Func<TRequest, TResponse> responseFunc)
         {
             return _requestReactiveProperty.Subscribe(_ => Response(responseFunc));
@@ -94,6 +125,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
             _requestReactiveProperty.Dispose();
         }
     }
+#endif
 }
 
 #endif
