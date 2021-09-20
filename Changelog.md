@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2021-09-13
+### Changed
+- Fixed Transform binder comparison mistake.
+
 ## [1.0.0] - 2021-05-26
 ### Added
 - Asynchronous Variable ScriptableObject
@@ -30,5 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/1.0.0...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/1.0.1...HEAD
+[1.0.1]: https://github.com/kadinche/Kassets/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/kadinche/Kassets/releases/tag/1.0.0
