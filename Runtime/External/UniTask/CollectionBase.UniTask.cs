@@ -88,7 +88,7 @@ namespace Kadinche.Kassets.Collection
         #endregion
     }
     
-#if KASSETS_MULTI_LIBRARY
+#if KASSETS_UNIRX
     public abstract partial class Collection<T>
     {
         private void RaiseOnAdd_UniTask(T addedValue) => _onAddReactiveProperty.Value = addedValue;

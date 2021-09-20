@@ -83,7 +83,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
         }
     }
     
-#if KASSETS_MULTI_LIBRARY
+#if KASSETS_UNIRX
     public abstract partial class RequestResponseEvent<TRequest, TResponse>
     {
         private void TryRespond_UniTask()

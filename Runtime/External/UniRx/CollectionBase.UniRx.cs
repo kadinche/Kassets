@@ -53,7 +53,7 @@ namespace Kadinche.Kassets.Collection
         #endregion
     }
     
-#if KASSETS_MULTI_LIBRARY
+#if KASSETS_UNITASK
     public abstract partial class Collection<T>
     {
         private void RaiseOnAdd_UniRx(T addedValue) => _onAddSubject.OnNext(addedValue);

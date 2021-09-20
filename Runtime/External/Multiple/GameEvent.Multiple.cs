@@ -1,4 +1,4 @@
-#if KASSETS_MULTI_LIBRARY
+#if KASSETS_UNIRX && KASSETS_UNITASK
 
 using System;
 using UnityEngine;

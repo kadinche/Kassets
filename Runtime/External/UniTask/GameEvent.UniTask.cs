@@ -89,7 +89,7 @@ namespace Kadinche.Kassets.EventSystem
         }
     }
     
-#if KASSETS_MULTI_LIBRARY
+#if KASSETS_UNIRX
     public partial class GameEvent
     {
         /// <summary>

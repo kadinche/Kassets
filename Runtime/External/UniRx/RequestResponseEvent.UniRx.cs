@@ -9,7 +9,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
         private readonly Subject<object> _requestSubject = new Subject<object>();
     }
     
-#if KASSETS_MULTI_LIBRARY
+#if KASSETS_UNITASK
     public abstract partial class RequestResponseEvent<TRequest, TResponse>
     {
         private void TryRespond_UniRx()

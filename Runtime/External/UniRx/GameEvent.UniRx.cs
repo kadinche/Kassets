@@ -44,7 +44,7 @@ namespace Kadinche.Kassets.EventSystem
         }
     }
     
-#if KASSETS_MULTI_LIBRARY
+#if KASSETS_UNITASK
     public partial class GameEvent
     {
         private void Raise_UniRx() => _subject.OnNext(this);
