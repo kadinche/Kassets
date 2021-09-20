@@ -128,6 +128,172 @@ namespace Kadinche.Kassets.Collection
             RemoveValueSubscription_UniTask(key);
         }
     }
+    
+#if !KASSETS_UNIRX
+    public abstract partial class Collection<T>
+    {
+        private void RaiseOnAdd_UniRx(T addedValue)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+
+        private void RaiseOnRemove_UniRx(T removedValue)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+
+        private void RaiseOnClear_UniRx()
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+        
+        private void RaiseValueAt_UniRx(int index, T value)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+        
+        public IDisposable SubscribeOnAdd_UniRx(Action<T> action)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+
+        public IDisposable SubscribeOnRemove_UniRx(Action<T> action)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+
+        public IDisposable SubscribeOnClear_UniRx(Action action)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+
+        public IDisposable SubscribeToValueAt_UniRx(int index, Action<T> action)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+        
+        private void ClearValueSubscriptions_UniRx()
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+        
+        private void RemoveValueSubscription_UniRx(int index)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+
+        private void DisposeSubscriptions_UniRx()
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+    }
+
+    public abstract partial class Collection<TKey, TValue>
+    {
+        private void RaiseValue_UniRx(TKey key, TValue value)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+        
+        public IDisposable SubscribeToValue_UniRx(TKey key, Action<TValue> action)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+        
+        private void ClearValueSubscriptions_UniRx()
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+        
+        private void RemoveValueSubscription_UniRx(TKey key)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+    }
+#endif
+    
+#if !KASSETS_UNITASK
+    public abstract partial class Collection<T>
+    {
+        private void RaiseOnAdd_UniTask(T addedValue)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+
+        private void RaiseOnRemove_UniTask(T removedValue)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+
+        private void RaiseOnClear_UniTask()
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+        
+        private void RaiseValueAt_UniTask(int index, T value)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+        
+        public IDisposable SubscribeOnAdd_UniTask(Action<T> action)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+
+        public IDisposable SubscribeOnRemove_UniTask(Action<T> action)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+
+        public IDisposable SubscribeOnClear_UniTask(Action action)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+
+        public IDisposable SubscribeToValueAt_UniTask(int index, Action<T> action)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+        
+        private void ClearValueSubscriptions_UniTask()
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+        
+        private void RemoveValueSubscription_UniTask(int index)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+
+        private void DisposeSubscriptions_UniTask()
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+    }
+
+    public abstract partial class Collection<TKey, TValue>
+    {
+        private void RaiseValue_UniTask(TKey key, TValue value)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+        
+        public IDisposable SubscribeToValue_UniTask(TKey key, Action<TValue> action)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+        
+        private void ClearValueSubscriptions_UniTask()
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+        
+        private void RemoveValueSubscription_UniTask(TKey key)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+    }
+#endif
 }
 
 #endif

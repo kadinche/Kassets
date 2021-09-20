@@ -35,6 +35,46 @@ namespace Kadinche.Kassets.RequestResponseSystem
             Dispose_UniTask();
         }
     }
+    
+#if !KASSETS_UNIRX
+    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    {
+        private void TryRespond_UniRx()
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+        
+        private IDisposable HandleSubscribe_UniRx(Func<TRequest, TResponse> responseFunc)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+
+        private void Dispose_UniRx()
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
+    }
+#endif
+    
+#if !KASSETS_UNITASK
+    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    {
+        private void TryRespond_UniTask()
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+        
+        private IDisposable HandleSubscribe_UniTask(Func<TRequest, TResponse> responseFunc)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+
+        private void Dispose_UniTask()
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+    }
+#endif
 }
 
 #endif
