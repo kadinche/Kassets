@@ -2,22 +2,22 @@ using System;
 
 namespace Kadinche.Kassets
 {
-    public interface IEventRaiser
+    public interface IGameEventRaiser
     {
         void Raise();
     }
     
-    public interface IEventRaiser<in T> : IEventRaiser
+    public interface IGameEventRaiser<in T> : IGameEventRaiser
     {
         void Raise(T param);
     }
     
-    public interface IEventHandler
+    public interface IGameEventHandler
     {
         IDisposable Subscribe(Action action);
     }
 
-    public interface IEventHandler<out T> : IEventHandler
+    public interface IGameEventHandler<out T> : IGameEventHandler
     {
         IDisposable Subscribe(Action<T> action);
     }

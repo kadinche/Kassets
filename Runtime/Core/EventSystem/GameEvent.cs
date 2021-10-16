@@ -12,8 +12,8 @@ namespace Kadinche.Kassets.EventSystem
     /// <summary>
     /// Core Game Event System.
     /// </summary>
-    [CreateAssetMenu(fileName = "GameEvent", menuName = MenuHelper.DefaultEventMenu + "GameEvent")]
-    public partial class GameEvent : CommandBase, IEventRaiser, IEventHandler
+    [CreateAssetMenu(fileName = "GameEvent", menuName = MenuHelper.DefaultGameEventMenu + "GameEvent")]
+    public partial class GameEvent : CommandBase, IGameEventRaiser, IGameEventHandler
     {
         public override void Execute() => Raise();
     }
@@ -22,7 +22,7 @@ namespace Kadinche.Kassets.EventSystem
     /// Generic base class for event system with parameter.
     /// </summary>
     /// <typeparam name="T">Parameter type for the event system</typeparam>
-    public abstract partial class GameEvent<T> : GameEvent, IEventRaiser<T>, IEventHandler<T>
+    public abstract partial class GameEvent<T> : GameEvent, IGameEventRaiser<T>, IGameEventHandler<T>
     {
         [SerializeField] protected T _value;
 
@@ -39,7 +39,7 @@ namespace Kadinche.Kassets.EventSystem
     /// Made it possible to listen to many events at once.
     /// </summary>
     [Serializable]
-    public partial class GameEventCollection : IEventRaiser, IEventHandler, IDisposable
+    public partial class GameEventCollection : IGameEventRaiser, IGameEventHandler, IDisposable
     {
         [SerializeField] private List<GameEvent> _gameEvents;
         [SerializeField] protected bool buffered;
@@ -48,7 +48,7 @@ namespace Kadinche.Kassets.EventSystem
 
         public void Raise()
         {
-            foreach (IEventRaiser gameEvent in _gameEvents)
+            foreach (IGameEventRaiser gameEvent in _gameEvents)
             {
                 gameEvent.Raise();
             }
