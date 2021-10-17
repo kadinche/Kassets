@@ -10,7 +10,7 @@ using Kadinche.Kassets.Utilities;
 
 namespace Kadinche.Kassets.Collection
 {
-    public abstract partial class Collection<T> : VariableBase<List<T>>, IList<T>
+    public abstract partial class Collection<T> : VariableCore<List<T>>, IList<T>
     {
         #region Property
 

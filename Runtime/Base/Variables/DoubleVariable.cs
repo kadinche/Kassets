@@ -3,7 +3,7 @@
 namespace Kadinche.Kassets.Variable
 {
     [CreateAssetMenu(fileName = "DoubleVariable", menuName = MenuHelper.DefaultVariableMenu + "Double")]
-    public class DoubleVariable : VariableBase<double>
+    public class DoubleVariable : VariableCore<double>
     {
     }
 }

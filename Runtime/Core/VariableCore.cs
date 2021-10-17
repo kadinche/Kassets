@@ -11,7 +11,7 @@ namespace Kadinche.Kassets.Variable
     /// Variable System Basics.
     /// </summary>
     /// <typeparam name="T">Type to use on variable system</typeparam>
-    public abstract class VariableBase<T> : GameEvent<T>, IVariable<T>
+    public abstract class VariableCore<T> : GameEvent<T>, IVariable<T>
     {
         [Tooltip("Set how variable event behave.\nValue Assign: Raise when value is assigned regardless of value.\nValue Changed: Raise only when value is changed.")]
         [SerializeField] internal VariableEventType _variableEventType;
@@ -43,7 +43,7 @@ namespace Kadinche.Kassets.Variable
             Value = InitialValue;
         }
         
-        public static implicit operator T(VariableBase<T> variable) => variable.Value;
+        public static implicit operator T(VariableCore<T> variable) => variable.Value;
 
         public override string ToString() => Value.ToString();
 
