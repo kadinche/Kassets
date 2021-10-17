@@ -2,25 +2,21 @@
 
 [![openupm](https://img.shields.io/npm/v/com.kadinche.kassets?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.kadinche.kassets/)
 
-Kassets is an [UniTask](https://github.com/Cysharp/UniTask) powered Scriptable Object Architecture capable of Async/Await.
+Kassets is an implementation of Scriptable Object Architecture. Scriptable Object Architecture provides a clean and decoupled code architecture. It is implemented based on [Ryan Hipple talk on Unite Austin 2017](https://youtu.be/raQ3iHhE_Kk).
 
-Scriptable Object Architecture provides a clean and decoupled code architecture in Unity. Based on [Ryan Hipple talk on Unite Austin 2017](https://youtu.be/raQ3iHhE_Kk).
+Kassets can be used independently. However, Kassets was originally made as an attempt to extend functionality of UniRx and UniTask into ScriptableObjectArchitecture. So, it is recommended and would be more effective to use Kassets along with [UniRx], [UniTask], or both. To use them, simply import any or both of these library along with Kassets.
 
-On the other hand, [UniTask](https://github.com/Cysharp/UniTask) is a powerful tool for Asynchronous pattern that "provides an efficient allocation free async/await integration to Unity." 
+[UniRx](https://github.com/neuecc/UniRx) is a Reactive Extensions for Unity. 
 
-References:
-- [https://github.com/Cysharp/UniTask](https://github.com/Cysharp/UniTask)
-- [https://speakerdeck.com/torisoup/unitask2020](https://speakerdeck.com/torisoup/unitask2020) (Japanese/日本語)
-- [https://github.com/roboryantron/Unite2017](https://github.com/roboryantron/Unite2017)
-- [https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects](https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects)
-- [https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/](https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/) (Japanese/日本語)
+[UniTask](https://github.com/Cysharp/UniTask) provides an efficient allocation free async/await integration to Unity.
 
 ### Unity Version
 - Unity 2019.4+
 - Note that this github project cannot be opened directly in Unity Editor. See [Installation](https://github.com/kadinche/Kassets#Installation) for cloning.
 
 ### Dependencies
-- [UniTask](https://github.com/Cysharp/UniTask)
+- [UniRx](https://github.com/neuecc/UniRx) [Optional]
+- [UniTask](https://github.com/Cysharp/UniTask) [Optional]
 
 # Getting Started
 
@@ -29,20 +25,24 @@ References:
 <details>
 <summary>Add from OpenUPM | <em>import via scoped registry, update from Package Manager</em></summary>
 
-To add OpenUPM to your project, including UniTask as dependency:
+To add OpenUPM to your project:
 
 - open `Edit/Project Settings/Package Manager`
 - add a new Scoped Registry:
 ```
 Name: OpenUPM
 URL:  https://package.openupm.com/
-Scope(s): com.kadinche, com.cysharp.unitask
+Scope(s):
+  - com.kadinche
+  - com.neuecc.unirx (optional)
+  - com.cysharp.unitask (optional)
 ```
 - click <kbd>Save</kbd>
 - open Package Manager
-- Select ``My Registries`` in dropdown top left
-- Select ``UniTask`` and click ``Install``
+- Select ``My Registries`` in top left dropdown
 - Select ``Kassets`` and click ``Install``
+- Select ``UniRx`` and click ``Install`` (Optional)
+- Select ``UniTask`` and click ``Install`` (Optional)
 </details>
 
 <details>
@@ -73,13 +73,17 @@ You can also clone the project as Submodule.
 </details>
 
 <details>
-<summary><em>❗Note that UniTask need to be added as dependency❗</em></summary>
+<summary><em>Importing UniRx and/or UniTask</em></summary>
 
-UniTask can be added either from OpenUPM or GitHub.
+Both UniRx and UniTask can be added either from OpenUPM or GitHub.
 
-- scope on openupm: [com.cysharp.unitask](https://openupm.com/packages/com.cysharp.unitask/)
-- package link on github: https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask
-- for more detailed information, please look at [UniTask github page](https://github.com/Cysharp/UniTask).
+- scope on openupm:
+  - [com.neuecc.unirx](https://openupm.com/packages/com.neuecc.unirx/)
+  - [com.cysharp.unitask](https://openupm.com/packages/com.cysharp.unitask/)
+- package link on github:
+  - https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts
+  - https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask
+- for more detailed information, please look at the respective github pages.
 </details>
 
 
@@ -155,31 +159,13 @@ Usage of Subscribe on health, one of Asynchronous LINQ feature :
 
 <img width="536" alt="Screen Shot 2020-11-17 at 9 18 07" src="https://user-images.githubusercontent.com/1290720/99601821-8a83c900-2a43-11eb-885b-07e7c02c6de0.png">
 
-# Contribution
-
-### Branching Guideline
-Branching concept follows [Github-flow](https://guides.github.com/introduction/flow/). When adding new features or working on bugfix, please create a new branch such as `feature/<issue_number>/new_awesome_feature` or `fix/<issue_number>/things_that_dont_work` and create pull request to `main` branch.
-
-### Commit Guideline
-Please add following prefix to the beginning of the message.
-ex) "feat: add feature to make kassets more awesome", "fix: kassets not working when this happens"
-
-- feat: A new feature
-- fix: A bug fix
-- add : Simple add file, assets, etc.
-- del : Simple del file, assets, etc.
-- docs: Documentation only changes
-- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-- refactor: A code change that neither fixes a bug nor adds a feature
-- perf: A code change that improves performance
-- test: Adding missing or correcting existing tests
-- chore: Changes to the build process or auxiliary tools and -libraries such as documentation generation
-
-### Pull Request Guideline
-Please include following points in Pull Requests :
-- Overview. Short description of what the pull requests is about.
-- Changes. Short explanation of what changes from base code.
-- [Optional] Need Review. Point out where reviews are required or is desired.
+# References:
+- [https://github.com/neuecc/UniRx](https://github.com/neuecc/UniRx)
+- [https://github.com/Cysharp/UniTask](https://github.com/Cysharp/UniTask)
+- [https://speakerdeck.com/torisoup/unitask2020](https://speakerdeck.com/torisoup/unitask2020) (Japanese/日本語)
+- [https://github.com/roboryantron/Unite2017](https://github.com/roboryantron/Unite2017)
+- [https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects](https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects)
+- [https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/](https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/) (Japanese/日本語)
 
 # LICENSE
 
