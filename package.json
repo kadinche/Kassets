@@ -7,9 +7,14 @@
   "license": "MIT",
   "samples": [
     {
-      "displayName": "Samples",
-      "description": "",
-      "path": "Samples~"
+      "displayName": "Command System Samples",
+      "description": "Contains sample usage of Kassets Command System",
+      "path": "Samples~/CommandSystemSamples"
+    },
+    {
+      "displayName": "GameEvent System Samples",
+      "description": "Contains sample usage of Kassets Event System",
+      "path": "Samples~/EventSystemSamples"
     }
   ]
 }
