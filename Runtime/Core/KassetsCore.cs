@@ -11,7 +11,7 @@ using UnityEditor;
 
 namespace Kadinche.Kassets
 {
-    public abstract class KassetsBase : ScriptableObject, ISerializationCallbackReceiver, IDisposable
+    public abstract class KassetsCore : ScriptableObject, ISerializationCallbackReceiver, IDisposable
     {
         public virtual void OnBeforeSerialize() {}
         public virtual void OnAfterDeserialize() {}

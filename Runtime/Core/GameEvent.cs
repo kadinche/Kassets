@@ -13,7 +13,7 @@ namespace Kadinche.Kassets.EventSystem
     /// Core Game Event System.
     /// </summary>
     [CreateAssetMenu(fileName = "GameEvent", menuName = MenuHelper.DefaultGameEventMenu + "GameEvent")]
-    public partial class GameEvent : CommandBase, IGameEventRaiser, IGameEventHandler
+    public partial class GameEvent : CommandCore, IGameEventRaiser, IGameEventHandler
     {
         public override void Execute() => Raise();
     }

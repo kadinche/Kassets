@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Kadinche.Kassets.CommandSystem
 {
-    [CustomEditor(typeof(CommandBase), true)]
+    [CustomEditor(typeof(CommandCore), true)]
     public class CommandEditor : Editor
     {
         public override void OnInspectorGUI()
@@ -12,7 +12,7 @@ namespace Kadinche.Kassets.CommandSystem
 
             GUI.enabled = Application.isPlaying;
 
-            var e = (CommandBase) target;
+            var e = (CommandCore) target;
             if (GUILayout.Button("Execute"))
                 e.Execute();
         }

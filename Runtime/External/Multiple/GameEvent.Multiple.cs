@@ -7,6 +7,7 @@ namespace Kadinche.Kassets.EventSystem
 {
     public partial class GameEvent
     {
+        [Tooltip("Default Event Subscription behavior. UniRx for push-based, UniTask for pull-based.")]
         [SerializeField] protected LibraryEnum _defaultSubscribeBehavior;
 
         /// <summary>

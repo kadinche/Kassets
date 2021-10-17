@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Kadinche.Kassets.CommandSystem.Sample
 {
     [CreateAssetMenu(fileName = "PrintLogCommand", menuName = MenuHelper.DefaultCommandMenu + "PrintLogCommand")]
-    public class PrintLogCommand : CommandBase
+    public class PrintLogCommand : CommandCore
     {
         [SerializeField] private string _toPrint = "Debugging...";
         [SerializeField] private Color _color = Color.white;
