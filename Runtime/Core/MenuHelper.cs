@@ -1,6 +1,6 @@
 namespace Kadinche.Kassets
 {
-    public class MenuHelper
+    public static class MenuHelper
     {
         public const string DefaultCommandMenu = "Kassets/Commands/";
         public const string DefaultGameEventMenu = "Kassets/Game Events/";
