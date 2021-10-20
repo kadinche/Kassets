@@ -89,29 +89,34 @@ Both UniRx and UniTask can be added either from OpenUPM or GitHub.
 
 ## Creating Kassets' ScriptableObjects
 
-### Create a Variable Instance
-
-Variables can be created from Create context menu or from Assets/Create menu bar. Simply right click on the Project window and select any variables on `Create/Kassets/Variables/` 
-
-<img width="770" alt="Screen Shot 2021-05-26 at 4 02 27" src="https://user-images.githubusercontent.com/1290720/119568205-3689e080-bde8-11eb-91e1-253a8cdaf4da.png">
-
 ### Create an Event Instance
 
-For event instances, select any of events from `Create/Kassets/Events/` 
+Kassets instances can be created from Create context menu or from Assets/Create menu bar. Simply right click on the Project window and select any instance to create. For Event instances, select any of event types from `Create/Kassets/Game Events/` 
 
-<img width="829" alt="Screen Shot 2021-05-26 at 4 05 49" src="https://user-images.githubusercontent.com/1290720/119568417-75b83180-bde8-11eb-940a-4aa00fa218a4.png">
+![CreateEvent](https://user-images.githubusercontent.com/1290720/137657526-5bbad8d6-a6c5-4361-a272-0ef30e684fad.gif)
+
+### Create a Variable Instance
+
+For Variables instances, select any of available types from `Create/Kassets/Variables/` 
+
+![CreateVariable](https://user-images.githubusercontent.com/1290720/137657744-cc7ec167-d728-4a8a-8a6f-06b67bf01b14.gif)
+
+Kassets' Variable instance on Inspector window
+
+<img width="488" alt="Screen Shot 2021-10-20 at 3 43 15" src="https://user-images.githubusercontent.com/1290720/138010918-0ac58dfc-dd64-4044-b0df-2473a4f9ca37.png">
 
 ### Create Other Instances
 
 Other available Kassets' Scriptable Object are
-- ExchangeEvent. A Request-Response event pair.
+- Command. Class that contains an executable method.
 - Collection. Can be either a List or Dictionary.
+- ExchangeEvent. A Request-Response event.
 
-(More Details TBD)
+## Using Kassets' ScriptableObject Instances
 
-## Using Kassets' ScriptableObjects
+### Usage on MonoBehavior Script
 
-Create a `MonoBehavior` Script and add variables and/or events as a serialized field.
+Create a `MonoBehavior` Script and add Kassets' instance as a serialized field.
 
 `Player.cs` :
 
@@ -131,33 +136,47 @@ Drag and drop `PlayerHealth` (`FloatVariable`) to `HealthBarUI`'s `Health` field
 
 From example above, `Player` component's field `Health` and `HealthBarUI` component's field `Health` both refer to the same FloatVariable ScriptableObject instance `PlayerHealth`. Since both component refer to the same variable instance, the `float` value they refer to is shared. Each component then manage their own need with the value without any coupling between components. I.e. `HealthBarUI` doesn't have to request the `Health` value to `Player` component and Player component can manage its own `Health` without the need to distribute its value to other components.
 
+### Usage on UnityEvents
+
+Kassets’s instance is a ScriptableObject asset. It can be referenced to UnityEvent via Inspector. You can aslo use dynamic method call on UnityEvent to pass a parameter.
+
+![UnityEvent](https://user-images.githubusercontent.com/1290720/138039011-f32deac1-de5c-48ea-afaa-bf0f815b448d.gif)
+
+![UnityEventDynamic](https://user-images.githubusercontent.com/1290720/138039041-0b42cbe8-254f-40ef-a2df-a45a19883c98.gif)
+
+# Reactive with UniRx
+
+If you had UniRx imported, you can use Reactive on Kassets' instances. First, make sure to import UniRx to your project. Upon import, Kassets will adjust internally to support UniRx using scripting define "KASSETS_UNIRX". It would normally be defined when UniRx is imported using package manager. If somehow "KASSETS_UNIRX" is undefined, add it to `Scripting Define Symbols` on Project Settings.
+
+When importing UniRx, Kassets' GameEvent becomes `Observable`. To use Kassets reactively, simply `Subscribe` to a GameEvent instances or its derivation.
+
+![Screen Shot 2021-10-18 at 11 19 20](https://user-images.githubusercontent.com/1290720/137659609-61510ee1-44b3-4286-bc2a-993a6e369b59.png)
+
 # Asynchronous with UniTask
 
-To use Kassets Asynchronously just add `await` in front of any of Kassets' ScriptableObject instance.
+If you had UniTask imported, you can use Asynchronous on Kassets' instances. First, make sure to import UniTask to your project. Upon import, Kassets will adjust internally to support UniTask using scripting define "KASSETS_UNITASK". It would normally be defined when UniTask is imported using package manager. If somehow "KASSETS_UNITASK" is undefined, add it to `Scripting Define Symbols` on Project Settings.
 
-Asynchronous usage sample of FloatVariable `health` :
+To use Kassets Asynchronously, use the method `EventAsync()` and add `await` in front of it. Any Kassets' instances that derived from GameEvent can be used asynchronously. (For Command, use method `ExecuteAsync()`)
 
-<img width="604" alt="Screen Shot 2020-11-17 at 5 46 08" src="https://user-images.githubusercontent.com/1290720/99601760-66c08300-2a43-11eb-9772-04efe3fec7b6.png">
+![Screen Shot 2021-10-18 at 11 40 16](https://user-images.githubusercontent.com/1290720/137661440-9f5800c9-3081-4e9a-b61a-90edd4573d40.png)
 
-To use cancellation token use `health.ValueAsync(token)`.
-
-In the example above, an asynchronous operation on variable will wait for its value to change. In case of events, it will wait for any event to fire. To use cancellation token on event use `event.EventAsync(token)`.
+In the example above, an asynchronous operation `EventAsync()` on variable means to wait for its value to change. GameEvent in general, will wait for an event to fire.
 
 According to this [slide (Japanese)](https://speakerdeck.com/torisoup/unitask2020?slide=52), It is a best practice to always use cancellation token on every UniTask's asynchronous operation. Since Unity is not asynchronous, any asynchronous operation can be left behind waiting infinitely when the process is not stopped.
 
-In case of Kassets' `ScriptableObject`, a `CancellationTokenSource` is included in an instance's life cycle. As a result, it is assumed to be safe to use `await` directly on an instance. However, in Unity Editor, a `ScriptableObject` lifecycle is alongside with Unity Editor's lifetime. So, cancellation are handled on Kassets' `ScriptableObject` instance lifecycle.
-
-# Using UniTask.Linq
+# Using UniTask.Linq and its Usages with UniRx
 
 UniTask v2 has support for Asynchronous LINQ. Asynchronous LINQ is an extension to `IUniTaskAsyncEnumerable<T>` and its usage can be very similar to UniRx, but the process behind it is different (UniRx is push-based while UniTask is pull-based).
 
-Kassets' `ScriptableObject` also make use of Asynchronous LINQ. Kassets' `ScriptableObject` derived from `IUniTaskAsyncEnumerable<T>` so it is possible to directly apply various features of UniTask as explained in its [github](https://github.com/Cysharp/UniTask#asyncenumerable-and-async-linq) page or from this [slide](https://speakerdeck.com/torisoup/unitask2020?slide=110) (Japanese). An exception would be `GameEvent`(w/o value) which is a base class of `GameEvent<T>` (w/ value). It is necessary to call `AsUniTaskAsyncEnumerable()` on `GameEvent` which return `IUniTaskAsyncEnumerable<GameEvent>`. However it is possible to `Subscribe` directly to `GameEvent` as it is implemented manually.
+Kassets' `ScriptableObject` also make use of Asynchronous LINQ. Kassets' `ScriptableObject` derived from `IUniTaskAsyncEnumerable<T>` so it is possible to directly apply various features of UniTask as explained in its [github](https://github.com/Cysharp/UniTask#asyncenumerable-and-async-linq) page or from this [slide](https://speakerdeck.com/torisoup/unitask2020?slide=110) (Japanese).
+
+As an example, the sample class `CounterAttackSkill` above used `SubscribeAwait` which is part of UniTask.Linq. Since it is pull-based, when the process of `OnCounterActivate` is still running, it won't be called again until it is over no matter how many times the event has been raised during the process. Reversely, push-based will execute every event raise.
+
+When both UniRx and UniTask are imported together, It can be confusing which of the `Subscription` behavior is in effect (pull-based or push-based?). Unless referenced by interface such as `IObservable` or `IUniTaskAsyncEnumerable`, Kassets instances Default Subscribe Behavior can be selected from the inspector window.
 
 Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` namespace. To use, add `UniTask.Linq` as reference to your project's Assembly Definition.
 
-Usage of Subscribe on health, one of Asynchronous LINQ feature :
-
-<img width="536" alt="Screen Shot 2020-11-17 at 9 18 07" src="https://user-images.githubusercontent.com/1290720/99601821-8a83c900-2a43-11eb-885b-07e7c02c6de0.png">
+![Screen Shot 2021-10-18 at 12 12 02](https://user-images.githubusercontent.com/1290720/137663587-c384158b-ee0a-4190-a896-ba8a62b6983b.png)
 
 # References:
 - [https://github.com/neuecc/UniRx](https://github.com/neuecc/UniRx)
