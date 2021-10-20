@@ -308,9 +308,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11400000, guid: fa03b1745e08b49b9bc1f688976d6e8b, type: 2}
-        m_TargetAssemblyTypeName: Kadinche.Kassets.EventSystem.GameEvent, Kassets
-        m_MethodName: Raise
+      - m_Target: {fileID: 11400000, guid: ab5bc2513d2424db8a943bb9b0df9bc9, type: 2}
+        m_TargetAssemblyTypeName: Kadinche.Kassets.CommandSystem.Sample.PrintLogCommand,
+          Assembly-CSharp
+        m_MethodName: Execute
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
