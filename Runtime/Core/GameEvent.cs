@@ -146,7 +146,7 @@ namespace Kadinche.Kassets.EventSystem
 
         public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
         {
-            foreach (IEventHandler gameEvent in _gameEvents)
+            foreach (IGameEventHandler gameEvent in _gameEvents)
             {
                 gameEvent.Subscribe(onAnyEvent).AddTo(_compositeDisposable);
             }
