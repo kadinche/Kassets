@@ -100,6 +100,7 @@ namespace Kadinche.Kassets.Collection
 
         public override void OnAfterDeserialize()
         {
+            InitialValue ??= new List<T>();
             InitialValue.Clear();
             InitialValue.AddRange(_value);
         }
