@@ -105,22 +105,22 @@ namespace Kadinche.Kassets.Collection
             }
         }
         
-        public IDisposable SubscribeOnAdd_UniTask(Action<T> action)
+        protected IDisposable SubscribeOnAdd_UniTask(Action<T> action)
         {
             return _onAddReactiveProperty.Subscribe(action);
         }
-        
-        public IDisposable SubscribeOnRemove_UniTask(Action<T> action)
+
+        protected IDisposable SubscribeOnRemove_UniTask(Action<T> action)
         {
             return _onRemoveReactiveProperty.Subscribe(action);
         }
         
-        public IDisposable SubscribeOnClear_UniTask(Action action)
+        private IDisposable SubscribeOnClear_UniTask(Action action)
         {
             return _onClearReactiveProperty.Subscribe(_ => action.Invoke());
         }
         
-        public IDisposable SubscribeToValueAt_UniTask(int index, Action<T> action)
+        private IDisposable SubscribeToValueAt_UniTask(int index, Action<T> action)
         {
             return ValueAtAsyncEnumerable(index).Subscribe(action);
         }

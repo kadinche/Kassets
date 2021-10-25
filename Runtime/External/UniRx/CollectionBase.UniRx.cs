@@ -70,22 +70,22 @@ namespace Kadinche.Kassets.Collection
             }
         }
         
-        public IDisposable SubscribeOnAdd_UniRx(Action<T> action)
+        private IDisposable SubscribeOnAdd_UniRx(Action<T> action)
         {
             return _onAddSubject.Subscribe(action);
         }
 
-        public IDisposable SubscribeOnRemove_UniRx(Action<T> action)
+        private IDisposable SubscribeOnRemove_UniRx(Action<T> action)
         {
             return _onRemoveSubject.Subscribe(action);
         }
 
-        public IDisposable SubscribeOnClear_UniRx(Action action)
+        private IDisposable SubscribeOnClear_UniRx(Action action)
         {
             return _onClearSubject.Subscribe(_ => action.Invoke());
         }
 
-        public IDisposable SubscribeToValueAt_UniRx(int index, Action<T> action)
+        private IDisposable SubscribeToValueAt_UniRx(int index, Action<T> action)
         {
             return ValueAtObservable(index).Subscribe(action);
         }
