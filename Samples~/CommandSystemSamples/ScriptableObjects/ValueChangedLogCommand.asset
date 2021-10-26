@@ -9,10 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0c73c690c1d412da2fb9523ee7800dd, type: 3}
-  m_Name: PrintLogCommand
+  m_Script: {fileID: 11500000, guid: 9fe1e11221264a3b8c9364c823045ec5, type: 3}
+  m_Name: ValueChangedLogCommand
   m_EditorClassIdentifier: 
-  _tag: 
-  _toPrint: Debugging...
-  _color: {r: 0.0990566, g: 0.962414, b: 1, a: 1}
+  _tag: Value Changed
+  _color: {r: 0.43867922, g: 0.9468684, b: 1, a: 1}
   _withCounter: 0
