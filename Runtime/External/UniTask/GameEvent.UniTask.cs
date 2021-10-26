@@ -4,15 +4,10 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
-using UnityEngine;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Kadinche.Kassets.EventSystem
 {
-    public partial class GameEvent : IUniTaskAsyncEnumerable<object>, ISerializationCallbackReceiver
+    public partial class GameEvent : IUniTaskAsyncEnumerable<object>
     {
         private readonly AsyncReactiveProperty<object> _onEventRaise = new AsyncReactiveProperty<object>(default);
         protected readonly CancellationTokenSource cts = new CancellationTokenSource();
@@ -28,27 +23,24 @@ namespace Kadinche.Kassets.EventSystem
         IUniTaskAsyncEnumerator<object> IUniTaskAsyncEnumerable<object>.GetAsyncEnumerator(
             CancellationToken cancellationToken) =>
             _onEventRaise.GetAsyncEnumerator(cancellationToken);
-
-        public override void OnAfterDeserialize()
-        {
-            _ = cts.RefreshToken();
-        }
-
-        void ISerializationCallbackReceiver.OnAfterDeserialize() => OnAfterDeserialize();
     }
     
-#if UNITY_EDITOR
     public partial class GameEvent
     {
-        protected override void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+#if !UNITY_EDITOR
+        protected override void OnDisable()
         {
-            if (stateChange == PlayModeStateChange.ExitingPlayMode)
-            {
-                cts.RefreshToken();
-            }
+            base.OnDisable();
+            cts.RefreshToken();
         }
-    }
+#else
+        protected override void OnExitPlayMode()
+        {
+            base.OnExitPlayMode();
+            cts.RefreshToken();
+        }
 #endif
+    }
 
     public abstract partial class GameEvent<T> : IUniTaskAsyncEnumerable<T>
     {

@@ -23,11 +23,26 @@ namespace Kadinche.Kassets.EventSystem
         [SerializeField] protected T _value;
 
         public override void Raise() => Raise(_value);
-        
-        public override void OnAfterDeserialize()
+
+        protected virtual void ResetInternal()
         {
             _value = default;
         }
+
+#if !UNITY_EDITOR
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            ResetInternal();
+        }
+#else
+        protected override void OnExitPlayMode()
+        {
+            base.OnExitPlayMode();
+            ResetInternal();
+            SaveAndRefresh();
+        }
+#endif
     }
 
     /// <summary>
