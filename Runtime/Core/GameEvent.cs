@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using Kadinche.Kassets.CommandSystem;
 using UnityEngine;
 
-#if !KASSETS_UNIRX
-using Kadinche.Kassets.Utilities;
-#endif
-
 namespace Kadinche.Kassets.EventSystem
 {
     /// <summary>
@@ -60,7 +56,7 @@ namespace Kadinche.Kassets.EventSystem
     public partial class GameEvent
     {
         [Tooltip("Whether to listen to previous event upon subscription.")]
-        [SerializeField] protected bool buffered;
+        [SerializeField] protected bool buffered = true;
         
         public IDisposable Subscribe(Action action) => Subscribe(action, buffered);
         
