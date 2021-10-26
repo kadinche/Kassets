@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using Kadinche.Kassets.CommandSystem;
 using UnityEngine;
 
-#if !KASSETS_UNIRX
-using Kadinche.Kassets.Utilities;
-#endif
-
 namespace Kadinche.Kassets.EventSystem
 {
     /// <summary>

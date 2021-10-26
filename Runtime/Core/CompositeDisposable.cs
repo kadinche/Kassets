@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Kadinche.Kassets.Utilities
+namespace Kadinche.Kassets
 {
     internal class CompositeDisposable : IDisposable
     {

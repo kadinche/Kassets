@@ -4,10 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Kadinche.Kassets.Variable;
 
-#if !KASSETS_UNIRX && !KASSETS_UNITASK
-using Kadinche.Kassets.Utilities;
-#endif
-
 namespace Kadinche.Kassets.Collection
 {
     public abstract partial class Collection<T> : VariableCore<List<T>>, IList<T>
