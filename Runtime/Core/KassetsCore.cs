@@ -11,28 +11,54 @@ using UnityEditor;
 
 namespace Kadinche.Kassets
 {
-    public abstract class KassetsCore : ScriptableObject, ISerializationCallbackReceiver, IDisposable
+    public abstract class KassetsCore : ScriptableObject, IDisposable
     {
-        public virtual void OnBeforeSerialize() {}
-        public virtual void OnAfterDeserialize() {}
+        protected virtual void OnEnable()
+        {
+#if UNITY_EDITOR
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+#endif
+        }
+
+        protected virtual void OnDisable()
+        {
+#if UNITY_EDITOR
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+#endif
+        }
+
         public abstract void Dispose();
-        
+
         protected virtual void OnDestroy()
         {
             Dispose();
+        }
+        
 #if UNITY_EDITOR
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        private void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+        {
+            switch (stateChange)
+            {
+                case PlayModeStateChange.EnteredPlayMode:
+                    OnEnterPlayMode();
+                    break;
+                case PlayModeStateChange.ExitingPlayMode:
+                    OnExitPlayMode();
+                    break;
+            }
         }
 
-        private void Awake()
-        {
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-        }
+        protected virtual void OnEnterPlayMode() { }
 
-        protected virtual void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+        protected virtual void OnExitPlayMode() { }
+
+        protected void SaveAndRefresh()
         {
+            EditorUtility.SetDirty(this);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
 #endif
-        }
     }
     
 #if !KASSETS_UNIRX && !KASSETS_UNITASK

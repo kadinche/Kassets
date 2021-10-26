@@ -1,10 +1,6 @@
 ﻿using Kadinche.Kassets.EventSystem;
 using UnityEngine;
 
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-
 namespace Kadinche.Kassets.Variable
 {
     /// <summary>
@@ -33,33 +29,49 @@ namespace Kadinche.Kassets.Variable
             base.Raise(value);
         }
 
-        public T InitialValue { get; protected set; }
+        public virtual T InitialValue { get; protected set; }
 
         /// <summary>
         /// Reset value to InitialValue
         /// </summary>
-        public void ResetValue()
+        public void ResetValue() => ResetInternal();
+
+        protected override void ResetInternal()
         {
             Value = InitialValue;
         }
-        
+
         public static implicit operator T(VariableCore<T> variable) => variable.Value;
 
         public override string ToString() => Value.ToString();
 
-        public override void OnAfterDeserialize()
+#if !UNITY_EDITOR
+        protected override void OnEnable()
         {
+            base.OnEnable();
             InitialValue = _value;
         }
         
-#if UNITY_EDITOR
-        protected override void OnPlayModeStateChanged(PlayModeStateChange stateChange)
+        protected override void OnDisable()
         {
-            base.OnPlayModeStateChanged(stateChange);
-            if (_autoResetValue && stateChange == PlayModeStateChange.ExitingPlayMode)
-            {
-                ResetValue();
-            }
+            if (!_autoResetValue)
+                return;
+            
+            base.OnDisable();
+        }
+#else   
+        protected override void OnEnterPlayMode()
+        {
+            base.OnEnterPlayMode();
+            InitialValue = _value;
+        }
+        
+        protected override void OnExitPlayMode()
+        {
+            if (!_autoResetValue)
+                return;
+            
+            base.OnExitPlayMode();
         }
 #endif
     }

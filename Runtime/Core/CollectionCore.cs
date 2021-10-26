@@ -94,11 +94,15 @@ namespace Kadinche.Kassets.Collection
 
         #region Method Overload
 
-        public override void OnAfterDeserialize()
+        private readonly List<T> _initialValue = new List<T>();
+        public override List<T> InitialValue
         {
-            InitialValue ??= new List<T>();
-            InitialValue.Clear();
-            InitialValue.AddRange(_value);
+            get => _initialValue;
+            protected set
+            {
+                _initialValue.Clear();
+                _initialValue.AddRange(value);
+            }
         }
 
         public override void Dispose()
