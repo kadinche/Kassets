@@ -59,7 +59,7 @@ You won't be able to receive updates through Package Manager this way, you'll ha
 </details>
 
 <details>
-<summary>Clone to Packages Folder | <em>for those who want to contribute</em></summary>
+<summary>Clone to Packages Folder | <em>for those who want to make and manage changes</em></summary>
 
 Clone this repository to Unity Project's Packages directory.
 
@@ -146,7 +146,7 @@ Kassets’s instance is a ScriptableObject asset. It can be referenced to UnityE
 
 # Reactive with UniRx
 
-If you had UniRx imported, you can use Reactive on Kassets' instances. First, make sure to import UniRx to your project. Upon import, Kassets will adjust internally to support UniRx using scripting define "KASSETS_UNIRX". It would normally be defined when UniRx is imported using package manager. If somehow "KASSETS_UNIRX" is undefined, add it to `Scripting Define Symbols` on Project Settings.
+If you had UniRx imported, you can use Reactive on Kassets' instances. First, make sure to import UniRx to your project. Upon import, Kassets will adjust internally to support UniRx using scripting define `KASSETS_UNIRX`. It would normally be defined when UniRx is imported using package manager. If somehow `KASSETS_UNIRX` is undefined, add it to `Scripting Define Symbols` on Project Settings.
 
 When importing UniRx, Kassets' GameEvent becomes `Observable`. To use Kassets reactively, simply `Subscribe` to a GameEvent instances or its derivation.
 
@@ -154,7 +154,7 @@ When importing UniRx, Kassets' GameEvent becomes `Observable`. To use Kassets re
 
 # Asynchronous with UniTask
 
-If you had UniTask imported, you can use Asynchronous on Kassets' instances. First, make sure to import UniTask to your project. Upon import, Kassets will adjust internally to support UniTask using scripting define "KASSETS_UNITASK". It would normally be defined when UniTask is imported using package manager. If somehow "KASSETS_UNITASK" is undefined, add it to `Scripting Define Symbols` on Project Settings.
+If you had UniTask imported, you can use Asynchronous on Kassets' instances. First, make sure to import UniTask to your project. Upon import, Kassets will adjust internally to support UniTask using scripting define `KASSETS_UNITASK`. It would normally be defined when UniTask is imported using package manager. If somehow `KASSETS_UNITASK` is undefined, add it to `Scripting Define Symbols` on Project Settings.
 
 To use Kassets Asynchronously, use the method `EventAsync()` and add `await` in front of it. Any Kassets' instances that derived from GameEvent can be used asynchronously. (For Command, use method `ExecuteAsync()`)
 
