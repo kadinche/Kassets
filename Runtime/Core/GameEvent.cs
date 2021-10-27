@@ -22,6 +22,8 @@ namespace Kadinche.Kassets.EventSystem
     {
         [SerializeField] protected T _value;
 
+        public Type Type => typeof(T);
+
         public override void Raise() => Raise(_value);
 
         protected virtual void ResetInternal()
