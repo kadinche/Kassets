@@ -27,14 +27,19 @@
       "path": "Samples~/CollectionSamples"
     },
     {
-      "displayName": "RequestResponseEvent Samples",
+      "displayName": "RequestResponse Event Samples",
       "description": "Contains sample usage of Kassets RequestResponseEvent System",
       "path": "Samples~/RequestResponseSamples"
     },
     {
-      "displayName": "RequestResponseEvent UniTask Samples",
+      "displayName": "RequestResponse Event UniTask Samples",
       "description": "Contains sample usage of Kassets RequestResponseEvent System Asynchronously with UniTask",
       "path": "Samples~/RequestResponseUniTaskSamples"
+    },
+    {
+      "displayName": "UnityEvent Binder Samples",
+      "description": "Contains sample usage of Kassets UnityEventBinder components",
+      "path": "Samples~/UnityEventBinderSamples"
     }
   ]
 }
