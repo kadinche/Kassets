@@ -3,7 +3,7 @@
   "displayName": "Kassets",
   "version": "2.0.0",
   "unity": "2019.4",
-  "description": "Asynchronous Scriptable Object Architecture",
+  "description": "Scriptable Object Architecture extendable with UniRx and/or UniTask",
   "license": "MIT",
   "samples": [
     {
@@ -15,6 +15,26 @@
       "displayName": "GameEvent System Samples",
       "description": "Contains sample usage of Kassets Event System",
       "path": "Samples~/EventSystemSamples"
+    },
+    {
+      "displayName": "Variable System Samples",
+      "description": "Contains sample usage of Kassets Variable System",
+      "path": "Samples~/VariableSystemSamples"
+    },
+    {
+      "displayName": "Collection Samples",
+      "description": "Contains sample usage of Kassets Collection System",
+      "path": "Samples~/CollectionSamples"
+    },
+    {
+      "displayName": "RequestResponseEvent Samples",
+      "description": "Contains sample usage of Kassets RequestResponseEvent System",
+      "path": "Samples~/RequestResponseSamples"
+    },
+    {
+      "displayName": "RequestResponseEvent UniTask Samples",
+      "description": "Contains sample usage of Kassets RequestResponseEvent System Asynchronously with UniTask",
+      "path": "Samples~/RequestResponseUniTaskSamples"
     }
   ]
 }
