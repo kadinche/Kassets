@@ -6,6 +6,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2021-10-27
+
+Major version upgrade. Not backward compatible with version 1.0.x.
+
+### Added
+- Interface ICommand, ICommand<T>
+- Interface IGameEventRaiser, IGameEventRaiser<T>
+- Interface IGameEventHandler, IGameEventHandler<T>
+- Interface IVariable<T>
+- KassetsCore. Base class for all Kassets' classes.
+- Kassets now Independent from external libraries.
+- Kassets supports two external libraries: [UniRx](https://github.com/neuecc/UniRx) and [UniTask](https://github.com/Cysharp/UniTask).
+- Samples for each Kassets' classes.
+- Editor Code to view or edit ScriptableObject's from MonoBehavior's Inspector window.
+
+### Changed
+- Renamed ExchangeEvent to RequestResponseEvent
+
+### Removed
+- DebugLogger.
+- GameEvent Forwarder
+- FileLoadUtility
+- RecenterCommandBinder
+- XRDeviceUtility
+- TransformBindUtilityExtension
+- GameObjectBindUtilityExtension
+- ByteConverterUtilityExtension
+- ExternalJsonHandler
+- PersistentScriptableObject
+- Kassets Unity's Components Binder
+- Removed other Non-related component
+
 ## [1.0.1] - 2021-09-13
 ### Changed
 - Fixed Transform binder comparison mistake.
@@ -34,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/1.0.1...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.0.0...HEAD
+[2.0.0]: https://github.com/kadinche/Kassets/compare/1.0.0...2.0.0
 [1.0.1]: https://github.com/kadinche/Kassets/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/kadinche/Kassets/releases/tag/1.0.0

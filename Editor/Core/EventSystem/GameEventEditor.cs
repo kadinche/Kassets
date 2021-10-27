@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Kassets.EventSystem
+namespace Kadinche.Kassets.EventSystem
 {
     [CustomEditor(typeof(GameEvent), true)]
     public class GameEventEditor : Editor
@@ -14,7 +14,7 @@ namespace Kassets.EventSystem
 
             var e = (GameEvent) target;
             if (GUILayout.Button("Raise"))
-                e.RaiseEditor();
+                e.Raise();
         }
     }
 }
