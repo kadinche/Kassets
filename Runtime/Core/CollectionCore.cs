@@ -12,7 +12,7 @@ namespace Kadinche.Kassets.Collection
 
         public override List<T> Value
         {
-            get => this;
+            get => _value;
             set => Copy(value);
         }
 
