@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Kadinche.Kassets.Variable;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ namespace Kadinche.Kassets
         {
             if (!File.Exists(fullpath)) return;
             var jsonString = File.ReadAllText(fullpath);
-            JsonUtility.FromJsonOverwrite(jsonString, data.Value);
+            data.Value = JsonUtility.FromJson<JsonableWrapper<T>>(jsonString).value;
         }
         
         /// <summary>
@@ -87,7 +88,7 @@ namespace Kadinche.Kassets
         /// <typeparam name="T">Data type to save. Must be serializable.</typeparam>
         public static void SaveToJson<T>(this VariableCore<T> data, string fullPath)
         {
-            var jsonString = JsonUtility.ToJson(data.Value);
+            var jsonString = JsonUtility.ToJson(new JsonableWrapper<T>(data.Value), Application.isEditor);
             File.WriteAllText(fullPath, jsonString);
         }
 
@@ -167,5 +168,13 @@ namespace Kadinche.Kassets
         {
             return IsJsonExist(DefaultPath, data.name);
         }
+        
+        [Serializable]
+        public class JsonableWrapper<T>
+        {
+            public T value;
+            public JsonableWrapper(T value) => this.value = value;
+        }
+
     }
 }
