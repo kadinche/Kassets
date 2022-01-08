@@ -44,15 +44,15 @@ namespace Kadinche.Kassets.EventSystem
 
     public abstract partial class GameEvent<T> : IUniTaskAsyncEnumerable<T>
     {
-        private readonly AsyncReactiveProperty<T> _onEventRaise = new AsyncReactiveProperty<T>(default);
+        protected readonly AsyncReactiveProperty<T> onEventRaise = new AsyncReactiveProperty<T>(default);
 
-        public void Subscribe(Action<T> action, CancellationToken cancellationToken) => _onEventRaise.Subscribe(action, cancellationToken);
+        public void Subscribe(Action<T> action, CancellationToken cancellationToken) => onEventRaise.Subscribe(action, cancellationToken);
 
-        public new UniTask<T> EventAsync(CancellationToken cancellationToken) => _onEventRaise.WaitAsync(cancellationToken);
+        public new UniTask<T> EventAsync(CancellationToken cancellationToken) => onEventRaise.WaitAsync(cancellationToken);
         public new UniTask<T> EventAsync() => EventAsync(cts.Token);
         
         IUniTaskAsyncEnumerator<T> IUniTaskAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken cancellationToken) =>
-            _onEventRaise.GetAsyncEnumerator(cancellationToken);
+            onEventRaise.GetAsyncEnumerator(cancellationToken);
     }
 
     public partial class GameEventCollection
@@ -105,10 +105,10 @@ namespace Kadinche.Kassets.EventSystem
         {
             _value = param;
             base.Raise();
-            _onEventRaise.Value = param;
+            onEventRaise.Value = param;
         }
 
-        private IDisposable Subscribe_UniTask(Action<T> action) => _onEventRaise.Subscribe(action);
+        private IDisposable Subscribe_UniTask(Action<T> action) => onEventRaise.Subscribe(action);
     }
 #else
     public partial class GameEvent

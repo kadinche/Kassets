@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,45 +7,37 @@ namespace Kadinche.Kassets.EventSystem
 {
     public class UnityEventBinder : MonoBehaviour
     {
-        [SerializeField] protected GameEvent _gameEventToListen;
+        [SerializeField] protected GameEvent gameEventToListen;
         [Space]
         [SerializeField] private UnityEvent _onGameEventRaised;
 
-        private IDisposable _subscription;
+        protected readonly List<IDisposable> subscriptions = new List<IDisposable>();
 
         protected virtual void Start()
         {
-            _subscription = _gameEventToListen.Subscribe(_onGameEventRaised.Invoke);
+            subscriptions.Add(gameEventToListen.Subscribe(_onGameEventRaised.Invoke));
         }
 
         protected virtual void OnDestroy()
         {
-            _subscription?.Dispose();
+            subscriptions.ForEach(subscription => subscription.Dispose());
         }
     }
 
     public abstract class UnityEventBinder<T> : UnityEventBinder
     {
-        [SerializeField] private TypedUnityEvent _onTypedGameEventRaised;
-
-        private IDisposable _subscription;
-
+        [SerializeField] protected TypedUnityEvent onTypedGameEventRaised;
+        
         protected override void Start()
         {
             base.Start();
-            if (_gameEventToListen is GameEvent<T> typedEvent)
+            if (gameEventToListen is GameEvent<T> typedEvent)
             {
-                _subscription = typedEvent.Subscribe(_onTypedGameEventRaised.Invoke);
+                subscriptions.Add(typedEvent.Subscribe(onTypedGameEventRaised.Invoke));
             }
         }
 
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            _subscription?.Dispose();
-        }
-
         [Serializable]
-        private class TypedUnityEvent : UnityEvent<T> { }
+        protected class TypedUnityEvent : UnityEvent<T> { }
     }
 }
