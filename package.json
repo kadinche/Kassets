@@ -1,7 +1,7 @@
 {
   "name": "com.kadinche.kassets",
   "displayName": "Kassets",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "unity": "2019.4",
   "description": "Scriptable Object Architecture extendable with UniRx and/or UniTask",
   "license": "MIT",
