@@ -14,7 +14,7 @@ Component Name: UniTask
 
 License Type: "MIT"
 
-[UniRx License](https://github.com/Cysharp/UniTask/blob/master/LICENSE)
+[UniTask License](https://github.com/Cysharp/UniTask/blob/master/LICENSE)
 
 ### ExtendedScriptableObjectDrawer
 
