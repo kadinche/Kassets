@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using UnityEngine;
@@ -18,13 +19,14 @@ namespace Kadinche.Kassets.RequestResponseSystem
 
         private readonly Queue<TRequest> _asyncRequests = new Queue<TRequest>();
 
-        public UniTask RequestAsync() => RequestAsync(default);
+        public UniTask RequestAsync(CancellationToken cancellationToken = default) => RequestAsync(default, cancellationToken);
 
-        public UniTask<TResponse> RequestAsync(TRequest request)
+        public UniTask<TResponse> RequestAsync(TRequest request, CancellationToken cancellationToken = default)
         {
-            var task = _responseReactiveProperty.WaitAsync(cts.Token);
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            var task = _responseReactiveProperty.WaitAsync(token);
             _asyncRequests.Enqueue(request);
-            TryRespond();
+            _requestReactiveProperty.Value = this;
             return task;
         }
 
@@ -44,8 +46,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
             }
         }
 
-        public async UniTask ResponseAsync(Func<TRequest, UniTask<TResponse>> responseFunc)
+        public async UniTask ResponseAsync(Func<TRequest, UniTask<TResponse>> responseFunc, CancellationToken cancellationToken = default)
         {
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            token.ThrowIfCancellationRequested();
+            
             if (_requests.Count > 0)
             {
                 var request = _requests.Dequeue();
@@ -59,8 +64,26 @@ namespace Kadinche.Kassets.RequestResponseSystem
                 _responseReactiveProperty.Value = response;
             }
         }
+        
+        public async UniTask ResponseAsync(Func<TRequest, CancellationToken, UniTask<TResponse>> responseFunc, CancellationToken cancellationToken = default)
+        {
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            if (_requests.Count > 0)
+            {
+                var request = _requests.Dequeue();
+                var response = await responseFunc.Invoke(request.Item1, token);
+                request.Item2.Invoke(response);
+            }
+            else if (_asyncRequests.Count > 0)
+            {
+                var request = _asyncRequests.Dequeue();
+                var response = await responseFunc.Invoke(request, token);
+                _responseReactiveProperty.Value = response;
+            }
+        }
 
         public IDisposable SubscribeResponse(Func<TRequest, UniTask<TResponse>> responseFunc,
+            CancellationToken cancellationToken = default,
             bool overrideResponse = true)
         {
             if (!overrideResponse && responseSubscription != null)
@@ -72,11 +95,33 @@ namespace Kadinche.Kassets.RequestResponseSystem
             responseSubscription?.Dispose();
 
             responseSubscription =
-                _requestReactiveProperty.SubscribeAwait(async _ => await ResponseAsync(responseFunc));
+                _requestReactiveProperty.SubscribeAwait(async _ => await ResponseAsync(responseFunc, cancellationToken));
 
             while (_requests.Count > 0)
             {
-                TryRespond();
+                _requestReactiveProperty.Value = this;
+            }
+
+            return responseSubscription;
+        }
+        
+        public IDisposable SubscribeResponse(Func<TRequest, CancellationToken, UniTask<TResponse>> responseFunc,
+            CancellationToken cancellationToken = default,
+            bool overrideResponse = true)
+        {
+            if (!overrideResponse && responseSubscription != null)
+            {
+                Debug.LogWarning("Responder already exist.");
+                return responseSubscription;
+            }
+
+            responseSubscription?.Dispose();
+            responseSubscription =
+                _requestReactiveProperty.SubscribeAwait(async _ => await ResponseAsync(responseFunc, cancellationToken));
+
+            while (_requests.Count > 0)
+            {
+                _requestReactiveProperty.Value = this;
             }
 
             return responseSubscription;
