@@ -59,6 +59,7 @@ sysinfo.txt
 crashlytics-build.properties
 
 /.idea*
+.idea*
 
 # Paid optional Assets
 [Aa]ssets/[Pp]lugins/[Ss]irenix*
