@@ -26,7 +26,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
             var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
             var task = _responseReactiveProperty.WaitAsync(token);
             _asyncRequests.Enqueue(request);
-            TryRespond();
+            _requestReactiveProperty.Value = this;
             return task;
         }
 
@@ -99,7 +99,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
 
             while (_requests.Count > 0)
             {
-                TryRespond();
+                _requestReactiveProperty.Value = this;
             }
 
             return responseSubscription;
@@ -121,7 +121,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
 
             while (_requests.Count > 0)
             {
-                TryRespond();
+                _requestReactiveProperty.Value = this;
             }
 
             return responseSubscription;
