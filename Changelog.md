@@ -6,19 +6,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.2] - 2022-02-15
+
+### Changed
+- Update `CancellationToken` handling.
+- Handle `async` oprations using only UniTask when using Multiple library (both `UniRx` and `UniTask` imported).
+- Fix typos
+
 ## [2.1.1] - 2022-01-09
 
 ### Changed
-- VariableCore for UniTask now Inherits Interface IAsyncReactiveProperty<>
-- Reword "Base" to "Core" for some filenames.
-- BoolUnityEventBinder now handles negated bool value.
-- StringUnityEventBinder now handles ToString() for value type other than string.
-- Change subscription handling on UnityEventBinder.
+- `VariableCore` for `UniTask` now Inherits Interface `IAsyncReactiveProperty<>`
+- Reword `Base` to `Core` for some filenames.
+- `BoolUnityEventBinder` now handles negated `bool` value.
+- `StringUnityEventBinder` now handles `ToString()` for value type other than string.
+- Change subscription handling on `UnityEventBinder`.
 
 ## [2.1.0] - 2021-12-16
 
 ### Added
-- Persistent Json Extension Utility for VariableCore<T> derivations.
+- Persistent Json Extension Utility for `VariableCore<T>` derivations.
 
 ## [2.0.0] - 2021-10-27
 
@@ -80,7 +87,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.1.1...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.1.2...HEAD
+[2.1.2]: https://github.com/kadinche/Kassets/compare/2.1.1...2.1.2
 [2.1.1]: https://github.com/kadinche/Kassets/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/kadinche/Kassets/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/kadinche/Kassets/compare/1.0.0...2.0.0
