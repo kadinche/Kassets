@@ -2,7 +2,6 @@ namespace Kadinche.Kassets.CommandSystem
 {
     public abstract partial class CommandCore : KassetsCore, ICommand
     {
-        public override void Dispose() { }
     }
 
     public abstract partial class CommandCore<T> : CommandCore, ICommand<T>
@@ -13,6 +12,7 @@ namespace Kadinche.Kassets.CommandSystem
 #if !KASSETS_UNITASK
     public abstract partial class CommandCore
     {
+        public override void Dispose() { }
         public abstract void Execute();
     }
 

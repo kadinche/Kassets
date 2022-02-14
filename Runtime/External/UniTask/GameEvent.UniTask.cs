@@ -10,49 +10,48 @@ namespace Kadinche.Kassets.EventSystem
     public partial class GameEvent : IUniTaskAsyncEnumerable<object>
     {
         private readonly AsyncReactiveProperty<object> _onEventRaise = new AsyncReactiveProperty<object>(default);
-        protected readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         public void Subscribe(Action action, CancellationToken cancellationToken)
         {
-            _onEventRaise.Subscribe(_ => action.Invoke(), cancellationToken);
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            _onEventRaise.Subscribe(_ => action.Invoke(), token);
         }
 
-        public UniTask EventAsync(CancellationToken cancellationToken) => _onEventRaise.WaitAsync(cancellationToken);
-        public UniTask EventAsync() => EventAsync(cts.Token);
+        public UniTask EventAsync(CancellationToken cancellationToken = default)
+        {
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            return _onEventRaise.WaitAsync(token);
+        }
 
         IUniTaskAsyncEnumerator<object> IUniTaskAsyncEnumerable<object>.GetAsyncEnumerator(
-            CancellationToken cancellationToken) =>
-            _onEventRaise.GetAsyncEnumerator(cancellationToken);
-    }
-    
-    public partial class GameEvent
-    {
-#if !UNITY_EDITOR
-        protected override void OnDisable()
+            CancellationToken cancellationToken)
         {
-            base.OnDisable();
-            cts.RefreshToken();
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            return _onEventRaise.GetAsyncEnumerator(token);
         }
-#else
-        protected override void OnExitPlayMode()
-        {
-            base.OnExitPlayMode();
-            cts.RefreshToken();
-        }
-#endif
     }
 
     public abstract partial class GameEvent<T> : IUniTaskAsyncEnumerable<T>
     {
         protected readonly AsyncReactiveProperty<T> onEventRaise = new AsyncReactiveProperty<T>(default);
 
-        public void Subscribe(Action<T> action, CancellationToken cancellationToken) => onEventRaise.Subscribe(action, cancellationToken);
+        public void Subscribe(Action<T> action, CancellationToken cancellationToken)
+        {
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            onEventRaise.Subscribe(action, token);
+        }
 
-        public new UniTask<T> EventAsync(CancellationToken cancellationToken) => onEventRaise.WaitAsync(cancellationToken);
-        public new UniTask<T> EventAsync() => EventAsync(cts.Token);
-        
-        IUniTaskAsyncEnumerator<T> IUniTaskAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken cancellationToken) =>
-            onEventRaise.GetAsyncEnumerator(cancellationToken);
+        public new UniTask<T> EventAsync(CancellationToken cancellationToken = default)
+        {
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            return onEventRaise.WaitAsync(token);
+        }
+
+        IUniTaskAsyncEnumerator<T> IUniTaskAsyncEnumerable<T>.GetAsyncEnumerator(CancellationToken cancellationToken)
+        {
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            return onEventRaise.GetAsyncEnumerator(token);
+        }
     }
 
     public partial class GameEventCollection
@@ -61,16 +60,17 @@ namespace Kadinche.Kassets.EventSystem
 
         public void Subscribe(Action onAnyEvent, CancellationToken cancellationToken)
         {
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
             foreach (var gameEvent in _gameEvents)
             {
-                gameEvent.Subscribe(onAnyEvent, cancellationToken);
+                gameEvent.Subscribe(onAnyEvent, token);
             }
         }
 
-        public UniTask AnyEventAsync() => AnyEventAsync(cts.Token);
-        public UniTask AnyEventAsync(CancellationToken cancellationToken)
+        public UniTask AnyEventAsync(CancellationToken cancellationToken = default)
         {
-            return UniTask.WhenAny(_gameEvents.Select(gameEvent => gameEvent.EventAsync(cancellationToken)));
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            return UniTask.WhenAny(_gameEvents.Select(gameEvent => gameEvent.EventAsync(token)));
         }
         
         public void Dispose()
@@ -90,7 +90,7 @@ namespace Kadinche.Kassets.EventSystem
         private IDisposable Subscribe_UniTask(Action action) => _onEventRaise.Subscribe(_ => action.Invoke());
         private void Dispose_UniTask()
         {
-            cts.CancelAndDispose();
+            base.Dispose();
             _onEventRaise.Dispose();
         }
     }
@@ -120,7 +120,7 @@ namespace Kadinche.Kassets.EventSystem
         public IDisposable Subscribe(Action action) => _onEventRaise.Subscribe(_ => action.Invoke());
         public override void Dispose()
         {
-            cts.CancelAndDispose();
+            base.Dispose();
             _onEventRaise.Dispose();
         }
     }

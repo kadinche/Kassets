@@ -25,7 +25,7 @@ namespace Kadinche.Kassets.Collection
         public IUniTaskAsyncEnumerable<T> OnRemoveAsyncEnumerable() => _onRemoveReactiveProperty;
         public IUniTaskAsyncEnumerable<object> OnClearAsyncEnumerable() => _onClearReactiveProperty;
 
-        public IUniTaskAsyncEnumerable<T> ValueAtAsyncEnumerable(int index)
+        public IAsyncReactiveProperty<T> ValueAtAsyncEnumerable(int index)
         {
             if (!_valueReactiveProperties.TryGetValue(index, out var elementSubject))
             {
@@ -38,22 +38,26 @@ namespace Kadinche.Kassets.Collection
 
         public void SubscribeOnAdd(Action<T> action, CancellationToken cancellationToken)
         {
-            _onAddReactiveProperty.Subscribe(action, cancellationToken);
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            _onAddReactiveProperty.Subscribe(action, token);
         }
         
         public void SubscribeOnRemove(Action<T> action, CancellationToken cancellationToken)
         {
-            _onRemoveReactiveProperty.Subscribe(action, cancellationToken);
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            _onRemoveReactiveProperty.Subscribe(action, token);
         }
         
         public void SubscribeOnClear(Action action, CancellationToken cancellationToken)
         {
-            _onClearReactiveProperty.Subscribe(_ => action.Invoke(), cancellationToken);
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            _onClearReactiveProperty.Subscribe(_ => action.Invoke(), token);
         }
 
         public void SubscribeToValueAt(int index, Action<T> action, CancellationToken cancellationToken)
         {
-            ValueAtAsyncEnumerable(index).Subscribe(action, cancellationToken);
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            ValueAtAsyncEnumerable(index).Subscribe(action, token);
         }
         
         #endregion
@@ -65,7 +69,7 @@ namespace Kadinche.Kassets.Collection
         
         private readonly IDictionary<TKey, AsyncReactiveProperty<TValue>> _valueReactiveProperties = new Dictionary<TKey, AsyncReactiveProperty<TValue>>();
         
-        public IUniTaskAsyncEnumerable<TValue> ValueAtAsyncEnumerable(TKey key)
+        public IAsyncReactiveProperty<TValue> ValueAtAsyncEnumerable(TKey key)
         {
             if (!_valueReactiveProperties.TryGetValue(key, out var reactiveProperty))
             {
@@ -82,7 +86,8 @@ namespace Kadinche.Kassets.Collection
 
         public void SubscribeToValue(TKey key, Action<TValue> action, CancellationToken cancellationToken)
         {
-            ValueAtAsyncEnumerable(key).Subscribe(action, cancellationToken);
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            ValueAtAsyncEnumerable(key).Subscribe(action, token);
         }
 
         #endregion
