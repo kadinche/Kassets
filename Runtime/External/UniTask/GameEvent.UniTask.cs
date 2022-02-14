@@ -135,10 +135,10 @@ namespace Kadinche.Kassets.EventSystem
         {
             _value = param;
             base.Raise();
-            _onEventRaise.Value = param;
+            onEventRaise.Value = param;
         }
 
-        public IDisposable Subscribe(Action<T> action) => _onEventRaise.Subscribe(action);
+        public IDisposable Subscribe(Action<T> action) => onEventRaise.Subscribe(action);
     }
 #endif
 }
