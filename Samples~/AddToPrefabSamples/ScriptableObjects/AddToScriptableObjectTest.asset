@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc34356955d405ba1a2b13e5a36eff3, type: 3}
+  m_Name: AddToScriptableObjectTest
+  m_EditorClassIdentifier: 
+  buffered: 1
+  _value:
+    name: AddToScriptableObjectTest
+    maxHP: 0
+    atk: 0
+    def: 0
+  _variableEventType: 0
+  _autoResetValue: 0
+  _enemyMaxHPVariable: {fileID: 9081139887584030750}
+  _enemyHPVariable: {fileID: 2861205205302829487}
+  _enemyAtkVariable: {fileID: 4772407135669040886}
+  _enemyDefVariable: {fileID: 6514424365909951780}
+--- !u!114 &2861205205302829487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea94cbab76ba4a80b39aaaafaa72a330, type: 3}
+  m_Name: HP
+  m_EditorClassIdentifier: 
+  buffered: 1
+  _value: 0
+  _variableEventType: 0
+  _autoResetValue: 0
+--- !u!114 &4772407135669040886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea94cbab76ba4a80b39aaaafaa72a330, type: 3}
+  m_Name: Attack
+  m_EditorClassIdentifier: 
+  buffered: 1
+  _value: 0
+  _variableEventType: 0
+  _autoResetValue: 0
+--- !u!114 &6514424365909951780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea94cbab76ba4a80b39aaaafaa72a330, type: 3}
+  m_Name: Defense
+  m_EditorClassIdentifier: 
+  buffered: 1
+  _value: 0
+  _variableEventType: 0
+  _autoResetValue: 0
+--- !u!114 &9081139887584030750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea94cbab76ba4a80b39aaaafaa72a330, type: 3}
+  m_Name: Max HP
+  m_EditorClassIdentifier: 
+  buffered: 1
+  _value: 0
+  _variableEventType: 0
+  _autoResetValue: 0
