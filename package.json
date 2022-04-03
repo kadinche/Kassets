@@ -1,7 +1,7 @@
 {
   "name": "com.kadinche.kassets",
   "displayName": "Kassets",
-  "version": "2.1.4",
+  "version": "2.2.0",
   "unity": "2019.4",
   "description": "Scriptable Object Architecture extendable with UniRx and/or UniTask",
   "license": "MIT",
@@ -40,6 +40,11 @@
       "displayName": "UnityEvent Binder Samples",
       "description": "Contains sample usage of Kassets UnityEventBinder components",
       "path": "Samples~/UnityEventBinderSamples"
+    },
+    {
+      "displayName": "Add to Prefab Samples",
+      "description": "Contains sample usage of adding ScriptableObject's assets to a Prefab or other Scriptable Object.",
+      "path": "Samples~/AddToPrefabSamples"
     }
   ]
 }
