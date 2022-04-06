@@ -70,8 +70,8 @@ namespace Kadinche.Kassets.Collection
         {
             _lastRemoved = _value[index];
             _value.RemoveAt(index);
-            RemoveValueSubscription(index);
             RaiseOnRemove(_lastRemoved);
+            RemoveValueSubscription(index);
         }
 
         public T this[int index]
@@ -251,7 +251,7 @@ namespace Kadinche.Kassets.Collection
             if (!_onAddSubscriptions.Contains(subscription))
             {
                 _onAddSubscriptions.Add(subscription);
-                if (withBuffer)
+                if (withBuffer && _value.Count > 0)
                 {
                     subscription.Invoke(_value.LastOrDefault());
                 }

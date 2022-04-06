@@ -20,11 +20,10 @@ namespace Kadinche.Kassets
     {
         internal static void Dispose(this IList<IDisposable> disposables)
         {
-            foreach (var disposable in disposables)
-            {
-                disposable?.Dispose();
-            }
-            
+            var i = 0;
+            while (i < disposables.Count) 
+                disposables[i++].Dispose();
+
             disposables.Clear();
         }
 
