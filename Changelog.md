@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Fixed `Collection<TKey, TValue>` doesn't reflect its value correctly as `IDictionary<TKey, TValue>`.
 - Set independent `GameEvent` `buffered` default value to `false`.
+- Fixed `Null Reference Exception` on subscription disposal and buffered subscription.
 
 ## [2.2.0] - 2022-04-04
 
