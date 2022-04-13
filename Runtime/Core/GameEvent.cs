@@ -73,7 +73,7 @@ namespace Kadinche.Kassets.EventSystem
     public partial class GameEvent
     {
         [Tooltip("Whether to listen to previous event upon subscription.")]
-        [SerializeField] protected bool buffered = true;
+        [SerializeField] protected bool buffered;
         
         public IDisposable Subscribe(Action action) => Subscribe(action, buffered);
         
