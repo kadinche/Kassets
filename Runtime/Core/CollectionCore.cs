@@ -128,12 +128,7 @@ namespace Kadinche.Kassets.Collection
             {
                 _value.Clear();
                 _value.AddRange(value);
-
-                _activeDictionary.Clear();
-                foreach (var pair in value)
-                {
-                    _activeDictionary.Add(pair.key, pair.value);
-                }
+                OnValidate();
             }
         }
 
@@ -175,9 +170,16 @@ namespace Kadinche.Kassets.Collection
 
         public TValue this[TKey key]
         {
-            get => _activeDictionary[key];
+            get
+            {
+                if (!_activeDictionary.ContainsKey(key))
+                    OnValidate();
+                return _activeDictionary[key];
+            }
             set
             {
+                if (!_activeDictionary.ContainsKey(key))
+                    OnValidate();
                 _activeDictionary[key] = value;
                 var _ = _value.First(p => p.key.Equals(key));
                 _.value = value;
@@ -209,6 +211,13 @@ namespace Kadinche.Kassets.Collection
         public ICollection<TValue> Values => _activeDictionary.Values;
 
         #endregion
+
+        private void OnValidate()
+        {
+            _activeDictionary.Clear();
+            foreach (var pair in Value) 
+                _activeDictionary.Add(pair.key, pair.value);
+        }
 
         public override void Dispose()
         {
