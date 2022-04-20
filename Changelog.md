@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.3.0] - 2022-04-21
+
+### Added
+- Added feature to Subscribe to Request of `RequestResponse<TRequest, TResponse>` without reponse.
+- Added feature to Subscribe to Response of `RequestResponse<TRequest, TResponse>` without requesting.
+- Added sample for Subscribe to Request and Subscribe to Response.
+
 ## [2.2.1] - 2022-04-14
 
 ### Changed
@@ -111,7 +118,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.2.1...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.3.0...HEAD
+[2.3.0]: https://github.com/kadinche/Kassets/compare/2.2.1...2.3.0
 [2.2.1]: https://github.com/kadinche/Kassets/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/kadinche/Kassets/compare/2.1.4...2.2.0
 [2.1.4]: https://github.com/kadinche/Kassets/compare/2.1.3...2.1.4
