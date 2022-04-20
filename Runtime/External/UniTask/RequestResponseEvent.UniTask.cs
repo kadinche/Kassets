@@ -29,23 +29,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
             _requestReactiveProperty.Value = this;
             return task;
         }
-
-        public void Response(Func<TRequest, TResponse> responseFunc)
-        {
-            if (_requests.Count > 0)
-            {
-                var request = _requests.Dequeue();
-                var response = responseFunc.Invoke(request.Item1);
-                request.Item2.Invoke(response);
-            }
-            else if (_asyncRequests.Count > 0)
-            {
-                var request = _asyncRequests.Dequeue();
-                var response = responseFunc.Invoke(request);
-                _responseReactiveProperty.Value = response;
-            }
-        }
-
+        
         public async UniTask ResponseAsync(Func<TRequest, UniTask<TResponse>> responseFunc, CancellationToken cancellationToken = default)
         {
             var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
@@ -82,7 +66,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
             }
         }
 
-        public IDisposable SubscribeResponse(Func<TRequest, UniTask<TResponse>> responseFunc,
+        public IDisposable RegisterResponse(Func<TRequest, UniTask<TResponse>> responseFunc,
             CancellationToken cancellationToken = default,
             bool overrideResponse = true)
         {
@@ -105,7 +89,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
             return responseSubscription;
         }
         
-        public IDisposable SubscribeResponse(Func<TRequest, CancellationToken, UniTask<TResponse>> responseFunc,
+        public IDisposable RegisterResponse(Func<TRequest, CancellationToken, UniTask<TResponse>> responseFunc,
             CancellationToken cancellationToken = default,
             bool overrideResponse = true)
         {
@@ -126,6 +110,8 @@ namespace Kadinche.Kassets.RequestResponseSystem
 
             return responseSubscription;
         }
+
+        public UniTask<TResponse> WaitForResponse(CancellationToken token) => _responseReactiveProperty.WaitAsync(token);
     }
     
 #if KASSETS_UNIRX
@@ -135,10 +121,38 @@ namespace Kadinche.Kassets.RequestResponseSystem
         {
             _requestReactiveProperty.Value = this;
         }
+        
+        public void Response_UniTask(Func<TRequest, TResponse> responseFunc)
+        {
+            if (_requests.Count > 0)
+            {
+                var request = _requests.Dequeue();
+                var response = responseFunc.Invoke(request.Item1);
+                request.Item2.Invoke(response);
+                responseValue = response;
+            }
+            else if (_asyncRequests.Count > 0)
+            {
+                var request = _asyncRequests.Dequeue();
+                var response = responseFunc.Invoke(request);
+                responseValue = response;
+                _responseReactiveProperty.Value = response;
+            }
+        }
 
         private IDisposable HandleSubscribe_UniTask(Func<TRequest, TResponse> responseFunc)
         {
             return _requestReactiveProperty.Subscribe(_ => Response(responseFunc));
+        }
+        
+        private IDisposable HandleSubscribeToResponse_UniTask(Action action)
+        {
+            return _responseReactiveProperty.Subscribe(_ => action.Invoke());
+        }
+        
+        private IDisposable HandleSubscribeToResponse_UniTask(Action<TResponse> action)
+        {
+            return _responseReactiveProperty.Subscribe(action);
         }
         
         private void Dispose_UniTask()
@@ -147,6 +161,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
             _requests.Clear();
             responseSubscription?.Dispose();
             _requestReactiveProperty.Dispose();
+            _responseReactiveProperty.Dispose();
         }
     }
 #else
@@ -156,10 +171,39 @@ namespace Kadinche.Kassets.RequestResponseSystem
         {
             _requestReactiveProperty.Value = this;
         }
+        
+        public void Response(Func<TRequest, TResponse> responseFunc)
+        {
+            if (_requests.Count > 0)
+            {
+                var request = _requests.Dequeue();
+                var response = responseFunc.Invoke(request.Item1);
+                request.Item2.Invoke(response);
+                responseValue = response;
+            }
+            else if (_asyncRequests.Count > 0)
+            {
+                var request = _asyncRequests.Dequeue();
+                var response = responseFunc.Invoke(request);
+                responseValue = response;
+                _responseReactiveProperty.Value = response;
+            }
+        }
+
 
         private IDisposable HandleSubscribe(Func<TRequest, TResponse> responseFunc)
         {
             return _requestReactiveProperty.Subscribe(_ => Response(responseFunc));
+        }
+        
+        private IDisposable HandleSubscribeToResponse(Action action)
+        {
+            return _responseReactiveProperty.Subscribe(_ => action.Invoke());
+        }
+        
+        private IDisposable HandleSubscribeToResponse(Action<TResponse> action)
+        {
+            return _responseReactiveProperty.Subscribe(action);
         }
         
         public override void Dispose()
@@ -168,6 +212,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
             _requests.Clear();
             responseSubscription?.Dispose();
             _requestReactiveProperty.Dispose();
+            _responseReactiveProperty.Dispose();
         }
     }
 #endif

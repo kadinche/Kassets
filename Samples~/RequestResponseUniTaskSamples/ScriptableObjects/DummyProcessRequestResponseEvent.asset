@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1075c3c1f67149b7a001ddffbb076df4, type: 3}
   m_Name: DummyProcessRequestResponseEvent
   m_EditorClassIdentifier: 
-  buffered: 1
+  _defaultSubscribeBehavior: 1
   _value: 0
+  responseValue: 0

@@ -11,7 +11,7 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
 
         private void Start()
         {
-            _subscription = _dummyProcessRequestResponseEvent.SubscribeResponse(ProcessRequest);
+            _subscription = _dummyProcessRequestResponseEvent.RegisterResponse(ProcessRequest);
         }
 
         private float ProcessRequest(float requestValue)
