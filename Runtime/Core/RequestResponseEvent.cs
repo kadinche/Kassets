@@ -21,6 +21,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
         public void Request(TRequest param, Action<TResponse> onResponse)
         {
             _requests.Enqueue(new Tuple<TRequest, Action<TResponse>>(param, onResponse));
+            Raise(param);
             TryRespond();
         }
 

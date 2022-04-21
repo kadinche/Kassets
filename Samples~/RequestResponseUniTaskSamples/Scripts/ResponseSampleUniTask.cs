@@ -23,7 +23,7 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
         private async UniTask<float> ProcessRequest(float requestValue)
         {
             var token = this.GetCancellationTokenOnDestroy();
-            var delay = Random.value * 5;
+            var delay = requestValue + Random.value * 3;
             await UniTask.Delay(TimeSpan.FromSeconds(delay), cancellationToken: token);
             return delay;
         }
