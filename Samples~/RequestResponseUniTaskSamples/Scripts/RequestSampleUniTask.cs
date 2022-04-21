@@ -33,7 +33,7 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
             _button.interactable = false;
             _buttonLabel.text = "Waiting for Response..";
             
-            var responseValue = await _dummyProcessRequestResponseEvent.RequestAsync(0f);
+            var responseValue = await _dummyProcessRequestResponseEvent.RequestAsync(Random.value * 3f);
             
             _button.interactable = true;
             _buttonLabel.text = "Request";

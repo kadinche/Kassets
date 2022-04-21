@@ -27,6 +27,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
             var task = _responseReactiveProperty.WaitAsync(token);
             _asyncRequests.Enqueue(request);
             _requestReactiveProperty.Value = this;
+            Raise(request);
             return task;
         }
         
