@@ -215,8 +215,11 @@ namespace Kadinche.Kassets.Collection
         private void OnValidate()
         {
             _activeDictionary.Clear();
-            foreach (var pair in Value) 
-                _activeDictionary.Add(pair.key, pair.value);
+            foreach (var pair in Value)
+            {
+                if (!_activeDictionary.ContainsKey(pair.key))
+                    _activeDictionary.Add(pair.key, pair.value);
+            }
         }
 
         public override void Dispose()
