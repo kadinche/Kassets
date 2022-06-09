@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.0] - 2022-06-10
+
+### Added
+- Wrap Object Pool into Kassets' ScriptableObject
+- Note: Object Pool is a new feature and only available from Unity version 2021 or later.
+
+### Changed
+- Fixed error when adding an element into `Collection<TKey, TValue>`
+- Added Fire-and-Forget for `RequestResponse<TRequest, TResponse>`
+
 ## [2.3.1] - 2022-04-21
 
 ### Changed
@@ -123,7 +133,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.3.1...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.4.0...HEAD
+[2.4.0]: https://github.com/kadinche/Kassets/compare/2.3.1...2.4.0
 [2.3.1]: https://github.com/kadinche/Kassets/compare/2.3.0...2.3.1
 [2.3.0]: https://github.com/kadinche/Kassets/compare/2.2.1...2.3.0
 [2.2.1]: https://github.com/kadinche/Kassets/compare/2.2.0...2.2.1
