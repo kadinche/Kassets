@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Kadinche.Kassets.ObjectPool
 {
-    [CreateAssetMenu(fileName = "NewTransformPool", menuName = MenuHelper.DefaultObjectPoolMenu + "TransformPool")]
+    [CreateAssetMenu(fileName = "NewGameObjectPool", menuName = MenuHelper.DefaultObjectPoolMenu + "GameObjectPool")]
     public class GameObjectPool : ObjectPoolCore<GameObject>
     {
         [SerializeField] private GameObject _targetPrefab;
