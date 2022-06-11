@@ -45,6 +45,11 @@
       "displayName": "Add to Prefab Samples",
       "description": "Contains sample usage of adding ScriptableObject's assets to a Prefab or other Scriptable Object.",
       "path": "Samples~/AddToPrefabSamples"
+    },
+    {
+      "displayName": "Object Pool Samples",
+      "description": "Contains sample usage of Kassets ObjectPool (Unity 2021 or later).",
+      "path": "Samples~/ObjectPoolSamples"
     }
   ]
 }

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Wrap Object Pool into Kassets' ScriptableObject
+- Object Pool Sample
 - Note: Object Pool is a new feature and only available from Unity version 2021 or later.
 
 ### Changed
