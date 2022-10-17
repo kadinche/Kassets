@@ -1,7 +1,7 @@
-using Kadinche.Kassets.Variable;
+using Kadinche.Kassets.EventSystem;
 using UnityEditor;
 
-namespace Kadinche.Kassets.EventSystem
+namespace Kadinche.Kassets.Variable
 {
     [CustomEditor(typeof(VariableCore<>), true)]
     [CanEditMultipleObjects]

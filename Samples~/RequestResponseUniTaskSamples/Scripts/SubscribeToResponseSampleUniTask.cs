@@ -12,6 +12,7 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
         [SerializeField] private FloatRequestResponseEvent _dummyProcessRequestResponseEvent;
         [SerializeField] private TMP_Text _label;
 
+#if KASSETS_UNITASK
         private void Start() => Begin().Forget();
 
         private async UniTaskVoid Begin()
@@ -23,5 +24,11 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
                 _label.text = $"Response received. Response value: {response}";
             }
         }
+#else
+        private void Start()
+        {
+            Debug.LogError("UniTask not found. Please import UniTask first");
+        }
+#endif
     }
 }
