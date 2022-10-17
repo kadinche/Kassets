@@ -7,11 +7,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
     {
         private void TryRespond()
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 TryRespond_UniRx();
             }
-            else //if (_defaultSubscribeBehavior == LibraryEnum.UniTask)
+            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
             {
                 TryRespond_UniTask();
             }
@@ -19,11 +19,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
 
         public void Response(Func<TRequest, TResponse> responseFunc)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 Response_UniRx(responseFunc);
             }
-            else //if (_defaultSubscribeBehavior == LibraryEnum.UniTask)
+            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
             {
                 Response_UniTask(responseFunc);
             }
@@ -31,11 +31,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
 
         private IDisposable HandleSubscribe(Func<TRequest, TResponse> responseFunc)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return HandleSubscribe_UniRx(responseFunc);
             }
-            else //if (_defaultSubscribeBehavior == LibraryEnum.UniTask)
+            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
             {
                 return HandleSubscribe_UniTask(responseFunc);
             }
@@ -43,11 +43,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
         
         private IDisposable HandleSubscribeToResponse(Action action)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return HandleSubscribeToResponse_UniRx(action);
             }
-            else //if (_defaultSubscribeBehavior == LibraryEnum.UniTask)
+            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
             {
                 return HandleSubscribeToResponse_UniTask(action);
             }
@@ -55,11 +55,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
         
         private IDisposable HandleSubscribeToResponse(Action<TResponse> action)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return HandleSubscribeToResponse_UniRx(action);
             }
-            else //if (_defaultSubscribeBehavior == LibraryEnum.UniTask)
+            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
             {
                 return HandleSubscribeToResponse_UniTask(action);
             }

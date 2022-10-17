@@ -31,7 +31,7 @@ namespace Kadinche.Kassets.Collection
         
         public IDisposable SubscribeOnAdd(Action<T> action)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return SubscribeOnAdd_UniRx(action);
             }
@@ -43,7 +43,7 @@ namespace Kadinche.Kassets.Collection
 
         public IDisposable SubscribeOnRemove(Action<T> action)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return SubscribeOnRemove_UniRx(action);
             }
@@ -55,7 +55,7 @@ namespace Kadinche.Kassets.Collection
 
         public IDisposable SubscribeOnClear(Action action)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return SubscribeOnClear_UniRx(action);
             }
@@ -67,7 +67,7 @@ namespace Kadinche.Kassets.Collection
 
         public IDisposable SubscribeToValueAt(int index, Action<T> action)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return SubscribeToValueAt_UniRx(index, action);
             }
@@ -106,7 +106,7 @@ namespace Kadinche.Kassets.Collection
         
         public IDisposable SubscribeToValue(TKey key, Action<TValue> action)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return SubscribeToValue_UniRx(key, action);
             }
