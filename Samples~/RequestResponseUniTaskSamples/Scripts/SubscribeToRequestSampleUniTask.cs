@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -12,17 +13,17 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
         [SerializeField] private FloatRequestResponseEvent _dummyProcessRequestResponseEvent;
         [SerializeField] private TMP_Text _label;
 
+        private IDisposable _subscription;
+
         private void Start()
         {
-            _dummyProcessRequestResponseEvent
-                .SubscribeToRequest(value =>
-                {
-                    // if (!_label.enabled)
-                    //     _label.enabled = true;
-                    // else
-                        _label.text = $"Request sent. Request value: {value}";
-                })
-                .AddTo(this.GetCancellationTokenOnDestroy());
+            _subscription = _dummyProcessRequestResponseEvent
+                .SubscribeToRequest(value => _label.text = $"Request sent. Request value: {value}");
+        }
+
+        private void OnDestroy()
+        {
+            _subscription?.Dispose();
         }
     }
 }
