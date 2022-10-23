@@ -32,7 +32,10 @@ public class ExtendedScriptableObjectDrawer : PropertyDrawer {
 			SerializedProperty prop = serializedObject.GetIterator();
 			if (prop.NextVisible(true)) {
 				do {
-					if(prop.name == "m_Script") continue;
+					if (prop.name == "m_Script") continue;
+					if (prop.name == "_value" && prop.propertyType == SerializedPropertyType.Generic && !prop.isArray) 
+						totalHeight -= EditorGUIUtility.singleLineHeight;
+
 					var subProp = serializedObject.FindProperty(prop.name);
 					float height = EditorGUI.GetPropertyHeight(subProp, null, true) + EditorGUIUtility.standardVerticalSpacing;
 					totalHeight += height;
@@ -48,6 +51,7 @@ public class ExtendedScriptableObjectDrawer : PropertyDrawer {
 	const int buttonWidth = 66;
 	
 	static readonly List<string> ignoreClassFullNames = new List<string>{ "TMPro.TMP_FontAsset" };
+	private readonly List<SerializedProperty> _orderedProperty = new();
 	
 	public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
 		EditorGUI.BeginProperty (position, label, property);
@@ -98,21 +102,61 @@ public class ExtendedScriptableObjectDrawer : PropertyDrawer {
 				GUI.Box(new Rect(0, position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing - 1, Screen.width, position.height - EditorGUIUtility.singleLineHeight - EditorGUIUtility.standardVerticalSpacing), "");
 
 				EditorGUI.indentLevel++;
-				SerializedObject serializedObject = new SerializedObject(data);
+				var serializedObject = new SerializedObject(data);
 				
-				// Iterate over all the values and draw them
-				SerializedProperty prop = serializedObject.GetIterator();
-				float y = position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-				if (prop.NextVisible(true)) {
+				_orderedProperty.Clear();
+				SerializedProperty value = null;
+				
+				var prop = serializedObject.GetIterator();
+				var y = position.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+				
+				// Iterate over all the values
+				if (prop.NextVisible(true))
+				{
+					SerializedProperty instanceSettings = null;
 					do {
 						// Don't bother drawing the class file
-						if(prop.name == "m_Script") continue;
-						float height = EditorGUI.GetPropertyHeight(prop, new GUIContent(prop.displayName), true);
-						EditorGUI.PropertyField(new Rect(position.x, y, position.width-buttonWidth, height), prop, true);
-						y += height + EditorGUIUtility.standardVerticalSpacing;
+						if (prop.name == "m_Script") continue;
+						
+						if (prop.name == "_value")
+							value = prop.Copy();
+						else if (prop.name == "instanceSettings")
+							instanceSettings = prop.Copy();
+						else
+							_orderedProperty.Add(prop.Copy());
 					}
 					while (prop.NextVisible(false));
+					
+					if (instanceSettings != null)
+						_orderedProperty.Add(instanceSettings);
 				}
+				
+				// draw generic values
+				if (value != null)
+				{
+					if (value.propertyType == SerializedPropertyType.Generic && !value.isArray)
+					{
+						foreach (var child in value.GetChildren()) 
+						{
+							var height = EditorGUI.GetPropertyHeight(child, new GUIContent(child.displayName), true);
+							EditorGUI.PropertyField(new Rect(position.x, y, position.width, height), child, true);
+							y += height + EditorGUIUtility.standardVerticalSpacing;
+						}
+					}
+					else
+					{
+						_orderedProperty.Insert(0, value);
+					}
+				}
+				
+				// draw all the values
+				foreach (var ordered in _orderedProperty)
+				{
+					var height = EditorGUI.GetPropertyHeight(ordered, new GUIContent(ordered.displayName), true);
+					EditorGUI.PropertyField(new Rect(position.x, y, position.width, height), ordered, true);
+					y += height + EditorGUIUtility.standardVerticalSpacing;
+				}
+				
 				if (GUI.changed)
 					serializedObject.ApplyModifiedProperties();
 
@@ -130,7 +174,7 @@ public class ExtendedScriptableObjectDrawer : PropertyDrawer {
 			}
 		}
 		property.serializedObject.ApplyModifiedProperties();
-		EditorGUI.EndProperty ();
+		EditorGUI.EndProperty();
 	}
 
 	public static T _GUILayout<T> (string label, T objectReferenceValue, ref bool isExpanded) where T : ScriptableObject {
