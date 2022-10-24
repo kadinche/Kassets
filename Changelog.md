@@ -9,17 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.4.1] - 2022-10-24
 
 ### Added
-- QuaternionCollection
-- PoseCollection
-- InstanceSettings: Grouped kassets instance's settings (i.e. Variable event type) into one class. 
+- `QuaternionCollection`
+- `PoseCollection`
+- `InstanceSettings`: Grouped kassets instance's settings (i.e. Variable event type) into one class.
 
 ### Changed
-- Fixed wrong type of Vector3Collection, from Vector2 to correct Vector3.
+- Fixed wrong type of `Vector3Collection`, from `Vector2` to the correct `Vector3`.
+- Fixed conditionals (Scripting Define) on UniTask Samples.
 - Improve Custom Editor code (Custom class no longer show "Value" dropdown).
 
 ### Known Issues
-- Kassets' Instance Inline inspector editing for Collection currently doesn't work.
-- Kassets' Instance Settings Auto Reset currently doesn't work properly.
+- Kassets' Instance Inline inspector editing for `Collection` currently doesn't work.
+- Kassets' Instance Settings `Auto Reset Value` currently doesn't work properly.
 
 ## [2.4.0] - 2022-06-10
 
