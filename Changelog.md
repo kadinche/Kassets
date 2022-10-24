@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.2] - 2022-10-25
+
+### Changed
+- Fixed timing of entering play mode (use ExitingEditMode instead) which were used for `AutoResetValue` timing.
+
 ## [2.4.1] - 2022-10-24
 
 ### Added
@@ -150,7 +155,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.4.1...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.4.2...HEAD
+[2.4.2]: https://github.com/kadinche/Kassets/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/kadinche/Kassets/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/kadinche/Kassets/compare/2.3.1...2.4.0
 [2.3.1]: https://github.com/kadinche/Kassets/compare/2.3.0...2.3.1
