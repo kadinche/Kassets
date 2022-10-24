@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.1] - 2022-10-24
+
+### Added
+- QuaternionCollection
+- PoseCollection
+- InstanceSettings: Grouped kassets instance's settings (i.e. Variable event type) into one class. 
+
+### Changed
+- Fixed wrong type of Vector3Collection, from Vector2 to correct Vector3.
+- Improve Custom Editor code (Custom class no longer show "Value" dropdown).
+
+### Known Issues
+- Kassets' Instance Inline inspector editing for Collection currently doesn't work.
+- Kassets' Instance Settings Auto Reset currently doesn't work properly.
+
 ## [2.4.0] - 2022-06-10
 
 ### Added
@@ -134,7 +149,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.4.0...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.4.1...HEAD
+[2.4.1]: https://github.com/kadinche/Kassets/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/kadinche/Kassets/compare/2.3.1...2.4.0
 [2.3.1]: https://github.com/kadinche/Kassets/compare/2.3.0...2.3.1
 [2.3.0]: https://github.com/kadinche/Kassets/compare/2.2.1...2.3.0
