@@ -39,7 +39,7 @@ namespace Kadinche.Kassets
         {
             switch (stateChange)
             {
-                case PlayModeStateChange.EnteredPlayMode:
+                case PlayModeStateChange.ExitingEditMode:
                     OnEnterPlayMode();
                     break;
                 case PlayModeStateChange.ExitingPlayMode:
