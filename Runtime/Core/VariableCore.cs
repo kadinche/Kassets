@@ -9,12 +9,6 @@ namespace Kadinche.Kassets.Variable
     /// <typeparam name="T">Type to use on variable system</typeparam>
     public abstract partial class VariableCore<T> : GameEvent<T>, IVariable<T>
     {
-        [Tooltip("Set how variable event behave.\nValue Assign: Raise when value is assigned regardless of value.\nValue Changed: Raise only when value is changed.")]
-        [SerializeField] internal VariableEventType _variableEventType;
-
-        [Tooltip("If true will reset value when play mode end. Otherwise, keep runtime value.")]
-        [SerializeField] protected bool _autoResetValue;
-
         public virtual T Value
         {
             get => _value;
@@ -23,7 +17,7 @@ namespace Kadinche.Kassets.Variable
 
         public override void Raise(T value)
         {
-            if (_variableEventType == VariableEventType.ValueChange && _value.Equals(value))
+            if (instanceSettings.variableEventType == VariableEventType.ValueChange && _value.Equals(value))
                 return;
             
             base.Raise(value);
@@ -54,7 +48,7 @@ namespace Kadinche.Kassets.Variable
         
         protected override void OnDisable()
         {
-            if (!_autoResetValue)
+            if (!instanceSettings.autoResetValue)
                 return;
             
             base.OnDisable();
@@ -68,17 +62,18 @@ namespace Kadinche.Kassets.Variable
         
         protected override void OnExitPlayMode()
         {
-            if (!_autoResetValue)
+            if (!instanceSettings.autoResetValue)
                 return;
             
             base.OnExitPlayMode();
         }
 #endif
     }
-
-    internal enum VariableEventType
+    
+#if !KASSETS_UNIRX || !KASSETS_UNITASK
+    public abstract partial class VariableCore<T>
     {
-        ValueAssign,
-        ValueChange
+        [SerializeField] protected InstanceSettings instanceSettings;
     }
+#endif
 }

@@ -7,8 +7,8 @@ namespace Kadinche.Kassets.EventSystem
 {
     public partial class GameEvent
     {
-        [Tooltip("Default Event Subscription behavior. UniRx for push-based, UniTask for pull-based.")]
-        [SerializeField] protected LibraryEnum _defaultSubscribeBehavior;
+        [Tooltip("Customizable settings for current Kassets instance.")]
+        [SerializeField] protected InstanceSettings instanceSettings;
 
         /// <summary>
         /// Raise the event.
@@ -21,7 +21,7 @@ namespace Kadinche.Kassets.EventSystem
 
         public IDisposable Subscribe(Action action)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return Subscribe_UniRx(action);
             }
@@ -48,7 +48,7 @@ namespace Kadinche.Kassets.EventSystem
 
         public IDisposable Subscribe(Action<T> action)
         {
-            if (_defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
             {
                 return Subscribe_UniRx(action);
             }
@@ -58,7 +58,7 @@ namespace Kadinche.Kassets.EventSystem
             }
         }
     }
-    
+
 #if !KASSETS_UNIRX
     public partial class GameEvent
     {
