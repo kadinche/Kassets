@@ -27,30 +27,24 @@ namespace Kadinche.Kassets.EventSystem
     [CanEditMultipleObjects]
     public class TypedGameEventEditor : GameEventEditor
     {
-        private SerializedProperty _value;
-        private SerializedProperty _instanceSettings;
         private readonly string[] _excludedProperties = { "m_Script", "_value", "instanceSettings" };
-    
-        private void OnEnable()
-        {
-            _value = serializedObject.FindProperty("_value");
-            _instanceSettings = serializedObject.FindProperty("instanceSettings");
-        }
-    
+
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
             
-            if (_value.propertyType == SerializedPropertyType.Generic && !_value.isArray)
-                foreach (var child in _value.GetChildren()) 
+            using var value = serializedObject.FindProperty("_value");
+            if (value.propertyType == SerializedPropertyType.Generic && !value.isArray)
+                foreach (var child in value.GetChildren()) 
                     EditorGUILayout.PropertyField(child);
             else
-                EditorGUILayout.PropertyField(_value);
+                EditorGUILayout.PropertyField(value);
             
             DrawPropertiesExcluding(serializedObject, _excludedProperties);
             
-            if (_instanceSettings != null)
-                EditorGUILayout.PropertyField(_instanceSettings);
+            using var instanceSettings = serializedObject.FindProperty("instanceSettings");
+            if (instanceSettings != null)
+                EditorGUILayout.PropertyField(instanceSettings);
 
             AddRaiseButton();
 
