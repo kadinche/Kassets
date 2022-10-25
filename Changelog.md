@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.4.3] - 2022-10-26
+
+### Changed
+- Added `AsObservable()` and `AsAsyncEnumerable()` when both `UniRx` and `UniTask` exists together.
+- Minor improvement and code formatting on editor code.
+- Note : Updated minimum Unity version to 2020.1 due to some `C#` formatting.
+
 ## [2.4.2] - 2022-10-25
 
 ### Changed
@@ -155,7 +162,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.4.2...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.4.3...HEAD
+[2.4.3]: https://github.com/kadinche/Kassets/compare/2.4.2...2.4.3
 [2.4.2]: https://github.com/kadinche/Kassets/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/kadinche/Kassets/compare/2.4.0...2.4.1
 [2.4.0]: https://github.com/kadinche/Kassets/compare/2.3.1...2.4.0
