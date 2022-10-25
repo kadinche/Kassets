@@ -1,6 +1,7 @@
 #if KASSETS_UNIRX && KASSETS_UNITASK
 
 using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Kadinche.Kassets.EventSystem
@@ -57,6 +58,9 @@ namespace Kadinche.Kassets.EventSystem
                 return Subscribe_UniTask(action);
             }
         }
+        
+        public IObservable<T> AsObservable() => this;
+        public IUniTaskAsyncEnumerable<T> AsAsyncEnumerable() => this;
     }
 
 #if !KASSETS_UNIRX
