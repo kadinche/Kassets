@@ -50,6 +50,11 @@
       "displayName": "Object Pool Samples",
       "description": "Contains sample usage of Kassets ObjectPool (Unity 2021 or later).",
       "path": "Samples~/ObjectPoolSamples"
+    },
+    {
+      "displayName": "Json Utility Samples",
+      "description": "Contains sample usage of Kassets Json Utility extension.",
+      "path": "Samples~/JsonUtilitySamples"
     }
   ]
 }
