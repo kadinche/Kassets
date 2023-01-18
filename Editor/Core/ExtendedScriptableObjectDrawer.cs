@@ -49,8 +49,8 @@ public class ExtendedScriptableObjectDrawer : PropertyDrawer
 
 	private const int ButtonWidth = 66;
 
-	private static readonly List<string> IgnoreClassFullNames = new() { "TMPro.TMP_FontAsset" };
-	private static readonly List<string> IgnoreField = new() { "m_Script", "_value", "instanceSettings" };
+	private static readonly List<string> IgnoreClassFullNames = new List<string>() { "TMPro.TMP_FontAsset" };
+	private static readonly List<string> IgnoreField = new List<string>() { "m_Script", "_value", "instanceSettings" };
 	
 	public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
 		EditorGUI.BeginProperty (position, label, property);
