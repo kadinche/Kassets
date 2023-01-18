@@ -1,6 +1,7 @@
 namespace Kadinche.Kassets
 {
-    public interface IVariable<T>
+    public interface IVariable { }
+    public interface IVariable<T> : IVariable
     {
         T Value { get; set; }
     }
