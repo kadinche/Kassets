@@ -1,3 +1,5 @@
+#if UNITY_2021_1_OR_NEWER
+
 using TMPro;
 using UnityEngine;
 
@@ -14,3 +16,5 @@ namespace Kadinche.Kassets.ObjectPool.Samples
         }
     }
 }
+
+#endif
