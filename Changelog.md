@@ -6,6 +6,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.0] - 2023-01-19
+
+### Added
+
+- Sample for `KassetsJsonExtension` utility.
+
+### Changed
+
+- Fixed Editor Drawer compilation error on Unity 2020.3.
+- Added Unity 2021 Conditional for `ObjectPool` samples.
+- Added Non-Generic interface `IVariable` for Variable Systems.
+- Json Extension Utility now use interface `IVariable<T>` as parameter instead of `VariableCore<T>`.
+- Added Experimental feature on Json Extension Utility which use IVariable as parameter. This allows conversion to/from json string using reflection without knowing variable's generic type. Please use with care.
+
 ## [2.4.3] - 2022-10-26
 
 ### Changed
@@ -162,7 +176,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.4.3...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.0...HEAD
+[2.5.0]: https://github.com/kadinche/Kassets/compare/2.4.3...2.5.0
 [2.4.3]: https://github.com/kadinche/Kassets/compare/2.4.2...2.4.3
 [2.4.2]: https://github.com/kadinche/Kassets/compare/2.4.1...2.4.2
 [2.4.1]: https://github.com/kadinche/Kassets/compare/2.4.0...2.4.1
@@ -176,6 +191,6 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 [2.1.2]: https://github.com/kadinche/Kassets/compare/2.1.1...2.1.2
 [2.1.1]: https://github.com/kadinche/Kassets/compare/2.1.0...2.1.1
 [2.1.0]: https://github.com/kadinche/Kassets/compare/2.0.0...2.1.0
-[2.0.0]: https://github.com/kadinche/Kassets/compare/1.0.0...2.0.0
+[2.0.0]: https://github.com/kadinche/Kassets/compare/1.0.1...2.0.0
 [1.0.1]: https://github.com/kadinche/Kassets/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/kadinche/Kassets/releases/tag/1.0.0
