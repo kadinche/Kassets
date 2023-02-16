@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Fixed Editor Extension Custom Drawer to display properly when viewed over a Component.
+
 ## [2.5.0] - 2023-01-19
 
 ### Added

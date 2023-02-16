@@ -32,11 +32,19 @@ public class ExtendedScriptableObjectDrawer : PropertyDrawer
 			{
 				do {
 					if (prop.name == "m_Script") continue;
-					if (prop.name == "_value" && prop.propertyType == SerializedPropertyType.Generic && !prop.isArray) 
-						totalHeight -= EditorGUIUtility.singleLineHeight;
 
 					var subProp = serializedObject.FindProperty(prop.name);
 					var height = EditorGUI.GetPropertyHeight(subProp, null, true) + EditorGUIUtility.standardVerticalSpacing;
+					
+					if (prop.name == "_value" && prop.propertyType == SerializedPropertyType.Generic && !prop.isArray)
+					{
+						height = 0;
+						foreach (var child in subProp.GetChildren())
+						{
+							height += EditorGUI.GetPropertyHeight(child, null, true) + EditorGUIUtility.standardVerticalSpacing;
+						}
+					}
+					
 					totalHeight += height;
 				}
 				while (prop.NextVisible(false));
