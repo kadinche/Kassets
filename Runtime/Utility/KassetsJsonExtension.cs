@@ -23,7 +23,12 @@ namespace Kadinche.Kassets
         /// <typeparam name="T"></typeparam>
         public static void FromJsonString<T>(this IVariable<T> variable, string jsonString)
         {
-            variable.Value = JsonUtility.FromJson<JsonableWrapper<T>>(jsonString).value;
+            var simpleType = typeof(T).IsSimpleType();
+            
+            if (simpleType)
+                variable.Value = JsonUtility.FromJson<JsonableWrapper<T>>(jsonString).value;
+            else
+                JsonUtility.FromJsonOverwrite(jsonString, variable.Value);
         }
         
         /// <summary>
@@ -44,13 +49,23 @@ namespace Kadinche.Kassets
             var propertyInfo = variableType.GetProperty("Value");
             // Get the Value property of variable using reflection
             var value = propertyInfo?.GetValue(variable);
-            // Create an instance of JsonableWrapper<T> with the value of variable
-            var wrapped = Activator.CreateInstance(typeof(JsonableWrapper<>).MakeGenericType(genericType), value);
+
+            var simpleType = genericType.IsSimpleType();
             
-            // Deserialize json string to wrapped
-            JsonUtility.FromJsonOverwrite(jsonString, wrapped);
-            // Get the value of wrapped
-            value = wrapped.GetType().GetField("value").GetValue(wrapped);
+            if (simpleType)
+            {
+                // Create an instance of JsonableWrapper<T> with the value of variable
+                var wrapped = Activator.CreateInstance(typeof(JsonableWrapper<>).MakeGenericType(genericType), value);
+                // Deserialize json string to wrapped
+                JsonUtility.FromJsonOverwrite(jsonString, wrapped);
+                // Get the value of wrapped
+                value = wrapped.GetType().GetField("value").GetValue(wrapped);
+            }
+            else
+            {
+                JsonUtility.FromJsonOverwrite(jsonString, value);
+            }
+            
             // Get the Value property of variable using reflection and Set the value of the Value property.
             propertyInfo?.SetValue(variable, value);
         }
@@ -63,7 +78,13 @@ namespace Kadinche.Kassets
         /// <returns></returns>
         public static string ToJsonString<T>(this IVariable<T> variable)
         {
-            return JsonUtility.ToJson(new JsonableWrapper<T>(variable.Value), Application.isEditor);
+            var simpleType = typeof(T).IsSimpleType();
+            
+            var jsonString = simpleType ?
+                JsonUtility.ToJson(new JsonableWrapper<T>(variable.Value), Application.isEditor) :
+                JsonUtility.ToJson(variable.Value, Application.isEditor);
+
+            return jsonString;
         }
 
         /// <summary>
@@ -83,10 +104,23 @@ namespace Kadinche.Kassets
             var genericType = variableType.GetGenericArguments()[0];
             // Get the Value property of variable using reflection
             var value = variableType.GetProperty("Value")?.GetValue(variable);
-            // Create an instance of JsonableWrapper<T> with the value of variable
-            var wrapped = Activator.CreateInstance(typeof(JsonableWrapper<>).MakeGenericType(genericType), value);
-            // Convert wrapped to json string
-            return JsonUtility.ToJson(wrapped, Application.isEditor);
+
+            var simpleType = genericType.IsSimpleType();
+            string jsonString;
+            
+            if (simpleType)
+            {
+                // Create an instance of JsonableWrapper<T> with the value of variable
+                var wrapped = Activator.CreateInstance(typeof(JsonableWrapper<>).MakeGenericType(genericType), value);
+                // Convert wrapped to json string
+                jsonString = JsonUtility.ToJson(wrapped, Application.isEditor);
+            }
+            else
+            {
+                jsonString = JsonUtility.ToJson(value, Application.isEditor);
+            }
+
+            return jsonString;
         }
 
         /// <summary>
