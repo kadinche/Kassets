@@ -188,4 +188,6 @@ Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` na
 
 # LICENSE
 
-MIT
+- Kassets is Licensed under [MIT License](https://github.com/kadinche/Kassets/blob/main/LICENSE.txt)
+- UniRx is Licensed under  [MIT License](https://github.com/neuecc/UniRx/blob/master/LICENSE)
+- UniTask is Licensed under  [MIT License](https://github.com/Cysharp/UniTask/blob/master/LICENSE)
