@@ -185,7 +185,7 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
 [Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.1...HEAD
-[2.5.0]: https://github.com/kadinche/Kassets/compare/2.5.0...2.5.1
+[2.5.1]: https://github.com/kadinche/Kassets/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/kadinche/Kassets/compare/2.4.3...2.5.0
 [2.4.3]: https://github.com/kadinche/Kassets/compare/2.4.2...2.4.3
 [2.4.2]: https://github.com/kadinche/Kassets/compare/2.4.1...2.4.2
