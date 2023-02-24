@@ -6,9 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.1] - 2023-02-25
+
 ### Changed
 
 - Fixed Editor Extension Custom Drawer to display properly when viewed over a Component.
+- Json Extension Utility will convert custom types in root level without "value" label.
+- Fixed Custom Editor not drawing Quaternion field properly on Unity 2020.
 
 ## [2.5.0] - 2023-01-19
 
@@ -180,7 +184,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.0...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.1...HEAD
+[2.5.0]: https://github.com/kadinche/Kassets/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/kadinche/Kassets/compare/2.4.3...2.5.0
 [2.4.3]: https://github.com/kadinche/Kassets/compare/2.4.2...2.4.3
 [2.4.2]: https://github.com/kadinche/Kassets/compare/2.4.1...2.4.2
