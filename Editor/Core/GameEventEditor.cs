@@ -17,9 +17,13 @@ namespace Kadinche.Kassets.EventSystem
         {
             GUI.enabled = Application.isPlaying;
 
-            if (target is GameEvent gameEvent && 
-                GUILayout.Button("Raise"))
+            if (!(target is GameEvent gameEvent)) return;
+            
+            if (GUILayout.Button("Raise"))
+            {
                 gameEvent.Raise();
+                Debug.Log($"{target.name} event raised.");
+            }
         }
     }
     

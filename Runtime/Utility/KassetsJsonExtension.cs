@@ -179,7 +179,11 @@ namespace Kadinche.Kassets
         public static void LoadFromJson<T>(this IVariable<T> variable, string directory, string filename)
         {
             if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            {
+                Debug.LogError($"Failed to load from json. Directory not found: {directory}");
+                return;
+            }
+            
             var fn = filename.Split('.').Length < 2 ? filename + DefaultExtension : filename;
             var fullpath = Path.Combine(directory, fn);
             LoadFromJson(variable, fullpath);
@@ -194,7 +198,11 @@ namespace Kadinche.Kassets
         public static void LoadFromJson(this IVariable variable, string directory, string filename)
         {
             if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
+            {
+                Debug.LogError($"Failed to load from json. Directory not found: {directory}");
+                return;
+            }
+            
             var fn = filename.Split('.').Length < 2 ? filename + DefaultExtension : filename;
             var fullpath = Path.Combine(directory, fn);
             LoadFromJson(variable, fullpath);
@@ -351,9 +359,9 @@ namespace Kadinche.Kassets
         /// <returns>true if json file exist.</returns>
         public static bool IsJsonFileExist(string directory, string filename)
         {
-            if (!Directory.Exists(directory))
-                Directory.CreateDirectory(directory);
-            var path = Path.Combine(directory, filename);
+            if (!Directory.Exists(directory)) return false;
+            var fn = filename.Split('.').Length < 2 ? filename + DefaultExtension : filename;
+            var path = Path.Combine(directory, fn);
             return File.Exists(path);
         }
         
