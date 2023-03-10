@@ -1,5 +1,4 @@
 using Kadinche.Kassets.EventSystem;
-using UniRx;
 using UnityEngine;
 
 namespace Kadinche.Kassets.ObjectPool.Samples
@@ -9,12 +8,10 @@ namespace Kadinche.Kassets.ObjectPool.Samples
         [SerializeField] private GameEvent _shootBulletEvent;
         [SerializeField] private KeyCode _shootKey;
 
-        private void Start()
+        private void Update()
         {
-            Observable.EveryUpdate()
-                .Where(_ => Input.GetKeyDown(_shootKey))
-                .Subscribe(_ => _shootBulletEvent.Raise())
-                .AddTo(this);
+            if (Input.GetKeyDown(_shootKey)) 
+                _shootBulletEvent.Raise();
         }
     }
 }
