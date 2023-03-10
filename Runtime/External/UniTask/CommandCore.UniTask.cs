@@ -9,8 +9,14 @@ namespace Kadinche.Kassets.CommandSystem
     {
         protected CancellationTokenSource cts = new CancellationTokenSource();
         
-        public virtual void Execute() => ExecuteAsync(cts.Token).Forget();
-        public virtual UniTask ExecuteAsync(CancellationToken cancellationToken) { return UniTask.CompletedTask; }
+        public abstract void Execute();
+
+        public virtual async UniTask ExecuteAsync(CancellationToken cancellationToken)
+        {
+            Execute();
+            await UniTask.Yield(cancellationToken);
+        }
+        
         public UniTask ExecuteAsync() => ExecuteAsync(cts.Token);
 
         public override void Dispose()
@@ -40,9 +46,15 @@ namespace Kadinche.Kassets.CommandSystem
     
     public abstract partial class CommandCore<T>
     {
-        public virtual void Execute(T param) => ExecuteAsync(param, cts.Token).Forget();
-        public virtual UniTask<T> ExecuteAsync(T param, CancellationToken cancellationToken) => new UniTask<T>(param);
-        public UniTask<T> ExecuteAsync(T param) => ExecuteAsync(param, cts.Token);
+        public abstract void Execute(T param);
+
+        public virtual async UniTask ExecuteAsync(T param, CancellationToken cancellationToken)
+        {
+            Execute(param);
+            await UniTask.Yield(cancellationToken);
+        }
+        
+        public UniTask ExecuteAsync(T param) => ExecuteAsync(param, cts.Token);
     }
 }
 
