@@ -1,6 +1,6 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using TMPro;
-using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,10 +17,12 @@ namespace Kadinche.Kassets.Variable.Sample
         [SerializeField] private Button[] _intEditButtons;
         [SerializeField] private Slider _floatSlider;
 
+        private IDisposable _subscription;
+
         private void Start()
         {
             UpdateData(_customVariable);
-            _customVariable.Subscribe(UpdateData).AddTo(this);
+            _subscription = _customVariable.Subscribe(UpdateData);
         }
 
         private void OnEnable()
@@ -84,6 +86,11 @@ namespace Kadinche.Kassets.Variable.Sample
             _floatInputField.SetTextWithoutNotify(data.floatField.ToString(CultureInfo.InvariantCulture));
             _stringInputField.SetTextWithoutNotify(data.stringField);
             _floatSlider.SetValueWithoutNotify(data.floatField);
+        }
+
+        private void OnDestroy()
+        {
+            _subscription?.Dispose();
         }
     }
 }
