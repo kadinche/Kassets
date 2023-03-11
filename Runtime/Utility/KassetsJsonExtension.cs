@@ -342,13 +342,13 @@ namespace Kadinche.Kassets
         }
         
         /// <summary>
-        /// Check whether a json file exist in Unity's default data directory.
+        /// Check whether a json file exists.
         /// </summary>
-        /// <param name="filename">Name of the json file</param>
+        /// <param name="fullPath">Full path to the json file</param>
         /// <returns>true if json file exist.</returns>
-        public static bool IsJsonFileExist(string filename)
+        public static bool IsJsonFileExist(string fullPath)
         {
-            return IsJsonFileExist(DefaultPath, filename);
+            return File.Exists(fullPath);
         }
 
         /// <summary>
@@ -362,18 +362,19 @@ namespace Kadinche.Kassets
             if (!Directory.Exists(directory)) return false;
             var fn = filename.Split('.').Length < 2 ? filename + DefaultExtension : filename;
             var path = Path.Combine(directory, fn);
-            return File.Exists(path);
+            return IsJsonFileExist(path);
         }
         
         /// <summary>
         /// Check whether a json file exist in a directory.
         /// </summary>
         /// <param name="variable"></param>
-        /// <param name="filename"></param>
+        /// <param name="directory">Path to a directory where the json file would exist</param>
+        /// /// <param name="filename">Name of the json file</param>
         /// <returns></returns>
-        public static bool IsJsonFileExist(this IVariable variable, string filename)
+        public static bool IsJsonFileExist(this IVariable variable, string directory, string filename)
         {
-            return IsJsonFileExist(filename);
+            return IsJsonFileExist(directory, filename);
         }
         
         /// <summary>
@@ -383,9 +384,7 @@ namespace Kadinche.Kassets
         /// <returns></returns>
         public static bool IsJsonFileExist(this IVariable variable)
         {
-            if (variable is ScriptableObject so)
-                return IsJsonFileExist(DefaultPath, so.name);
-            return false;
+            return variable is ScriptableObject so && IsJsonFileExist(DefaultPath, so.name);
         }
 
         [Serializable]
