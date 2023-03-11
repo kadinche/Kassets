@@ -8,13 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Inspector button to save/load Variable derrived Kassets' Instance to/from json file.
+- Json File Operation in Inspector for Kassets' Variable Instances.
+- Log feedback when raising event from Inspector.
 
 ### Changed
 
-- Command's `Execute()` is now abstract on UniTask version and `ExecuteAsync()` is virtual (which simply calls `Execute()`).
+- Command's `Execute()` is now abstract on UniTask version and `ExecuteAsync()` is now virtual (which simply calls `Execute()`).
 - Fixed missing extension when checking existence of json file.
-- Add log feedback when raising event from Inspector.
 - Fixed some sample's dependency from UniRx.
 
 ## [2.5.1] - 2023-02-25
