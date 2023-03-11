@@ -10,10 +10,10 @@ namespace Kadinche.Kassets.EventSystem
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            AddRaiseButton();
+            AddCustomButtons();
         }
 
-        protected void AddRaiseButton()
+        protected virtual void AddCustomButtons()
         {
             GUI.enabled = Application.isPlaying;
 
@@ -50,7 +50,7 @@ namespace Kadinche.Kassets.EventSystem
             if (instanceSettings != null)
                 EditorGUILayout.PropertyField(instanceSettings);
 
-            AddRaiseButton();
+            AddCustomButtons();
 
             if (Application.isPlaying && target is GameEvent gameEvent) 
                 gameEvent.Raise();
