@@ -1,7 +1,6 @@
 #if KASSETS_UNIRX
 using System;
 using System.Collections.Generic;
-using Kadinche.Kassets.Variable;
 using UniRx;
 
 namespace Kadinche.Kassets.Collection

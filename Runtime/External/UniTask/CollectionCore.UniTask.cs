@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
-using Kadinche.Kassets.Variable;
 
 namespace Kadinche.Kassets.Collection
 {
