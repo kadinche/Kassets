@@ -31,50 +31,42 @@ namespace Kadinche.Kassets.Collection
         
         public IDisposable SubscribeOnAdd(Action<T> action)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            return defaultSubscribeBehavior switch
             {
-                return SubscribeOnAdd_UniRx(action);
-            }
-            else // if (_activeLibrary == LibraryEnum.UniTask)
-            {
-                return SubscribeOnAdd_UniTask(action);
-            }
+                SubscribeBehavior.Push => SubscribeOnAdd_UniRx(action),
+                SubscribeBehavior.Pull => SubscribeOnAdd_UniTask(action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         public IDisposable SubscribeOnRemove(Action<T> action)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            return defaultSubscribeBehavior switch
             {
-                return SubscribeOnRemove_UniRx(action);
-            }
-            else // if (_activeLibrary == LibraryEnum.UniTask)
-            {
-                return SubscribeOnRemove_UniTask(action);
-            }
+                SubscribeBehavior.Push => SubscribeOnRemove_UniRx(action),
+                SubscribeBehavior.Pull => SubscribeOnRemove_UniTask(action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         public IDisposable SubscribeOnClear(Action action)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            return defaultSubscribeBehavior switch
             {
-                return SubscribeOnClear_UniRx(action);
-            }
-            else // if (_activeLibrary == LibraryEnum.UniTask)
-            {
-                return SubscribeOnClear_UniTask(action);
-            }
+                SubscribeBehavior.Push => SubscribeOnClear_UniRx(action),
+                SubscribeBehavior.Pull => SubscribeOnClear_UniTask(action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         public IDisposable SubscribeToValueAt(int index, Action<T> action)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            return defaultSubscribeBehavior switch
             {
-                return SubscribeToValueAt_UniRx(index, action);
-            }
-            else // if (_activeLibrary == LibraryEnum.UniTask)
-            {
-                return SubscribeToValueAt_UniTask(index, action);
-            }
+                SubscribeBehavior.Push => SubscribeToValueAt_UniRx(index, action),
+                SubscribeBehavior.Pull => SubscribeToValueAt_UniTask(index, action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
         
         private void ClearValueSubscriptions()
@@ -103,19 +95,17 @@ namespace Kadinche.Kassets.Collection
             RaiseValue_UniRx(key, value);
             RaiseValue_UniTask(key, value);
         }
-        
+
         public IDisposable SubscribeToValue(TKey key, Action<TValue> action)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            return defaultSubscribeBehavior switch
             {
-                return SubscribeToValue_UniRx(key, action);
-            }
-            else // if (_activeLibrary == LibraryEnum.UniTask)
-            {
-                return SubscribeToValue_UniTask(key, action);
-            }
+                SubscribeBehavior.Push => SubscribeToValue_UniRx(key, action),
+                SubscribeBehavior.Pull => SubscribeToValue_UniTask(key, action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
-        
+
         private void ClearValueSubscriptions()
         {
             ClearValueSubscriptions_UniRx();

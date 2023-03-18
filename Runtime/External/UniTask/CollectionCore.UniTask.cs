@@ -100,7 +100,7 @@ namespace Kadinche.Kassets.Collection
         private void RaiseOnClear_UniTask() => _onClearReactiveProperty.Value = this;
         private void RaiseValueAt_UniTask(int index, T value)
         {
-            if (instanceSettings.variableEventType == VariableEventType.ValueChange && _value[index].Equals(value))
+            if (variableEventType == VariableEventType.ValueChange && _value[index].Equals(value))
                 return;
 
             if (_valueReactiveProperties.TryGetValue(index, out var reactiveProperty))
@@ -160,7 +160,7 @@ namespace Kadinche.Kassets.Collection
     {
         private void RaiseValue_UniTask(TKey key, TValue value)
         {
-            if (instanceSettings.variableEventType == VariableEventType.ValueChange && _activeDictionary[key].Equals(value))
+            if (variableEventType == VariableEventType.ValueChange && _activeDictionary[key].Equals(value))
                 return;
             
             if (_valueReactiveProperties.TryGetValue(key, out var reactiveProperty))
@@ -202,7 +202,7 @@ namespace Kadinche.Kassets.Collection
         private void RaiseOnClear() => _onClearReactiveProperty.Value = this;
         private void RaiseValueAt(int index, T value)
         {
-            if (instanceSettings.variableEventType == VariableEventType.ValueChange && _value[index].Equals(value))
+            if (variableEventType == VariableEventType.ValueChange && _value[index].Equals(value))
                 return;
 
             if (_valueReactiveProperties.TryGetValue(index, out var reactiveProperty))
@@ -262,7 +262,7 @@ namespace Kadinche.Kassets.Collection
     {
         private void RaiseValue(TKey key, TValue value)
         {
-            if (instanceSettings.variableEventType == VariableEventType.ValueChange && _activeDictionary[key].Equals(value))
+            if (variableEventType == VariableEventType.ValueChange && _activeDictionary[key].Equals(value))
                 return;
             
             if (_valueReactiveProperties.TryGetValue(key, out var reactiveProperty))
