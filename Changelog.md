@@ -8,14 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Json File Operation in Inspector for Kassets' Variable Instances.
+- Editor-Only Json File Operation in Inspector for Kassets' Variable derived Instances.
 - Log feedback when raising event from Inspector.
 
 ### Changed
 
-- Command's `Execute()` is now abstract on UniTask version and `ExecuteAsync()` is now virtual (which simply calls `Execute()`).
+- Command's `Execute()` is now abstract on UniTask version and `ExecuteAsync()` is now virtual (which calls `Execute()` by default).
 - Fixed missing extension when checking existence of json file.
-- Fixed some sample's dependency from UniRx.
+- Removed some sample's dependency from UniRx.
+- removed `InstanceSettings` as a class and use them as individual field. This prevents 'GameEvent' to have unecessary settings for 'Variable'.
+  - `CAUTION` : as Unity Serialization lose access to `instanceSettings` field, the settings for existing instances will reset.
 
 ## [2.5.1] - 2023-02-25
 
