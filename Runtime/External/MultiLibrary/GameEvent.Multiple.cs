@@ -8,8 +8,8 @@ namespace Kadinche.Kassets.EventSystem
 {
     public partial class GameEvent
     {
-        [Tooltip("Customizable settings for current Kassets instance.")]
-        [SerializeField] protected InstanceSettings instanceSettings;
+        [Tooltip("Default Event Subscription behavior. By default, Push-based use UniRx, and Pull-based use UniTask.")]
+        [SerializeField] protected SubscribeBehavior defaultSubscribeBehavior;
 
         /// <summary>
         /// Raise the event.
@@ -22,7 +22,7 @@ namespace Kadinche.Kassets.EventSystem
 
         public IDisposable Subscribe(Action action)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            if (defaultSubscribeBehavior == SubscribeBehavior.Push)
             {
                 return Subscribe_UniRx(action);
             }
@@ -49,14 +49,12 @@ namespace Kadinche.Kassets.EventSystem
 
         public IDisposable Subscribe(Action<T> action)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            return defaultSubscribeBehavior switch
             {
-                return Subscribe_UniRx(action);
-            }
-            else // if (_activeLibrary == LibraryEnum.UniTask)
-            {
-                return Subscribe_UniTask(action);
-            }
+                SubscribeBehavior.Push => Subscribe_UniRx(action),
+                SubscribeBehavior.Pull => Subscribe_UniTask(action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
         
         public IObservable<T> AsObservable() => this;

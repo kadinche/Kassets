@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -31,7 +32,10 @@ namespace Kadinche.Kassets.EventSystem
     [CanEditMultipleObjects]
     public class TypedGameEventEditor : GameEventEditor
     {
-        private readonly string[] _excludedProperties = { "m_Script", "_value", "instanceSettings" };
+        private readonly string[] _excludedProperties = { "m_Script", "_value" };
+        private readonly string[] _instanceSettings = { "defaultSubscribeBehavior", "variableEventType", "autoResetValue" };
+        private readonly string _instanceSettingsLabel = "Instance Settings";
+        private bool _showInstanceSettings;
 
         public override void OnInspectorGUI()
         {
@@ -43,12 +47,25 @@ namespace Kadinche.Kassets.EventSystem
                     EditorGUILayout.PropertyField(child, true);
             else
                 EditorGUILayout.PropertyField(value, true);
-            
-            DrawPropertiesExcluding(serializedObject, _excludedProperties);
-            
-            using var instanceSettings = serializedObject.FindProperty("instanceSettings");
-            if (instanceSettings != null)
-                EditorGUILayout.PropertyField(instanceSettings);
+
+            var toExclude = _excludedProperties.Concat(_instanceSettings).ToArray();
+            DrawPropertiesExcluding(serializedObject, toExclude);
+
+            _showInstanceSettings = EditorGUILayout.Foldout(_showInstanceSettings, _instanceSettingsLabel);
+
+            if (_showInstanceSettings)
+            {
+                EditorGUI.indentLevel++;
+                
+                foreach (var settingName in _instanceSettings)
+                {
+                    using var prop = serializedObject.FindProperty(settingName);
+                    if (prop == null) continue;
+                    EditorGUILayout.PropertyField(prop);
+                }
+                
+                EditorGUI.indentLevel--;
+            }
 
             AddCustomButtons();
 

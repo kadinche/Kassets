@@ -7,62 +7,58 @@ namespace Kadinche.Kassets.RequestResponseSystem
     {
         private void TryRespond()
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            switch (defaultSubscribeBehavior)
             {
-                TryRespond_UniRx();
-            }
-            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
-            {
-                TryRespond_UniTask();
+                case SubscribeBehavior.Push:
+                    TryRespond_UniRx();
+                    break;
+                case SubscribeBehavior.Pull:
+                    TryRespond_UniTask();
+                    break;
             }
         }
 
         public void Response(Func<TRequest, TResponse> responseFunc)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            switch (defaultSubscribeBehavior)
             {
-                Response_UniRx(responseFunc);
-            }
-            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
-            {
-                Response_UniTask(responseFunc);
+                case SubscribeBehavior.Push:
+                    Response_UniRx(responseFunc);
+                    break;
+                case SubscribeBehavior.Pull:
+                    Response_UniTask(responseFunc);
+                    break;
             }
         }
 
         private IDisposable HandleSubscribe(Func<TRequest, TResponse> responseFunc)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            return defaultSubscribeBehavior switch
             {
-                return HandleSubscribe_UniRx(responseFunc);
-            }
-            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
-            {
-                return HandleSubscribe_UniTask(responseFunc);
-            }
+                SubscribeBehavior.Push => HandleSubscribe_UniRx(responseFunc),
+                SubscribeBehavior.Pull => HandleSubscribe_UniTask(responseFunc),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
         
         private IDisposable HandleSubscribeToResponse(Action action)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            return defaultSubscribeBehavior switch
             {
-                return HandleSubscribeToResponse_UniRx(action);
-            }
-            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
-            {
-                return HandleSubscribeToResponse_UniTask(action);
-            }
+                SubscribeBehavior.Push => HandleSubscribeToResponse_UniRx(action),
+                SubscribeBehavior.Pull => HandleSubscribeToResponse_UniTask(action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
         
         private IDisposable HandleSubscribeToResponse(Action<TResponse> action)
         {
-            if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniRx)
+            return defaultSubscribeBehavior switch
             {
-                return HandleSubscribeToResponse_UniRx(action);
-            }
-            else //if (instanceSettings.defaultSubscribeBehavior == LibraryEnum.UniTask)
-            {
-                return HandleSubscribeToResponse_UniTask(action);
-            }
+                SubscribeBehavior.Push => HandleSubscribeToResponse_UniRx(action),
+                SubscribeBehavior.Pull => HandleSubscribeToResponse_UniTask(action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         public override void Dispose()

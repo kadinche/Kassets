@@ -1,4 +1,4 @@
-// Developed by Tom Kail at Inkle
+// Developed by Tom Kail at Inkle, Modified by Ripandy Adha at Kadinche
 // Released under the MIT Licence as held at https://opensource.org/licenses/MIT
 // Original code: https://gist.github.com/tomkail/ba4136e6aa990f4dc94e0d39ec6a058c
 
@@ -17,6 +17,12 @@ using UnityEditor;
 [CustomPropertyDrawer(typeof(KassetsCore), true)]
 public class ExtendedScriptableObjectDrawer : PropertyDrawer
 {
+	private const int ButtonWidth = 66;
+
+	private static readonly List<string> _ignoreClassFullNames = new List<string>() { "TMPro.TMP_FontAsset" };
+	private static readonly List<string> _ignoreField = new List<string>() { "m_Script", "_value" };
+	private static readonly List<string> _instanceSettings = new List<string>() { "defaultSubscribeBehavior", "variableEventType", "autoResetValue" };
+	
 	public override float GetPropertyHeight (SerializedProperty property, GUIContent label) {
 		var totalHeight = EditorGUIUtility.singleLineHeight;
         if(property.objectReferenceValue == null || !AreAnySubPropertiesVisible(property)){
@@ -32,6 +38,7 @@ public class ExtendedScriptableObjectDrawer : PropertyDrawer
 			{
 				do {
 					if (prop.name == "m_Script") continue;
+					if (_instanceSettings.Contains(prop.name)) continue;
 
 					var subProp = serializedObject.FindProperty(prop.name);
 					var height = EditorGUI.GetPropertyHeight(subProp, null, true) + EditorGUIUtility.standardVerticalSpacing;
@@ -55,16 +62,11 @@ public class ExtendedScriptableObjectDrawer : PropertyDrawer
 		return totalHeight;
 	}
 
-	private const int ButtonWidth = 66;
-
-	private static readonly List<string> IgnoreClassFullNames = new List<string>() { "TMPro.TMP_FontAsset" };
-	private static readonly List<string> IgnoreField = new List<string>() { "m_Script", "_value", "instanceSettings" };
-	
 	public override void OnGUI (Rect position, SerializedProperty property, GUIContent label) {
 		EditorGUI.BeginProperty (position, label, property);
 		var type = GetFieldType();
 		
-		if(type == null || IgnoreClassFullNames.Contains(type.FullName)) {
+		if(type == null || _ignoreClassFullNames.Contains(type.FullName)) {
 			EditorGUI.PropertyField(position, property, label);	
 			EditorGUI.EndProperty ();
 			return;
@@ -149,19 +151,14 @@ public class ExtendedScriptableObjectDrawer : PropertyDrawer
 				{
 					do {
 						// Don't bother drawing the class file
-						if (IgnoreField.Contains(prop.name)) continue;
+						if (_ignoreField.Contains(prop.name)) continue;
+						if (_instanceSettings.Contains(prop.name)) continue;
 						
 						var height = EditorGUI.GetPropertyHeight(prop, new GUIContent(prop.displayName), true);
 						EditorGUI.PropertyField(new Rect(position.x, y, position.width, height), prop, true);
 						y += height + EditorGUIUtility.standardVerticalSpacing;
 					}
 					while (prop.NextVisible(false));
-				}
-				
-				using var instanceSettings = serializedObject.FindProperty("instanceSettings");
-				{
-					var height = EditorGUI.GetPropertyHeight(instanceSettings, new GUIContent(instanceSettings.displayName), true);
-					EditorGUI.PropertyField(new Rect(position.x, y, position.width, height), instanceSettings, true);
 				}
 
 				if (GUI.changed)

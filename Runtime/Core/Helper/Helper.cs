@@ -10,4 +10,10 @@ namespace Kadinche.Kassets
         public const string DefaultObjectPoolMenu = "Kassets/Object Pools/";
         public const string DefaultOtherMenu = "Kassets/Others/";
     }
+    
+    public enum VariableEventType
+    {
+        ValueAssign,
+        ValueChange
+    }
 }
