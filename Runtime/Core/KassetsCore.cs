@@ -6,6 +6,7 @@ using System.Collections.Generic;
 #endif
 
 #if UNITY_EDITOR
+using Cysharp.Threading.Tasks;
 using UnityEditor;
 #endif
 
@@ -40,23 +41,27 @@ namespace Kadinche.Kassets
             switch (stateChange)
             {
                 case PlayModeStateChange.ExitingEditMode:
-                    OnEnterPlayMode();
+                    OnExitingEditMode();
                     break;
-                case PlayModeStateChange.ExitingPlayMode:
-                    OnExitPlayMode();
+                case PlayModeStateChange.EnteredEditMode:
+                    OnEnteringEditMode();
                     break;
             }
         }
 
-        protected virtual void OnEnterPlayMode() { }
+        protected virtual void OnExitingEditMode() { }
 
-        protected virtual void OnExitPlayMode() { }
-
-        protected void SaveAndRefresh()
+        protected virtual void OnEnteringEditMode()
         {
             EditorUtility.SetDirty(this);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
+            SaveAndRefresh().Forget();
+        }
+
+        private async UniTaskVoid SaveAndRefresh()
+        {
+            SaveAndRefreshHelper.RequestExecute();
+            await UniTask.Delay(100);
+            SaveAndRefreshHelper.SaveAndRefresh();
         }
 #endif
     }

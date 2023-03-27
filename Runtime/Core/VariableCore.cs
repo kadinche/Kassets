@@ -23,22 +23,24 @@ namespace Kadinche.Kassets.Variable
 
         public override void Raise(T value)
         {
-            if (variableEventType == VariableEventType.ValueChange && _value.Equals(value))
-                return;
-            
+            if (variableEventType == VariableEventType.ValueChange && IsValueChanged(value)) return;
             base.Raise(value);
         }
+
+        private bool IsValueChanged(T value) => _value == null && value == null ||
+                                                _value != null && value != null && _value.Equals(value);
 
         public virtual T InitialValue { get; protected set; }
 
         /// <summary>
         /// Reset value to InitialValue
         /// </summary>
-        public void ResetValue() => ResetInternal();
+        public void ResetValue() => Value = InitialValue;
 
         protected override void ResetInternal()
         {
-            Value = InitialValue;
+            if (!autoResetValue) return;
+            ResetValue();
         }
 
         public static implicit operator T(VariableCore<T> variable) => variable.Value;
@@ -51,27 +53,11 @@ namespace Kadinche.Kassets.Variable
             base.OnEnable();
             InitialValue = _value;
         }
-        
-        protected override void OnDisable()
-        {
-            if (!instanceSettings.autoResetValue)
-                return;
-            
-            base.OnDisable();
-        }
 #else   
-        protected override void OnEnterPlayMode()
+        protected override void OnExitingEditMode()
         {
-            base.OnEnterPlayMode();
+            base.OnExitingEditMode();
             InitialValue = _value;
-        }
-        
-        protected override void OnExitPlayMode()
-        {
-            if (!autoResetValue)
-                return;
-            
-            base.OnExitPlayMode();
         }
 #endif
     }

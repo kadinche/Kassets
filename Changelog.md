@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Fixed build error from refactored code being unchanged inside `#if` conditional.
+- Fixed autoResetValue on `VariableCore` and related callback methods.
+- Prevents multiple call of Editor code for every Kassets instances.
+- Fixed `VariableCore` unable to compare null value on `ValueChanged` check.
 
 ## [2.5.2] - 2023-03-18
 
