@@ -22,6 +22,7 @@ namespace Kadinche.Kassets.CommandSystem
         public override void Dispose()
         {
             cts.CancelAndDispose();
+            cts = null;
         }
     }
     
@@ -30,16 +31,16 @@ namespace Kadinche.Kassets.CommandSystem
 #if !UNITY_EDITOR
         protected override void OnDisable()
         {
-            base.OnDisable();
             cts.CancelAndDispose();
             cts = new CancellationTokenSource();
+            base.OnDisable();
         }
 #else
-        protected override void OnExitPlayMode()
+        protected override void OnEnteringEditMode()
         {
-            base.OnExitPlayMode();
             cts.CancelAndDispose();
             cts = new CancellationTokenSource();
+            base.OnEnteringEditMode();
         }
 #endif
     }

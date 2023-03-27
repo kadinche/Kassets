@@ -34,15 +34,14 @@ namespace Kadinche.Kassets.EventSystem
 #if !UNITY_EDITOR
         protected override void OnDisable()
         {
-            base.OnDisable();
             ResetInternal();
+            base.OnDisable();
         }
 #else
-        protected override void OnExitPlayMode()
+        protected override void OnEnteringEditMode()
         {
-            base.OnExitPlayMode();
             ResetInternal();
-            SaveAndRefresh();
+            base.OnEnteringEditMode();
         }
 #endif
     }

@@ -22,14 +22,12 @@ namespace Kadinche.Kassets.EventSystem
 
         public IDisposable Subscribe(Action action)
         {
-            if (defaultSubscribeBehavior == SubscribeBehavior.Push)
+            return defaultSubscribeBehavior switch
             {
-                return Subscribe_UniRx(action);
-            }
-            else // if (_activeLibrary == LibraryEnum.UniTask)
-            {
-                return Subscribe_UniTask(action);
-            }
+                SubscribeBehavior.Push => Subscribe_UniRx(action),
+                SubscribeBehavior.Pull => Subscribe_UniTask(action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         public override void Dispose()
