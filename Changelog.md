@@ -8,8 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fixed build error from refactored code being unchanged inside `#if` conditional.
-- Fixed autoResetValue on `VariableCore` and related callback methods.
+- Fixed build error from refactored code being unchanged inside `#if - #endif` conditionals.
+- Fixed `autoResetValue` on `VariableCore` and update related callback methods.
 - Prevents multiple call of Editor code for every Kassets instances.
 - Fixed `VariableCore` unable to compare null value on `ValueChanged` check.
 

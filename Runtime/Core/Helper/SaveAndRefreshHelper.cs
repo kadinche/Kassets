@@ -6,13 +6,14 @@ namespace Kadinche.Kassets
 {
     public static class SaveAndRefreshHelper
     {
-        private static int _requestCount;
-        public static void RequestExecute() => _requestCount++;
+        private static bool _executed;
+        public static void Reset() => _executed = false;
         public static void SaveAndRefresh()
         {
-            if (--_requestCount > 0) return;
+            if (_executed) return;
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
+            _executed = true;
         }
     }
 }

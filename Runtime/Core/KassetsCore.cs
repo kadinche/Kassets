@@ -6,7 +6,6 @@ using System.Collections.Generic;
 #endif
 
 #if UNITY_EDITOR
-using Cysharp.Threading.Tasks;
 using UnityEditor;
 #endif
 
@@ -49,18 +48,14 @@ namespace Kadinche.Kassets
             }
         }
 
-        protected virtual void OnExitingEditMode() { }
+        protected virtual void OnExitingEditMode()
+        {
+            SaveAndRefreshHelper.Reset();
+        }
 
         protected virtual void OnEnteringEditMode()
         {
             EditorUtility.SetDirty(this);
-            SaveAndRefresh().Forget();
-        }
-
-        private async UniTaskVoid SaveAndRefresh()
-        {
-            SaveAndRefreshHelper.RequestExecute();
-            await UniTask.Delay(100);
             SaveAndRefreshHelper.SaveAndRefresh();
         }
 #endif
