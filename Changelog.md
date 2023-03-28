@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.3] - 2023-03-28
+
 ### Changed
 
 - Fixed build error from refactored code being unchanged inside `#if - #endif` conditionals.
@@ -206,7 +208,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.2...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.3...HEAD
+[2.5.3]: https://github.com/kadinche/Kassets/compare/2.5.2...2.5.3
 [2.5.2]: https://github.com/kadinche/Kassets/compare/2.5.1...2.5.2
 [2.5.1]: https://github.com/kadinche/Kassets/compare/2.5.0...2.5.1
 [2.5.0]: https://github.com/kadinche/Kassets/compare/2.4.3...2.5.0
