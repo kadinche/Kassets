@@ -1,0 +1,24 @@
+name: Code Review
+
+permissions:
+  contents: read
+  pull-requests: write
+  
+on:
+  pull_request:
+    types: [review_requested]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.requested_reviewer.login == 'ripandy' }}
+    steps:
+      - uses: cirolini/chatgpt-github-actions@v1.3
+        with:
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          github_token: ${{ secrets.BOT_SECRET }}
+          github_pr_id: ${{ github.event.number }}
+          openai_engine: "gpt-3.5-turbo" #optional
+          openai_temperature: 0.5 #optional
+          openai_max_tokens: 512 #optional
+          mode: review
