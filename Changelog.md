@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Fixed unnecessary GameEvent Raise on Inspector code.
+
 ## [2.5.3] - 2023-03-28
 
 ### Changed

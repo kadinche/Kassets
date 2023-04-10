@@ -69,9 +69,6 @@ namespace Kadinche.Kassets.EventSystem
 
             AddCustomButtons();
 
-            if (Application.isPlaying && target is GameEvent gameEvent) 
-                gameEvent.Raise();
-
             serializedObject.ApplyModifiedProperties();
         }
     }
