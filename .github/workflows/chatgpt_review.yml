@@ -1,0 +1,24 @@
+name: Code Review
+
+permissions:
+  contents: read
+  pull-requests: write
+  
+on:
+  pull_request:
+    types: [review_requested]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.requested_reviewer.login == 'kadinche-dev' }}
+    steps:
+      - uses: ripandy/chatgpt-github-actions@main
+        with:
+          openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_pr_id: ${{ github.event.number }}
+          openai_engine: "gpt-3.5-turbo"
+          openai_temperature: 0.5
+          openai_max_tokens: 2048
+          file_filter: .cs
