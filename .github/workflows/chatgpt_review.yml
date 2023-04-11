@@ -16,7 +16,7 @@ jobs:
       - uses: ripandy/chatgpt-github-actions@main
         with:
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.ACCESS_TOKEN }}
           github_pr_id: ${{ github.event.number }}
           openai_engine: "gpt-3.5-turbo"
           openai_temperature: 0.5
