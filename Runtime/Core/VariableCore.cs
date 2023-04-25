@@ -47,18 +47,10 @@ namespace Kadinche.Kassets.Variable
 
         public override string ToString() => Value.ToString();
 
-#if !UNITY_EDITOR
         protected override void OnEnable()
         {
             base.OnEnable();
             InitialValue = _value;
         }
-#else   
-        protected override void OnExitingEditMode()
-        {
-            base.OnExitingEditMode();
-            InitialValue = _value;
-        }
-#endif
     }
 }

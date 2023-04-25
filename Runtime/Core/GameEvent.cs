@@ -31,19 +31,11 @@ namespace Kadinche.Kassets.EventSystem
             _value = default;
         }
 
-#if !UNITY_EDITOR
-        protected override void OnDisable()
+        protected override void OnQuit()
         {
             ResetInternal();
-            base.OnDisable();
+            base.OnQuit();
         }
-#else
-        protected override void OnEnteringEditMode()
-        {
-            ResetInternal();
-            base.OnEnteringEditMode();
-        }
-#endif
     }
 
     /// <summary>
@@ -108,7 +100,11 @@ namespace Kadinche.Kassets.EventSystem
             return subscription;
         }
 
-        public override void Dispose() => disposables.Dispose();
+        public override void Dispose()
+        {
+            disposables.Dispose();
+            base.Dispose();
+        }
     }
 
     public abstract partial class GameEvent<T>
