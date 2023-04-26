@@ -16,49 +16,22 @@ namespace Kadinche.Kassets
         protected virtual void OnEnable()
         {
 #if UNITY_EDITOR
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            SaveAndRefreshHelper.Reset();
 #endif
+            Application.quitting += OnQuit;
         }
 
-        protected virtual void OnDisable()
+        protected virtual void OnQuit()
         {
+            Dispose();
 #if UNITY_EDITOR
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorUtility.SetDirty(this);
+            SaveAndRefreshHelper.SaveAndRefresh();
 #endif
+            Application.quitting -= OnQuit;
         }
 
         public abstract void Dispose();
-
-        protected virtual void OnDestroy()
-        {
-            Dispose();
-        }
-        
-#if UNITY_EDITOR
-        private void OnPlayModeStateChanged(PlayModeStateChange stateChange)
-        {
-            switch (stateChange)
-            {
-                case PlayModeStateChange.ExitingEditMode:
-                    OnExitingEditMode();
-                    break;
-                case PlayModeStateChange.EnteredEditMode:
-                    OnEnteringEditMode();
-                    break;
-            }
-        }
-
-        protected virtual void OnExitingEditMode()
-        {
-            SaveAndRefreshHelper.Reset();
-        }
-
-        protected virtual void OnEnteringEditMode()
-        {
-            EditorUtility.SetDirty(this);
-            SaveAndRefreshHelper.SaveAndRefresh();
-        }
-#endif
     }
     
 #if !KASSETS_UNIRX && !KASSETS_UNITASK

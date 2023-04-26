@@ -34,6 +34,7 @@ namespace Kadinche.Kassets.EventSystem
         {
             Dispose_UniRx();
             Dispose_UniTask();
+            base.Dispose();
         }
     }
     

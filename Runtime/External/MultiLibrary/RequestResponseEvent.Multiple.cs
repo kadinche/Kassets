@@ -65,6 +65,9 @@ namespace Kadinche.Kassets.RequestResponseSystem
         {
             Dispose_UniRx();
             Dispose_UniTask();
+            _requests.Clear();
+            responseSubscription?.Dispose();
+            base.Dispose();
         }
     }
     
