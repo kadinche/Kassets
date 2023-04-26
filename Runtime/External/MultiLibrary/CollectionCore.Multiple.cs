@@ -23,6 +23,12 @@ namespace Kadinche.Kassets.Collection
             RaiseOnClear_UniTask();   
         }
         
+        private void RaiseCount()
+        {
+            RaiseCount_UniRx();
+            RaiseCount_UniTask();
+        }
+        
         private void RaiseValueAt(int index, T value)
         {
             RaiseValueAt_UniRx(index, value);
@@ -55,6 +61,16 @@ namespace Kadinche.Kassets.Collection
             {
                 SubscribeBehavior.Push => SubscribeOnClear_UniRx(action),
                 SubscribeBehavior.Pull => SubscribeOnClear_UniTask(action),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+        
+        public IDisposable SubscribeToCount(Action<int> action)
+        {
+            return defaultSubscribeBehavior switch
+            {
+                SubscribeBehavior.Push => SubscribeToCount_UniRx(action),
+                SubscribeBehavior.Pull => SubscribeToCount_UniTask(action),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }

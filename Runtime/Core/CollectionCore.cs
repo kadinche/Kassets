@@ -31,6 +31,7 @@ namespace Kadinche.Kassets.Collection
             RaiseOnAdd(item);
             var index = _value.Count - 1;
             RaiseValueAt(index, item);
+            RaiseCount();
         }
 
         public virtual void Copy(IEnumerable<T> others)
@@ -44,6 +45,7 @@ namespace Kadinche.Kassets.Collection
             ClearValueSubscriptions();
             _value.Clear();
             RaiseOnClear();
+            RaiseCount();
         }
 
         public virtual bool Remove(T item)
@@ -54,6 +56,7 @@ namespace Kadinche.Kassets.Collection
             {
                 RemoveValueSubscription(idx);
                 RaiseOnRemove(item);
+                RaiseCount();
                 _lastRemoved = item;
             }
 
@@ -64,6 +67,7 @@ namespace Kadinche.Kassets.Collection
         {
             _value.Insert(index, item);
             RaiseOnAdd(item);
+            RaiseCount();
         }
 
         public virtual void RemoveAt(int index)
@@ -72,6 +76,7 @@ namespace Kadinche.Kassets.Collection
             _value.RemoveAt(index);
             RaiseOnRemove(_lastRemoved);
             RemoveValueSubscription(index);
+            RaiseCount();
         }
 
         public T this[int index]
@@ -242,6 +247,7 @@ namespace Kadinche.Kassets.Collection
         }
         
         public static implicit operator KeyValuePair<TKey, TValue>(SerializedKeyValuePair<TKey, TValue> serializedKeyValuePair) => new KeyValuePair<TKey, TValue>(serializedKeyValuePair.key, serializedKeyValuePair.value);
+        public static implicit operator SerializedKeyValuePair<TKey, TValue>(KeyValuePair<TKey, TValue> keyValuePair) => new SerializedKeyValuePair<TKey, TValue>(keyValuePair.Key, keyValuePair.Value);
     }
 
 #if !KASSETS_UNIRX && !KASSETS_UNITASK
@@ -251,10 +257,12 @@ namespace Kadinche.Kassets.Collection
         private readonly IList<IDisposable> _onRemoveSubscriptions = new List<IDisposable>();
         private readonly IList<IDisposable> _onClearSubscriptions = new List<IDisposable>();
         private readonly IDictionary<int, IList<IDisposable>> _valueSubscriptions = new Dictionary<int, IList<IDisposable>>();
+        private readonly IList<IDisposable> _countSubscriptions = new List<IDisposable>();
         
         public IDisposable SubscribeOnAdd(Action<T> action) => SubscribeOnAdd(action, buffered);
         public IDisposable SubscribeOnRemove(Action<T> action) => SubscribeOnRemove(action, buffered);
         public IDisposable SubscribeOnClear(Action action) => SubscribeOnClear(action, buffered);
+        public IDisposable SubscribeToCount(Action<int> action) => SubscribeToCount(action, buffered);
         public IDisposable SubscribeToValueAt(int index, Action<T> action) => SubscribeToValueAt(index, action, buffered);
 
         public IDisposable SubscribeOnAdd(Action<T> action, bool withBuffer)
@@ -296,6 +304,21 @@ namespace Kadinche.Kassets.Collection
                 if (withBuffer)
                 {
                     subscription.Invoke();
+                }
+            }
+
+            return subscription;
+        }
+        
+        public IDisposable SubscribeToCount(Action<int> action, bool withBuffer)
+        {
+            var subscription = new Subscription<int>(action, _countSubscriptions);
+            if (!_countSubscriptions.Contains(subscription))
+            {
+                _countSubscriptions.Add(subscription);
+                if (withBuffer)
+                {
+                    subscription.Invoke(Count);
                 }
             }
 
@@ -349,6 +372,15 @@ namespace Kadinche.Kassets.Collection
                     subscription.Invoke();
             }
         }
+        
+        private void RaiseCount()
+        {
+            foreach (var disposable in _countSubscriptions)
+            {
+                if (disposable is Subscription<int> countSubscription)
+                    countSubscription.Invoke(Count);
+            }
+        }
 
         private void RaiseValueAt(int index, T value)
         {
@@ -392,6 +424,7 @@ namespace Kadinche.Kassets.Collection
             _onAddSubscriptions.Dispose();
             _onRemoveSubscriptions.Dispose();
             _onClearSubscriptions.Dispose();
+            _countSubscriptions.Dispose();
             ClearValueSubscriptions();
         }
     }
