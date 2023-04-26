@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Kadinche.Kassets.RequestResponseSystem
 {
-    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    public abstract partial class RequestResponseEvent<TRequest, TResponse> : IUniTaskAsyncEnumerable<TResponse>
     {
         private readonly AsyncReactiveProperty<object> _requestReactiveProperty =
             new AsyncReactiveProperty<object>(default);
@@ -117,6 +117,12 @@ namespace Kadinche.Kassets.RequestResponseSystem
         }
 
         public UniTask<TResponse> WaitForResponse(CancellationToken token) => _responseReactiveProperty.WaitAsync(token);
+        
+        IUniTaskAsyncEnumerator<TResponse> IUniTaskAsyncEnumerable<TResponse>.GetAsyncEnumerator(CancellationToken cancellationToken)
+        {
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            return _responseReactiveProperty.GetAsyncEnumerator(token);
+        }
     }
     
 #if KASSETS_UNIRX
