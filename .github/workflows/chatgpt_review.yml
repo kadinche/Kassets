@@ -18,7 +18,7 @@ jobs:
           openai_api_key: ${{ secrets.OPENAI_API_KEY }}
           github_token: ${{ secrets.ACCESS_TOKEN }}
           github_pr_id: ${{ github.event.number }}
-          openai_engine: "gpt-3.5-turbo"
+          openai_engine: "gpt-4"
           openai_temperature: 0.5
           openai_max_tokens: 2048
           file_filter: .cs
