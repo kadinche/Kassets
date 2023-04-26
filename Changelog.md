@@ -6,9 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-
 ## [2.5.4] - 2023-04-27
+
+### Changed
 
 - Fixed unnecessary `GameEvent` Raise on Inspector code.
 - Attempt to improve ScriptableObjects' lifetime event handling.
