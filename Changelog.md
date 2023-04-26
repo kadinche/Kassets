@@ -8,7 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fixed unnecessary GameEvent Raise on Inspector code.
+## [2.5.4] - 2023-04-27
+
+- Fixed unnecessary `GameEvent` Raise on Inspector code.
+- Attempt to improve ScriptableObjects' lifetime event handling.
+- Expose RequestResponseEvent's `RequestAsObservable`, `ResponseAsObservable`, `RequestAsAsyncEnumerable`, and `ResponseAsAsyncEnumerable`.
+- Added `SubscribeToCount` along with `CountObservable` and `CountAsyncEnumerable` on Collection.
+- Disposal handling and other minor performance improvement attempt.
 
 ## [2.5.3] - 2023-03-28
 
@@ -212,7 +218,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.3...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.4...HEAD
+[2.5.4]: https://github.com/kadinche/Kassets/compare/2.5.3...2.5.4
 [2.5.3]: https://github.com/kadinche/Kassets/compare/2.5.2...2.5.3
 [2.5.2]: https://github.com/kadinche/Kassets/compare/2.5.1...2.5.2
 [2.5.1]: https://github.com/kadinche/Kassets/compare/2.5.0...2.5.1
