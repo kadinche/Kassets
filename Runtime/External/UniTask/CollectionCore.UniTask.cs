@@ -13,9 +13,8 @@ namespace Kadinche.Kassets.Collection
 
         private readonly AsyncReactiveProperty<T> _onAddReactiveProperty = new AsyncReactiveProperty<T>(default);
         private readonly AsyncReactiveProperty<T> _onRemoveReactiveProperty = new AsyncReactiveProperty<T>(default);
-
-        private readonly AsyncReactiveProperty<object> _onClearReactiveProperty =
-            new AsyncReactiveProperty<object>(default);
+        private readonly AsyncReactiveProperty<object> _onClearReactiveProperty = new AsyncReactiveProperty<object>(default);
+        private readonly AsyncReactiveProperty<int> _countReactiveProperty = new AsyncReactiveProperty<int>(default);
 
         private readonly IDictionary<int, AsyncReactiveProperty<T>> _valueReactiveProperties =
             new Dictionary<int, AsyncReactiveProperty<T>>();
@@ -23,6 +22,7 @@ namespace Kadinche.Kassets.Collection
         public IUniTaskAsyncEnumerable<T> OnAddAsyncEnumerable() => _onAddReactiveProperty;
         public IUniTaskAsyncEnumerable<T> OnRemoveAsyncEnumerable() => _onRemoveReactiveProperty;
         public IUniTaskAsyncEnumerable<object> OnClearAsyncEnumerable() => _onClearReactiveProperty;
+        public IUniTaskAsyncEnumerable<int> CountAsyncEnumerable() => _countReactiveProperty;
 
         public IAsyncReactiveProperty<T> ValueAtAsyncEnumerable(int index)
         {
@@ -51,6 +51,12 @@ namespace Kadinche.Kassets.Collection
         {
             var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
             _onClearReactiveProperty.Subscribe(_ => action.Invoke(), token);
+        }
+        
+        public void SubscribeToCount(Action<int> action, CancellationToken cancellationToken)
+        {
+            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            _countReactiveProperty.Subscribe(action, token);
         }
 
         public void SubscribeToValueAt(int index, Action<T> action, CancellationToken cancellationToken)
@@ -98,6 +104,7 @@ namespace Kadinche.Kassets.Collection
         private void RaiseOnAdd_UniTask(T addedValue) => _onAddReactiveProperty.Value = addedValue;
         private void RaiseOnRemove_UniTask(T removedValue) => _onRemoveReactiveProperty.Value = removedValue;
         private void RaiseOnClear_UniTask() => _onClearReactiveProperty.Value = this;
+        private void RaiseCount_UniTask() => _countReactiveProperty.Value = Count;
         private void RaiseValueAt_UniTask(int index, T value)
         {
             if (variableEventType == VariableEventType.ValueChange && _value[index].Equals(value))
@@ -122,6 +129,11 @@ namespace Kadinche.Kassets.Collection
         private IDisposable SubscribeOnClear_UniTask(Action action)
         {
             return _onClearReactiveProperty.Subscribe(_ => action.Invoke());
+        }
+        
+        private IDisposable SubscribeToCount_UniTask(Action<int> action)
+        {
+            return _countReactiveProperty.Subscribe(action);
         }
         
         private IDisposable SubscribeToValueAt_UniTask(int index, Action<T> action)
@@ -152,6 +164,7 @@ namespace Kadinche.Kassets.Collection
             _onAddReactiveProperty.Dispose();
             _onRemoveReactiveProperty.Dispose();
             _onClearReactiveProperty.Dispose();
+            _countReactiveProperty.Dispose();
             ClearValueSubscriptions_UniTask();
         }
     }
@@ -200,6 +213,7 @@ namespace Kadinche.Kassets.Collection
         private void RaiseOnAdd(T addedValue) => _onAddReactiveProperty.Value = addedValue;
         private void RaiseOnRemove(T removedValue) => _onRemoveReactiveProperty.Value = removedValue;
         private void RaiseOnClear() => _onClearReactiveProperty.Value = this;
+        private void RaiseCount() => _countReactiveProperty.Value = Count;
         private void RaiseValueAt(int index, T value)
         {
             if (variableEventType == VariableEventType.ValueChange && _value[index].Equals(value))
@@ -224,6 +238,11 @@ namespace Kadinche.Kassets.Collection
         public IDisposable SubscribeOnClear(Action action)
         {
             return _onClearReactiveProperty.Subscribe(_ => action.Invoke());
+        }
+        
+        public IDisposable SubscribeToCount(Action<int> action)
+        {
+            return _countReactiveProperty.Subscribe(action);
         }
         
         public IDisposable SubscribeToValueAt(int index, Action<T> action)
@@ -254,6 +273,7 @@ namespace Kadinche.Kassets.Collection
             _onAddReactiveProperty.Dispose();
             _onRemoveReactiveProperty.Dispose();
             _onClearReactiveProperty.Dispose();
+            _countReactiveProperty.Dispose();
             ClearValueSubscriptions();
         }
     }
