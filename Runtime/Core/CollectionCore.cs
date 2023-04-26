@@ -242,6 +242,7 @@ namespace Kadinche.Kassets.Collection
         }
         
         public static implicit operator KeyValuePair<TKey, TValue>(SerializedKeyValuePair<TKey, TValue> serializedKeyValuePair) => new KeyValuePair<TKey, TValue>(serializedKeyValuePair.key, serializedKeyValuePair.value);
+        public static implicit operator SerializedKeyValuePair<TKey, TValue>(KeyValuePair<TKey, TValue> keyValuePair) => new SerializedKeyValuePair<TKey, TValue>(keyValuePair.Key, keyValuePair.Value);
     }
 
 #if !KASSETS_UNIRX && !KASSETS_UNITASK
