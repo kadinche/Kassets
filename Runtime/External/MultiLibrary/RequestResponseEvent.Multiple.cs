@@ -1,5 +1,6 @@
 #if KASSETS_UNIRX && KASSETS_UNITASK
 using System;
+using Cysharp.Threading.Tasks;
 
 namespace Kadinche.Kassets.RequestResponseSystem
 {
@@ -60,6 +61,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
+
+        public IObservable<TRequest> RequestAsObservable() => this;
+        public IObservable<TResponse> ResponseAsObservable() => this;
+        public IUniTaskAsyncEnumerable<TRequest> RequestAsAsyncEnumerable() => this;
+        public IUniTaskAsyncEnumerable<TResponse> ResponseAsAsyncEnumerable() => this;
 
         public override void Dispose()
         {
