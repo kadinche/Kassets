@@ -162,13 +162,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
             return _responseReactiveProperty.Subscribe(action);
         }
         
-        private void Dispose_UniTask()
+        protected override void Dispose_UniTask()
         {
-            base.Dispose();
-            _requests.Clear();
-            responseSubscription?.Dispose();
             _requestReactiveProperty.Dispose();
             _responseReactiveProperty.Dispose();
+            base.Dispose_UniTask();
         }
     }
 #else

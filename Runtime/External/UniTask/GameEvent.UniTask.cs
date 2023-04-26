@@ -86,13 +86,9 @@ namespace Kadinche.Kassets.EventSystem
         /// <summary>
         /// Raise the event.
         /// </summary>
-        private void Raise_UniTask() => _onEventRaise.Value = this;
+        protected void Raise_UniTask() => _onEventRaise.Value = this;
         private IDisposable Subscribe_UniTask(Action action) => _onEventRaise.Subscribe(_ => action.Invoke());
-        private void Dispose_UniTask()
-        {
-            base.Dispose();
-            _onEventRaise.Dispose();
-        }
+        protected virtual void Dispose_UniTask() => _onEventRaise.Dispose();
     }
     
     public abstract partial class GameEvent<T>
@@ -104,11 +100,17 @@ namespace Kadinche.Kassets.EventSystem
         private void Raise_UniTask(T param)
         {
             _value = param;
-            base.Raise();
+            base.Raise_UniTask();
             onEventRaise.Value = param;
         }
 
         private IDisposable Subscribe_UniTask(Action<T> action) => onEventRaise.Subscribe(action);
+
+        protected override void Dispose_UniTask()
+        {
+            onEventRaise.Dispose();
+            base.Dispose_UniTask();
+        }
     }
 #else
     public partial class GameEvent
@@ -139,6 +141,12 @@ namespace Kadinche.Kassets.EventSystem
         }
 
         public IDisposable Subscribe(Action<T> action) => onEventRaise.Subscribe(action);
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            onEventRaise.Dispose();
+        }
     }
 #endif
 }

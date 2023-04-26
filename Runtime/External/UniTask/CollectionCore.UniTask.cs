@@ -152,7 +152,7 @@ namespace Kadinche.Kassets.Collection
             _onAddReactiveProperty.Dispose();
             _onRemoveReactiveProperty.Dispose();
             _onClearReactiveProperty.Dispose();
-            ClearValueSubscriptions();
+            ClearValueSubscriptions_UniTask();
         }
     }
 

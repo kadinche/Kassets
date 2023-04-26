@@ -46,13 +46,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
             return _responseSubject.Subscribe(action);
         }
 
-        private void Dispose_UniRx()
+        protected override void Dispose_UniRx()
         {
-            base.Dispose();
-            _requests.Clear();
-            responseSubscription?.Dispose();
             _requestSubject.Dispose();
             _responseSubject.Dispose();
+            base.Dispose_UniRx();
         }
     }
 #else
