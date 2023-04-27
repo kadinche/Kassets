@@ -4,6 +4,7 @@ namespace Kadinche.Kassets
 {
     public static class DictionaryHelper
     {
+        // source : https://stackoverflow.com/a/15728577
         public static bool TryChangeKey<TKey, TValue>(this IDictionary<TKey, TValue> dict, 
             TKey oldKey, TKey newKey)
         {
