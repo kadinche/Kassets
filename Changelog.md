@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.5] - 2023-04-27
+
+### Changed
+
+- Fixed infinite loop on Cleanup (Dispose) operation.
+- Removed redundant code.
+- Null and loop check.
+
 ## [2.5.4] - 2023-04-27
 
 ### Changed
@@ -218,7 +226,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.4...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.5...HEAD
+[2.5.5]: https://github.com/kadinche/Kassets/compare/2.5.4...2.5.5
 [2.5.4]: https://github.com/kadinche/Kassets/compare/2.5.3...2.5.4
 [2.5.3]: https://github.com/kadinche/Kassets/compare/2.5.2...2.5.3
 [2.5.2]: https://github.com/kadinche/Kassets/compare/2.5.1...2.5.2
