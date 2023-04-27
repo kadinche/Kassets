@@ -84,6 +84,12 @@ namespace Kadinche.Kassets.Collection
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
+
+        private void IncrementValueSubscriptions(int index)
+        {
+            IncrementValueSubscriptions_UniRx(index);
+            IncrementValueSubscriptions_UniTask(index);
+        }
         
         private void ClearValueSubscriptions()
         {
@@ -177,6 +183,11 @@ namespace Kadinche.Kassets.Collection
         {
             throw new Exception(ErrMsgUniRx);
         }
+
+        private void IncrementValueSubscriptions_UniRx(int index)
+        {
+            throw new Exception(ErrMsgUniRx);
+        }
         
         private void ClearValueSubscriptions_UniRx()
         {
@@ -257,6 +268,11 @@ namespace Kadinche.Kassets.Collection
         }
 
         public IDisposable SubscribeToValueAt_UniTask(int index, Action<T> action)
+        {
+            throw new Exception(ErrMsgUniTask);
+        }
+
+        private void IncrementValueSubscriptions_UniTask(int index)
         {
             throw new Exception(ErrMsgUniTask);
         }

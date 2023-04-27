@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Update `Collection` value subscription index when inserting an element.
+
 ## [2.5.5] - 2023-04-27
 
 ### Changed

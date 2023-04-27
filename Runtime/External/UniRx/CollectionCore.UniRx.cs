@@ -96,6 +96,14 @@ namespace Kadinche.Kassets.Collection
         {
             return ValueAtObservable(index).Subscribe(action);
         }
+
+        private void IncrementValueSubscriptions_UniRx(int index)
+        {
+            for (var i = _value.Count; i > index; i--)
+            {
+                _valueSubjects.TryChangeKey(i - 1, i);
+            }
+        }
         
         private void ClearValueSubscriptions_UniRx()
         {
@@ -202,6 +210,14 @@ namespace Kadinche.Kassets.Collection
         public IDisposable SubscribeToValueAt(int index, Action<T> action)
         {
             return ValueAtObservable(index).Subscribe(action);
+        }
+        
+        private void IncrementValueSubscriptions(int index)
+        {
+            for (var i = _value.Count; i > index; i--)
+            {
+                _valueSubjects.TryChangeKey(i - 1, i);
+            }
         }
         
         private void ClearValueSubscriptions()
