@@ -70,7 +70,7 @@ namespace Kadinche.Kassets.EventSystem
         protected override void Dispose_UniRx()
         {
             _valueSubject.Dispose();
-            base.Dispose();
+            base.Dispose_UniRx();
         }
     }
 #else

@@ -112,8 +112,8 @@ namespace Kadinche.Kassets.Collection
 
         public override void Dispose()
         {
-            base.Dispose();
             DisposeSubscriptions();
+            base.Dispose();
         }
 
         #endregion
@@ -225,12 +225,6 @@ namespace Kadinche.Kassets.Collection
                 if (!_activeDictionary.ContainsKey(pair.key))
                     _activeDictionary.Add(pair.key, pair.value);
             }
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            ClearValueSubscriptions();
         }
     }
 
@@ -401,9 +395,9 @@ namespace Kadinche.Kassets.Collection
         {
             foreach (var subscriptions in _valueSubscriptions.Values)
             {
-                foreach (var disposable in subscriptions)
+                for (var i = subscriptions.Count - 1; i >= 0; i--)
                 {
-                    disposable.Dispose();
+                    subscriptions[i].Dispose();
                 }
                 subscriptions.Clear();
             }
