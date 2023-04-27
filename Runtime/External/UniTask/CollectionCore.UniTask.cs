@@ -141,6 +141,14 @@ namespace Kadinche.Kassets.Collection
             return ValueAtAsyncEnumerable(index).Subscribe(action);
         }
         
+        private void IncrementValueSubscriptions_UniTask(int index)
+        {
+            for (var i = _value.Count; i > index; i--)
+            {
+                _valueReactiveProperties.TryChangeKey(i - 1, i);
+            }
+        }
+        
         private void ClearValueSubscriptions_UniTask()
         {
             foreach (var reactiveProperty in _valueReactiveProperties.Values)
@@ -248,6 +256,14 @@ namespace Kadinche.Kassets.Collection
         public IDisposable SubscribeToValueAt(int index, Action<T> action)
         {
             return ValueAtAsyncEnumerable(index).Subscribe(action);
+        }
+        
+        private void IncrementValueSubscriptions(int index)
+        {
+            for (var i = _value.Count; i > index; i--)
+            {
+                _valueReactiveProperties.TryChangeKey(i - 1, i);
+            }
         }
         
         private void ClearValueSubscriptions()

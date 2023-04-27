@@ -66,6 +66,7 @@ namespace Kadinche.Kassets.Collection
         public virtual void Insert(int index, T item)
         {
             _value.Insert(index, item);
+            IncrementValueSubscriptions(index);
             RaiseOnAdd(item);
             RaiseCount();
         }
@@ -388,6 +389,14 @@ namespace Kadinche.Kassets.Collection
                     if (disposable is Subscription<T> valueSubscription)
                         valueSubscription.Invoke(value);
                 }
+            }
+        }
+        
+        private void IncrementValueSubscriptions(int index)
+        {
+            for (var i = _value.Count; i > index; i--)
+            {
+                _valueSubscriptions.TryChangeKey(i - 1, i);
             }
         }
         
