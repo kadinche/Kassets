@@ -401,9 +401,9 @@ namespace Kadinche.Kassets.Collection
         {
             foreach (var subscriptions in _valueSubscriptions.Values)
             {
-                foreach (var disposable in subscriptions)
+                for (var i = subscriptions.Count - 1; i >= 0; i--)
                 {
-                    disposable.Dispose();
+                    subscriptions[i].Dispose();
                 }
                 subscriptions.Clear();
             }
