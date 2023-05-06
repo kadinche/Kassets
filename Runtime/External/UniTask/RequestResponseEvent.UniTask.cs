@@ -24,7 +24,10 @@ namespace Kadinche.Kassets.RequestResponseSystem
         public UniTask<TResponse> RequestAsync(TRequest request, CancellationToken cancellationToken = default)
         {
             var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            token.ThrowIfCancellationRequested();
+            
             var rp = new AsyncReactiveProperty<TResponse>(default);
+                rp.AddTo(cts.Token);
             _asyncRequests.Enqueue(new Tuple<TRequest, AsyncReactiveProperty<TResponse>>(request, rp));
             _requestReactiveProperty.Value = this;
             Raise(request);
@@ -55,6 +58,8 @@ namespace Kadinche.Kassets.RequestResponseSystem
         public async UniTask ResponseAsync(Func<TRequest, CancellationToken, UniTask<TResponse>> responseFunc, CancellationToken cancellationToken = default)
         {
             var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            token.ThrowIfCancellationRequested();
+            
             if (_requests.Count > 0)
             {
                 var request = _requests.Dequeue();
@@ -121,6 +126,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
         IUniTaskAsyncEnumerator<TResponse> IUniTaskAsyncEnumerable<TResponse>.GetAsyncEnumerator(CancellationToken cancellationToken)
         {
             var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
+            token.ThrowIfCancellationRequested();
             return _responseReactiveProperty.GetAsyncEnumerator(token);
         }
     }
@@ -170,6 +176,11 @@ namespace Kadinche.Kassets.RequestResponseSystem
         
         protected override void Dispose_UniTask()
         {
+            foreach (var (_, rp) in _asyncRequests)
+            {
+                rp?.Dispose();
+            }
+            _asyncRequests.Clear();
             _requestReactiveProperty.Dispose();
             _responseReactiveProperty.Dispose();
             base.Dispose_UniTask();
