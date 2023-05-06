@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Fix token handling and diposal of Reactive Properties on UniTask's `RequestResponseEvent` .
+
 ## [2.5.6] - 2023-04-28
 
 ### Changed
