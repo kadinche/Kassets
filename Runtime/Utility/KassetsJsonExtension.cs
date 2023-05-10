@@ -28,7 +28,7 @@ namespace Kadinche.Kassets
             if (simpleType)
                 variable.Value = JsonUtility.FromJson<JsonableWrapper<T>>(jsonString).value;
             else
-                JsonUtility.FromJsonOverwrite(jsonString, variable.Value);
+                variable.Value = JsonUtility.FromJson<T>(jsonString);
         }
         
         /// <summary>

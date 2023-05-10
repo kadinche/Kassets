@@ -12,7 +12,7 @@ namespace Kadinche.Kassets.Variable
         [Tooltip("Set how variable event behave.\nValue Assign: Raise when value is assigned regardless of value.\nValue Changed: Raise only when value is changed.")]
         [SerializeField] protected VariableEventType variableEventType;
 
-        [Tooltip("If true will reset value when play mode end. Otherwise, keep runtime value.")]
+        [Tooltip("If true will reset value when play mode end. Otherwise, keep runtime value. Due to shallow copying of class types, it is better avoid using autoResetValue on Class type.")]
         [SerializeField] protected bool autoResetValue;
         
         public virtual T Value
@@ -29,8 +29,31 @@ namespace Kadinche.Kassets.Variable
 
         private bool IsValueChanged(T value) => _value == null && value == null ||
                                                 _value != null && value != null && _value.Equals(value);
+        
+        private T _initialValue;
+        private string _initialValueJsonString; // Hack to handle shallow copy of class type. Better to avoid this on class type.
 
-        public virtual T InitialValue { get; protected set; }
+        public virtual T InitialValue
+        {
+            get
+            {
+                if (!Type.IsSimpleType())
+                {
+                    Debug.Log($"[{nameof(VariableCore<T>)}:{name}] InitialValue get alt 3.");
+                    _initialValue = JsonUtility.FromJson<T>(_initialValueJsonString);
+                }
+                return _initialValue;
+            }
+            protected set
+            {
+                if (!Type.IsSimpleType())
+                {
+                    Debug.Log($"[{nameof(VariableCore<T>)}:{name}] InitialValue set alt 3.");
+                    _initialValueJsonString = JsonUtility.ToJson(value);
+                }
+                _initialValue = value;
+            }
+        }
 
         /// <summary>
         /// Reset value to InitialValue
@@ -49,8 +72,8 @@ namespace Kadinche.Kassets.Variable
 
         protected override void OnEnable()
         {
+            InitialValue = Value;
             base.OnEnable();
-            InitialValue = _value;
         }
     }
 }
