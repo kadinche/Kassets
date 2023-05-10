@@ -8,7 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fix token handling and diposal of Reactive Properties on UniTask's `RequestResponseEvent` .
+- Fixed token handling and diposal of Reactive Properties on UniTask's `RequestResponseEvent` .
+- Fixed json not loaded when loading on Awake/Start.
+- Fixed (hack) `VariableCore`'s `autoResetValue` on Class type due to shallow copy. Since this is a hack, it is better to avoid `autoResetValue` on class type and try to use `struct` instead.
 
 ## [2.5.6] - 2023-04-28
 
