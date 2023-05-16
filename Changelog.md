@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Removed debug log from `VariableCore`
+
 ## [2.5.7] - 2023-05-16
 
 ### Changed
