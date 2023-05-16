@@ -39,7 +39,6 @@ namespace Kadinche.Kassets.Variable
             {
                 if (!Type.IsSimpleType())
                 {
-                    Debug.Log($"[{nameof(VariableCore<T>)}:{name}] InitialValue get alt 3.");
                     _initialValue = JsonUtility.FromJson<T>(_initialValueJsonString);
                 }
                 return _initialValue;
@@ -48,7 +47,6 @@ namespace Kadinche.Kassets.Variable
             {
                 if (!Type.IsSimpleType())
                 {
-                    Debug.Log($"[{nameof(VariableCore<T>)}:{name}] InitialValue set alt 3.");
                     _initialValueJsonString = JsonUtility.ToJson(value);
                 }
                 _initialValue = value;
