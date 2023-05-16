@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.7] - 2023-05-16
+
 ### Changed
 
 - Fixed token handling and diposal of Reactive Properties on UniTask's `RequestResponseEvent` .
@@ -238,7 +240,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.6...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.7...HEAD
+[2.5.7]: https://github.com/kadinche/Kassets/compare/2.5.6...2.5.7
 [2.5.6]: https://github.com/kadinche/Kassets/compare/2.5.5...2.5.6
 [2.5.5]: https://github.com/kadinche/Kassets/compare/2.5.4...2.5.5
 [2.5.4]: https://github.com/kadinche/Kassets/compare/2.5.3...2.5.4
