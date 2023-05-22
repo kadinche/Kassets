@@ -1,4 +1,5 @@
-﻿using Kadinche.Kassets.EventSystem;
+﻿using System;
+using Kadinche.Kassets.EventSystem;
 using UnityEngine;
 
 namespace Kadinche.Kassets.Variable
@@ -39,7 +40,14 @@ namespace Kadinche.Kassets.Variable
             {
                 if (!Type.IsSimpleType())
                 {
-                    _initialValue = JsonUtility.FromJson<T>(_initialValueJsonString);
+                    try
+                    {
+                        _initialValue = JsonUtility.FromJson<T>(_initialValueJsonString);
+                    }
+                    catch (ArgumentException)
+                    {
+                        // TODO : actually check for Engine Types or "Fix" the hack.
+                    }
                 }
                 return _initialValue;
             }
@@ -47,7 +55,14 @@ namespace Kadinche.Kassets.Variable
             {
                 if (!Type.IsSimpleType())
                 {
-                    _initialValueJsonString = JsonUtility.ToJson(value);
+                    try
+                    {
+                        _initialValueJsonString = JsonUtility.ToJson(value);
+                    }
+                    catch (ArgumentException)
+                    {
+                        // TODO : actually check for Engine Types or "Fix" the hack.
+                    }
                 }
                 _initialValue = value;
             }
