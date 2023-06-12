@@ -11,7 +11,7 @@ Kassets can be used independently. However, Kassets was originally made as an at
 [UniTask](https://github.com/Cysharp/UniTask) provides an efficient allocation free async/await integration to Unity.
 
 ### Unity Version
-- Unity 2019.4+
+- Unity 2020.3+
 - Note that this github project cannot be opened directly in Unity Editor. See [Installation](https://github.com/kadinche/Kassets#Installation) for cloning.
 
 ### Dependencies
@@ -46,7 +46,7 @@ Scope(s):
 </details>
 
 <details>
-<summary>Add from GitHub | <em>cannot updates through Package Manager</em></summary>
+<summary>Add from GitHub | <em><s>cannot updates through Package Manager</s> Updates are now possible on Unity 2021.2 or later!</em></summary>
 
 Add package directly from GitHub on Unity 2019.4+.
 You won't be able to receive updates through Package Manager this way, you'll have to update manually.
@@ -103,7 +103,7 @@ For Variables instances, select any of available types from `Create/Kassets/Vari
 
 Kassets' Variable instance on Inspector window
 
-<img width="488" alt="Screen Shot 2021-10-20 at 3 43 15" src="https://user-images.githubusercontent.com/1290720/138010918-0ac58dfc-dd64-4044-b0df-2473a4f9ca37.png">
+<img width="551" alt="Screenshot 2023-06-12 at 16 34 50" src="https://github.com/kadinche/Kassets/assets/1290720/3d6d1a6d-6b95-4395-8b94-a9426185ae14">
 
 ### Create Other Instances
 
@@ -172,11 +172,11 @@ Kassets' `ScriptableObject` also make use of Asynchronous LINQ. Kassets' `Script
 
 As an example, the sample class `CounterAttackSkill` above used `SubscribeAwait` which is part of UniTask.Linq. Since it is pull-based, when the process of `OnCounterActivate` is still running, it won't be called again until it is over no matter how many times the event has been raised during the process. Reversely, push-based will execute every event raise.
 
-When both UniRx and UniTask are imported together, It can be confusing which of the `Subscription` behavior is in effect (pull-based or push-based?). Unless referenced by interface such as `IObservable` or `IUniTaskAsyncEnumerable`, Kassets instances Default Subscribe Behavior can be selected from the inspector window.
+When both UniRx and UniTask are imported together, It can be confusing which of the `Subscription` behavior is in effect (pull-based or push-based?). To use Kassets' instance as `IObservable`, use `AsObservable()`. To use Kassets' instance as `IUniTaskAsyncEnumerable` use `AsAsyncEnumerable()`. Unless referenced by interface, Kassets instances Default Subscribe Behavior can be selected from the inspector window.
 
 Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` namespace. To use, add `UniTask.Linq` as reference to your project's Assembly Definition.
 
-![Screen Shot 2021-10-18 at 12 12 02](https://user-images.githubusercontent.com/1290720/137663587-c384158b-ee0a-4190-a896-ba8a62b6983b.png)
+<img width="514" alt="Screenshot 2023-06-12 at 16 49 31" src="https://github.com/kadinche/Kassets/assets/1290720/dea3da9d-cc3e-45a2-82a5-e590cfca84ee">
 
 # References:
 - [https://github.com/neuecc/UniRx](https://github.com/neuecc/UniRx)
