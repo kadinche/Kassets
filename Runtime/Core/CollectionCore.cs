@@ -156,6 +156,7 @@ namespace Kadinche.Kassets.Collection
             ClearValueSubscriptions();
             Value.Clear();
             base.Clear();
+            OnValidate();
         }
 
         public override bool Remove(SerializedKeyValuePair<TKey, TValue> item)
