@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Fixed `Collection<TKey, TValue>` which does not `Clear()` properly.
+
 ## [2.5.8] - 2023-06-01
 
 ### Changed
