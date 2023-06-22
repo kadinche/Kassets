@@ -107,6 +107,7 @@ namespace Kadinche.Kassets.Collection
             protected set
             {
                 _initialValue.Clear();
+                if (value == null) return;
                 _initialValue.AddRange(value);
             }
         }
