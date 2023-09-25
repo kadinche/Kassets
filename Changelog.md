@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.5.10] - 2023-09-26
+
 ### Changed
 
 - Add null check on `CollectionCore`
@@ -257,7 +259,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.9...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.10...HEAD
+[2.5.10]: https://github.com/kadinche/Kassets/compare/2.5.9...2.5.10
 [2.5.9]: https://github.com/kadinche/Kassets/compare/2.5.8...2.5.9
 [2.5.8]: https://github.com/kadinche/Kassets/compare/2.5.7...2.5.8
 [2.5.7]: https://github.com/kadinche/Kassets/compare/2.5.6...2.5.7
