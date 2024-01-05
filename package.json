@@ -1,10 +1,24 @@
 {
   "name": "com.kadinche.kassets",
   "displayName": "Kassets",
-  "version": "2.5.10",
+  "author": {
+    "name": "Kadinche, Corp. & Ripandy Adha",
+    "url": "https://github.com/kadinche/Kassets"
+  },
+  "version": "2.6.0",
   "unity": "2020.3",
   "description": "Scriptable Object Architecture extendable with UniRx and/or UniTask",
+  "keywords": [
+    "ScriptableObject",
+    "Scriptable Object Architecture",
+    "UniRx",
+    "UniTask",
+    "Kassets"
+  ],
   "license": "MIT",
+  "publishConfig": {
+    "registry": "https://package.openupm.com"
+  },
   "samples": [
     {
       "displayName": "Command System Samples",

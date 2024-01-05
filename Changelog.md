@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.0] - 2024-01-08
+
 ### Changed
 
 - Add `Transaction` as a replacement to `RequestResponseEvent` for naming purpose.
@@ -35,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Fixed token handling and diposal of Reactive Properties on UniTask's `RequestResponseEvent` .
+- Fixed token handling and disposal of Reactive Properties on UniTask's `RequestResponseEvent` .
 - Fixed json not loaded when loading on Awake/Start.
 - Fixed (hack) `VariableCore`'s `autoResetValue` on Class type due to shallow copy. Since this is a hack, it is better to avoid `autoResetValue` on class type and try to use `struct` instead.
 
@@ -265,7 +267,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.5.10...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.6.0...HEAD
+[2.6.0]: https://github.com/kadinche/Kassets/compare/2.5.10...2.6.0
 [2.5.10]: https://github.com/kadinche/Kassets/compare/2.5.9...2.5.10
 [2.5.9]: https://github.com/kadinche/Kassets/compare/2.5.8...2.5.9
 [2.5.8]: https://github.com/kadinche/Kassets/compare/2.5.7...2.5.8
