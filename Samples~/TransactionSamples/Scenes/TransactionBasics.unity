@@ -151,7 +151,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1315041294}
   m_RootOrder: 0
@@ -287,7 +286,6 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 5
@@ -309,7 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 097d6eb0593a4f51bc6d4c42962b1489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dummyProcessRequestResponseEvent: {fileID: 11400000, guid: 2b86bab652dd84a609b8afac29a5e22e, type: 2}
+  _dummyProcessTransaction: {fileID: 11400000, guid: 1f6c09c3b75a2454585f775141abf24a, type: 2}
   _label: {fileID: 199005183}
 --- !u!114 &199005183
 MonoBehaviour:
@@ -470,7 +468,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -502,7 +499,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1084375797}
   m_Father: {fileID: 2132396288}
@@ -525,7 +521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b17b003bcfda4d548390139f50c182e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dummyProcessRequestResponseEvent: {fileID: 11400000, guid: 2b86bab652dd84a609b8afac29a5e22e, type: 2}
+  _dummyProcessTransaction: {fileID: 11400000, guid: 1f6c09c3b75a2454585f775141abf24a, type: 2}
   _button: {fileID: 1315041295}
   _processValue: {fileID: 1084375798}
 --- !u!1 &784294740
@@ -607,7 +603,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -640,7 +635,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 1
@@ -782,7 +776,6 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 6
@@ -804,7 +797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 068db924df8a4c1cbdeb7a834bc302c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dummyProcessRequestResponseEvent: {fileID: 11400000, guid: 2b86bab652dd84a609b8afac29a5e22e, type: 2}
+  _dummyProcessTransaction: {fileID: 11400000, guid: 1f6c09c3b75a2454585f775141abf24a, type: 2}
   _label: {fileID: 1024848336}
 --- !u!114 &1024848336
 MonoBehaviour:
@@ -931,7 +924,6 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 721469857}
   m_RootOrder: 0
@@ -1067,7 +1059,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 132396973}
   m_Father: {fileID: 2132396288}
@@ -1199,7 +1190,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 4
@@ -1221,7 +1211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2fa2d66238b440e88c48cd6a23ebd47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dummyProcessRequestResponseEvent: {fileID: 11400000, guid: 2b86bab652dd84a609b8afac29a5e22e, type: 2}
+  _dummyProcessTransaction: {fileID: 11400000, guid: 1f6c09c3b75a2454585f775141abf24a, type: 2}
 --- !u!1 &1895155635
 GameObject:
   m_ObjectHideFlags: 0
@@ -1250,7 +1240,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 0
@@ -1280,7 +1269,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Request Response Event Sample
+  m_text: 'Transaction Sample
 
 '
   m_isRightToLeft: 0
@@ -1449,7 +1438,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1895155636}
   - {fileID: 983118127}

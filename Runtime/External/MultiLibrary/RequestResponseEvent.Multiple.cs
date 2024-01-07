@@ -2,9 +2,9 @@
 using System;
 using Cysharp.Threading.Tasks;
 
-namespace Kadinche.Kassets.RequestResponseSystem
+namespace Kadinche.Kassets.Transaction
 {
-    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    public abstract partial class TransactionCore<TRequest, TResponse>
     {
         private void TryRespond()
         {

@@ -2,9 +2,9 @@
 using System;
 using UniRx;
 
-namespace Kadinche.Kassets.RequestResponseSystem
+namespace Kadinche.Kassets.Transaction
 {
-    public abstract partial class RequestResponseEvent<TRequest, TResponse> : IObservable<TResponse>
+    public abstract partial class TransactionCore<TRequest, TResponse> : IObservable<TResponse>
     {
         private readonly Subject<object> _requestSubject = new Subject<object>();
         private readonly Subject<TResponse> _responseSubject = new Subject<TResponse>();
@@ -13,7 +13,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
     }
     
 #if KASSETS_UNITASK
-    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    public abstract partial class TransactionCore<TRequest, TResponse>
     {
         private void TryRespond_UniRx()
         {
@@ -54,7 +54,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
         }
     }
 #else
-    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    public abstract partial class TransactionCore<TRequest, TResponse>
     {
         private void TryRespond()
         {
