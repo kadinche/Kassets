@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Add `Transaction` as a replacement to `RequestResponseEvent` for naming purpose.
+- Mark `RequestResponseEvent` as Obsolete.
+- Rename `RequestResponseEvent` sample into `Transaction` sample.
+
 ## [2.5.10] - 2023-09-26
 
 ### Changed
