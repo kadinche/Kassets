@@ -1,17 +1,17 @@
 using System;
 using UnityEngine;
 
-namespace Kadinche.Kassets.RequestResponseSystem.Sample
+namespace Kadinche.Kassets.Transaction.Sample
 {
     public class ResponseSample : MonoBehaviour
     {
-        [SerializeField] private FloatRequestResponseEvent _dummyProcessRequestResponseEvent;
+        [SerializeField] private FloatTransaction _dummyProcessTransaction;
 
         private IDisposable _subscription;
 
         private void Start()
         {
-            _subscription = _dummyProcessRequestResponseEvent.RegisterResponse(ProcessRequest);
+            _subscription = _dummyProcessTransaction.RegisterResponse(ProcessRequest);
         }
 
         private float ProcessRequest(float requestValue)
