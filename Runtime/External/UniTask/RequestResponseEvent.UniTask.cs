@@ -7,9 +7,9 @@ using Cysharp.Threading.Tasks;
 using Cysharp.Threading.Tasks.Linq;
 using UnityEngine;
 
-namespace Kadinche.Kassets.RequestResponseSystem
+namespace Kadinche.Kassets.Transaction
 {
-    public abstract partial class RequestResponseEvent<TRequest, TResponse> : IUniTaskAsyncEnumerable<TResponse>
+    public abstract partial class TransactionCore<TRequest, TResponse> : IUniTaskAsyncEnumerable<TResponse>
     {
         private readonly AsyncReactiveProperty<object> _requestReactiveProperty =
             new AsyncReactiveProperty<object>(default);
@@ -132,7 +132,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
     }
     
 #if KASSETS_UNIRX
-    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    public abstract partial class TransactionCore<TRequest, TResponse>
     {
         private void TryRespond_UniTask()
         {
@@ -187,7 +187,7 @@ namespace Kadinche.Kassets.RequestResponseSystem
         }
     }
 #else
-    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    public abstract partial class TransactionCore<TRequest, TResponse>
     {
         private void TryRespond()
         {
