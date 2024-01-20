@@ -5,7 +5,6 @@ using UnityEngine;
 namespace Kadinche.Kassets.Variable
 {
     [CustomEditor(typeof(VariableCore<>), true)]
-    [CanEditMultipleObjects]
     public class VariableEditor : TypedGameEventEditor
     {
         private bool _showJsonFileOperation;
@@ -73,7 +72,7 @@ namespace Kadinche.Kassets.Variable
                 if (GUILayout.Button("Save to Json"))
                 {
                     variable.SaveToJson(_jsonPath, _filename);
-                    Debug.Log($"Saved {_filename} to {_jsonPath}.");
+                    Debug.Log($"Saved {_filename} to {_jsonPath}");
                     
                     AssetDatabase.Refresh();
                 }
@@ -91,7 +90,7 @@ namespace Kadinche.Kassets.Variable
                     }
                     else
                     {
-                        Debug.Log($"Could not found file {_jsonPath}/{_filename}.");
+                        Debug.Log($"Could not found file {_jsonPath}/{_filename}");
                     }
                 }
 
