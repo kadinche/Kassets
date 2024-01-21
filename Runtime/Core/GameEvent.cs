@@ -42,7 +42,7 @@ namespace Kadinche.Kassets.EventSystem
     /// An event that contains collection of events. Get raised whenever any event is raised.
     /// Made it possible to listen to many events at once.
     /// </summary>
-    [Serializable]
+    [Serializable, Obsolete]
     public partial class GameEventCollection : IGameEventRaiser, IGameEventHandler, IDisposable
     {
         [SerializeField] private List<GameEvent> _gameEvents;
