@@ -8,8 +8,7 @@ namespace Kadinche.Kassets.EventSystem
     public class UnityEventBinder : MonoBehaviour
     {
         [SerializeField] protected GameEvent gameEventToListen;
-        [Space]
-        [SerializeField] private UnityEvent _onGameEventRaised;
+        [Space, SerializeField] private UnityEvent _onGameEventRaised;
 
         protected readonly List<IDisposable> subscriptions = new List<IDisposable>();
 
