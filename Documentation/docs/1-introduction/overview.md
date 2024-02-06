@@ -20,7 +20,7 @@ Main features of Kassets are:
 
 ### Command
 
-Implementation of [Command] pattern, utilizing `ScriptableObject` as an alternative to an `Interface`.
+Implementation of [Command pattern](https://gameprogrammingpatterns.com/command.html), utilizing `ScriptableObject` as an alternative to an `Interface`.
 The `CommandCore` class itself is an abstract class, so an implementation is required.
 Can be useful for one-way execution, i.e. logging.
 
@@ -145,6 +145,5 @@ Kassets are provided with a few helpful tools:
 An Editor tools to convert Kassets' Variables into a json string or local json file.
 
 [ScriptableObject]: https://docs.unity3d.com/Manual/class-ScriptableObject.html
-[Command]: https://gameprogrammingpatterns.com/command.html
 [UniRx]: https://github.com/neuecc/UniRx
 [UniTask]: https://github.com/Cysharp/UniTask
