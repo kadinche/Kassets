@@ -6,8 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `UnityEventBatchBinder` that binds multiple GameEvents into `UnityEvent`.
+
 ### Changed
 
+- Mark `GameEventCollection` as Obsolete.
 - Fix refactoring file rename leak.
 
 ## [2.6.0] - 2024-01-08
