@@ -48,8 +48,6 @@ Every time a request is sent, registered response event will process the request
 One response event can be registered at a time.
 Useful when you want to wait for event done.
 
-__＊__ `Transaction` was renamed after `RequestResponseEvent` which is now marked as `Obsolete`
-
 ## Base Classes
 
 Kassets provides default base classes that is usable immediately.
