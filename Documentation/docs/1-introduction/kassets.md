@@ -7,12 +7,12 @@ sidebar_position: 1
 
 Kassets is an implementation of [Scriptable Object](https://docs.unity3d.com/Manual/class-ScriptableObject.html) Architecture.
 Scriptable Object Architecture provides a clean and decoupled code architecture.
-It is implemented based on [Ryan Hipple talk on Unite Austin 2017](https://youtu.be/raQ3iHhE_Kk).
+It is implemented based on [Ryan Hipple's talk at Unite Austin 2017](https://youtu.be/raQ3iHhE_Kk).
 
-Kassets can be used independently.
-However, Kassets was originally made as an attempt to extend functionality of UniRx and UniTask into ScriptableObjectArchitecture.
-So, it is recommended and would be more effective to use Kassets along with [UniRx], [UniTask], or both.
-To use them, simply import any or both of these libraries along with Kassets.
+Though Kassets can function independently,
+it was originally developed to extend the functionality of the libraries [UniRx] and [UniTask] into the Scriptable Object Architecture.
+Therefore, it is recommended for enhanced functionality to use Kassets in conjunction with either or both the [UniRx] and [UniTask].
+To do so, simply import any or both of these libraries along with Kassets.
 
 https://github.com/kadinche/Kassets
 

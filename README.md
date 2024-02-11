@@ -2,9 +2,14 @@
 
 [![openupm](https://img.shields.io/npm/v/com.kadinche.kassets?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.kadinche.kassets/)
 
-Kassets is an implementation of Scriptable Object Architecture. Scriptable Object Architecture provides a clean and decoupled code architecture. It is implemented based on [Ryan Hipple talk on Unite Austin 2017](https://youtu.be/raQ3iHhE_Kk).
+Kassets is an implementation of [Scriptable Object](https://docs.unity3d.com/Manual/class-ScriptableObject.html) Architecture.
+Scriptable Object Architecture provides a clean and decoupled code architecture.
+It is implemented based on [Ryan Hipple's talk at Unite Austin 2017](https://youtu.be/raQ3iHhE_Kk).
 
-Kassets can be used independently. However, Kassets was originally made as an attempt to extend functionality of UniRx and UniTask into ScriptableObjectArchitecture. So, it is recommended and would be more effective to use Kassets along with [UniRx], [UniTask], or both. To use them, simply import any or both of these library along with Kassets.
+Though Kassets can function independently,
+it was originally developed to extend the functionality of the libraries [UniRx] and [UniTask] into the Scriptable Object Architecture.
+Therefore, it is recommended for enhanced functionality to use Kassets in conjunction with either or both the [UniRx] and [UniTask].
+To do so, simply import any or both of these libraries along with Kassets.
 
 [UniRx] is a Reactive Extensions for Unity. 
 
@@ -13,6 +18,8 @@ Kassets can be used independently. However, Kassets was originally made as an at
 ### Unity Version
 - Unity 2020.3+
 - Note that this github project cannot be opened directly in Unity Editor. See [Installation](https://github.com/kadinche/Kassets#Installation) for cloning.
+
+__For further details, see [Documentation]__
 
 # Getting Started
 
@@ -173,6 +180,8 @@ Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` na
 
 <img width="514" alt="Screenshot 2023-06-12 at 16 49 31" src="https://github.com/kadinche/Kassets/assets/1290720/dea3da9d-cc3e-45a2-82a5-e590cfca84ee">
 
+# [Documentation]
+
 # References:
 - [https://github.com/roboryantron/Unite2017](https://github.com/roboryantron/Unite2017)
 - [https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects](https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects)
@@ -189,3 +198,4 @@ Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` na
 
 [UniRx]: https://github.com/neuecc/UniRx
 [UniTask]: https://github.com/Cysharp/UniTask
+[Documentation]: https://Kadinche.github.io/Kassets/

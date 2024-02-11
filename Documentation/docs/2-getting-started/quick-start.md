@@ -6,19 +6,21 @@ sidebar_position: 2
 
 ## Creating Kassets' ScriptableObjects
 
-### Create an Event Instance
+Instances of Kassets can be created from the `Create` context menu or from `Assets/Create` menu bar. Simply right click in the Project window and select the type of instance you want to create.
 
-Kassets instances can be created from Create context menu or from Assets/Create menu bar. Simply right click on the Project window and select any instance to create. For Event instances, select any of event types from `Create/Kassets/Game Events/`
+### Create a `GameEvent` Instance
+
+For `GameEvent` instances, select any of the provided event types from `Create/Kassets/Game Events/`
 
 ![CreateEvent](https://user-images.githubusercontent.com/1290720/137657526-5bbad8d6-a6c5-4361-a272-0ef30e684fad.gif)
 
-### Create a Variable Instance
+### Create a `Variable` Instance
 
-For Variables instances, select any of available types from `Create/Kassets/Variables/`
+For `Variable` instances, select any of the provided variable types from `Create/Kassets/Variables/`
 
 ![CreateVariable](https://user-images.githubusercontent.com/1290720/137657744-cc7ec167-d728-4a8a-8a6f-06b67bf01b14.gif)
 
-Kassets' Variable instance on Inspector window
+Below are the preview of Kassets' `Variable` instance on Inspector window.
 
 <img width="551" alt="Screenshot 2023-06-12 at 16 34 50" src="https://github.com/kadinche/Kassets/assets/1290720/3d6d1a6d-6b95-4395-8b94-a9426185ae14"></img>
 
@@ -26,7 +28,7 @@ Kassets' Variable instance on Inspector window
 
 ### Usage on MonoBehavior Script
 
-Create a `MonoBehavior` Script and add Kassets' instance as a serialized field.
+Create a `MonoBehavior` script and add Kassets' instance as a serialized field.
 
 `Player.cs` :
 
@@ -44,7 +46,10 @@ Drag and drop `PlayerHealth` (`FloatVariable`) to `HealthBarUI`'s `Health` field
 
 <img width="878" alt="Screen Shot 2020-11-19 at 6 26 08" src="https://user-images.githubusercontent.com/1290720/99601584-0d585400-2a43-11eb-9ce3-dd143e260f0d.png"></img>
 
-From example above, `Player` component's field `Health` and `HealthBarUI` component's field `Health` both refer to the same FloatVariable ScriptableObject instance `PlayerHealth`. Since both component refer to the same variable instance, the `float` value they refer to is shared. Each component then manage their own need with the value without any coupling between components. I.e. `HealthBarUI` doesn't have to request the `Health` value to `Player` component and Player component can manage its own `Health` without the need to distribute its value to other components.
+From the example above, `Player` component's field `Health` and `HealthBarUI` component's field `Health` both refer to the same `FloatVariable` `ScriptableObject` instance `PlayerHealth`.
+Since both components refer to the same variable instance, the `float` value they refer to is shared.
+Each component then manages its own need with the value without any coupling between components.
+For instance, `HealthBarUI` doesn't need to request the `Health` value from the `Player` component and the `Player` component can manage its own `Health` value without needing to distribute it to other components.
 
 ### Usage on UnityEvents
 
