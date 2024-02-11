@@ -1,8 +1,8 @@
 ---
-sidebar_position: 5
+sidebar_position: 3
 ---
 
-# Pull vs Push Subscription
+# Importing Both UniRx and UniTask
 
 UniTask v2 has support for Asynchronous LINQ.
 Asynchronous LINQ is an extension to `IUniTaskAsyncEnumerable<T>` and its usage can be very similar to UniRx,
@@ -24,4 +24,4 @@ Unless referenced by interface, Kassets instances Default Subscribe Behavior can
 Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` namespace.
 To use, add `UniTask.Linq` as reference to your project's Assembly Definition.
 
-<img width="514" alt="Screenshot 2023-06-12 at 16 49 31" src="https://github.com/kadinche/Kassets/assets/1290720/dea3da9d-cc3e-45a2-82a5-e590cfca84ee">
+<img width="514" alt="Screenshot 2023-06-12 at 16 49 31" src="https://github.com/kadinche/Kassets/assets/1290720/dea3da9d-cc3e-45a2-82a5-e590cfca84ee"></img>
