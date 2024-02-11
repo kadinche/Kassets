@@ -51,10 +51,11 @@ Since both components refer to the same variable instance, the `float` value the
 Each component then manages its own need with the value without any coupling between components.
 For instance, `HealthBarUI` doesn't need to request the `Health` value from the `Player` component and the `Player` component can manage its own `Health` value without needing to distribute it to other components.
 
-### Usage on UnityEvents
+## Raising and Subscribing to an Event
 
-Kassets’s instance is a ScriptableObject asset. It can be referenced to UnityEvent via Inspector. You can aslo use dynamic method call on UnityEvent to pass a parameter.
+Both `Player` and `HealthBarUI` components manage their own instances of the shared `PlayerHealth` value.
+However, they still need a system of communication for accurate data sharing, which is where the Pub/Sub pattern becomes essential.
 
-![UnityEvent](https://user-images.githubusercontent.com/1290720/138039011-f32deac1-de5c-48ea-afaa-bf0f815b448d.gif)
-
-![UnityEventDynamic](https://user-images.githubusercontent.com/1290720/138039041-0b42cbe8-254f-40ef-a2df-a45a19883c98.gif)
+The `Player` component, as the `Publisher`, raises an event whenever there's a change to `PlayerHealth`.
+The `HealthBarUI` component, the `Subscriber`, listens for these events and updates the UI accordingly.
+Therefore, even though both components manage their own instances, they are not completely independent - the sharing of accurate health data requires this Publisher-Subscriber relationship for effective communication.
