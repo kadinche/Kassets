@@ -51,15 +51,18 @@ Scope(s):
 <details>
 <summary>Add from GitHub | <em>Use github link to import. Update from Package Manager on Unity 2021.2 or later.</em></summary>
 
-Add package directly from GitHub on Unity 2019.4+.
-Update to main branch from Package Manager on Unity 2021.2 or later.
-Otherwise, you'll have to update manually by removing then adding back the package.
+The package can be added directly from GitHub on Unity 2019.4 and later versions.
+To update to the main branch, use the Package Manager in Unity 2021.2 or later.
+Otherwise, you need to update manually by removing and then adding back the package.
 
-- open Package Manager
-- click <kbd>+</kbd>
-- select <kbd>Add from Git URL</kbd>
-- paste `https://github.com/kadinche/Kassets.git`
-- click <kbd>Add</kbd>
+- Open the Package Manager
+- Click the `+` icon
+- Select the `Add from Git URL` option
+- Paste the following URL: `https://github.com/kadinche/Kassets.git`
+- Click `Add`
+
+To install a specific version, you can refer to Kassets' release tags.
+For example: `https://github.com/kadinche/Kassets.git#2.6.0`
 </details>
 
 <details>
