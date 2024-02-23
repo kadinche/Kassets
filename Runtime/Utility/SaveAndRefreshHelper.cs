@@ -6,14 +6,39 @@ namespace Kadinche.Kassets
 {
     public static class SaveAndRefreshHelper
     {
-        private static bool _executed;
-        public static void Reset() => _executed = false;
-        public static void SaveAndRefresh()
+        [InitializeOnEnterPlayMode]
+        private static void OnEnterPlayModeInEditor(EnterPlayModeOptions options)
         {
-            if (_executed) return;
+            UnsubscribeEditorEvents();
+            SubscribeToEditorEvents();
+        }
+        
+        private static void SaveAndRefresh()
+        {
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            _executed = true;
+        }
+        
+        private static void OnPlayModeStateChanged(PlayModeStateChange playModeState)
+        {
+            switch (playModeState)
+            {
+                case PlayModeStateChange.EnteredEditMode:
+                    SaveAndRefresh();
+                    break;
+            }
+        }
+
+        private static void SubscribeToEditorEvents()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            EditorApplication.quitting += UnsubscribeEditorEvents;
+        }
+
+        private static void UnsubscribeEditorEvents()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.quitting -= UnsubscribeEditorEvents;
         }
     }
 }
