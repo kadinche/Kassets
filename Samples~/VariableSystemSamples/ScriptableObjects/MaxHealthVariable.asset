@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 880e535800484504a4df9c1087c467d4, type: 3}
   m_Name: MaxHealthVariable
   m_EditorClassIdentifier: 
-  _defaultSubscribeBehavior: 0
+  defaultSubscribeBehavior: 0
   _value: 100
-  _variableEventType: 0
-  _autoResetValue: 1
+  variableEventType: 0
+  autoResetValue: 1
