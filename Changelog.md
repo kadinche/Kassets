@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Mark `GameEventCollection` as Obsolete.
 - Fix refactoring file rename leak.
+- Fix unexpected behavior when editor's domain reload is disabled.
+
+### Removed
+
+- Removed `SaveAndRefreshHelper`. It is considered unnecessary and can be a heavy process on larger project.
 
 ## [2.6.0] - 2024-01-08
 
