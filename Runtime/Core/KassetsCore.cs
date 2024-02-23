@@ -13,25 +13,68 @@ namespace Kadinche.Kassets
 {
     public abstract class KassetsCore : ScriptableObject, IDisposable
     {
-        protected virtual void OnEnable()
+        private void OnEnable()
         {
 #if UNITY_EDITOR
-            SaveAndRefreshHelper.Reset();
+            UnsubscribeEditorEvents();
+            SubscribeToEditorEvents();
+#endif
+            Initialize();
+        }
+
+        protected virtual void Initialize()
+        {
+#if UNITY_EDITOR
+            if (IsDomainReloadDisabled) return;
 #endif
             Application.quitting += OnQuit;
         }
 
         protected virtual void OnQuit()
         {
-            Dispose();
 #if UNITY_EDITOR
             EditorUtility.SetDirty(this);
-            SaveAndRefreshHelper.SaveAndRefresh();
+            if (IsDomainReloadDisabled) return;
 #endif
+            Dispose();
             Application.quitting -= OnQuit;
         }
 
         public abstract void Dispose();
+    
+#if UNITY_EDITOR
+        // Handling of special case when user decides to disable domain reload.
+        private bool IsDomainReloadDisabled => EditorSettings.enterPlayModeOptionsEnabled &&
+                                               EditorSettings.enterPlayModeOptions.HasFlag(EnterPlayModeOptions.DisableDomainReload);
+        
+        private void OnPlayModeStateChanged(PlayModeStateChange playModeState)
+        {
+            // Only handle special case when user decides to disable domain reload.
+            if (!IsDomainReloadDisabled) return;
+            
+            switch (playModeState)
+            {
+                case PlayModeStateChange.ExitingEditMode:
+                    Initialize(); // need to call Initialize due to override calls.
+                    break;
+                case PlayModeStateChange.ExitingPlayMode:
+                    OnQuit(); // need to call OnQuit due to override calls.
+                    break;
+            }
+        }
+        
+        private void SubscribeToEditorEvents()
+        {
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            EditorApplication.quitting += UnsubscribeEditorEvents;
+        }
+
+        private void UnsubscribeEditorEvents()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.quitting -= UnsubscribeEditorEvents;
+        }
+#endif
     }
     
 #if !KASSETS_UNIRX && !KASSETS_UNITASK

@@ -19,10 +19,10 @@ namespace Kadinche.Kassets.CommandSystem
         
         public UniTask ExecuteAsync() => ExecuteAsync(cts.Token);
         
-        protected override void OnEnable()
+        protected override void Initialize()
         {
             cts = new CancellationTokenSource();
-            base.OnEnable();
+            base.Initialize();
         }
 
         public override void Dispose()
