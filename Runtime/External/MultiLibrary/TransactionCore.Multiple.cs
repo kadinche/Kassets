@@ -78,7 +78,7 @@ namespace Kadinche.Kassets.Transaction
     }
     
 #if !KASSETS_UNIRX
-    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    public abstract partial class TransactionCore<TRequest, TResponse>
     {
         private void TryRespond_UniRx()
         {
@@ -98,7 +98,7 @@ namespace Kadinche.Kassets.Transaction
 #endif
     
 #if !KASSETS_UNITASK
-    public abstract partial class RequestResponseEvent<TRequest, TResponse>
+    public abstract partial class TransactionCore<TRequest, TResponse>
     {
         private void TryRespond_UniTask()
         {
