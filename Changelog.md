@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Mark `GameEventCollection` as Obsolete.
 - Fix refactoring file rename leak.
+- Change `SaveAndRefreshHelper` to utilize Editor's `OnPlayModeChanged` event instead.
 
 ## [2.6.0] - 2024-01-08
 
