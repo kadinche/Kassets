@@ -1,4 +1,5 @@
 using System;
+using Kadinche.Kassets.Transaction;
 using TMPro;
 using UnityEngine;
 
@@ -10,14 +11,14 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
 {
     public class SubscribeToRequestSampleUniTask : MonoBehaviour
     {
-        [SerializeField] private FloatRequestResponseEvent _dummyProcessRequestResponseEvent;
+        [SerializeField] private FloatTransaction _dummyProcessTransaction;
         [SerializeField] private TMP_Text _label;
 
         private IDisposable _subscription;
 
         private void Start()
         {
-            _subscription = _dummyProcessRequestResponseEvent
+            _subscription = _dummyProcessTransaction
                 .SubscribeToRequest(value => _label.text = $"Request sent. Request value: {value}");
         }
 

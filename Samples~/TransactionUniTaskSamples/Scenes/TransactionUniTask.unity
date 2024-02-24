@@ -151,7 +151,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1315041294}
   m_RootOrder: 0
@@ -287,7 +286,6 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 6
@@ -406,7 +404,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47d155f294954e90a4e97e0b8b74d773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dummyProcessRequestResponseEvent: {fileID: 11400000, guid: f89bb39369a344fb396d5ea6936cf6ef, type: 2}
+  _dummyProcessTransaction: {fileID: 11400000, guid: f89bb39369a344fb396d5ea6936cf6ef, type: 2}
   _label: {fileID: 345818513}
 --- !u!1 &620753452
 GameObject:
@@ -470,7 +468,6 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.000030517578, z: 0}
   m_LocalScale: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -502,7 +499,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1084375797}
   m_Father: {fileID: 2132396288}
@@ -525,7 +521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f17a1b0f7a8474862b2dc0f6d858088a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dummyProcessRequestResponseEvent: {fileID: 11400000, guid: f89bb39369a344fb396d5ea6936cf6ef, type: 2}
+  _dummyProcessTransaction: {fileID: 11400000, guid: f89bb39369a344fb396d5ea6936cf6ef, type: 2}
   _button: {fileID: 1315041295}
   _processValue: {fileID: 1084375798}
 --- !u!1 &784294740
@@ -607,7 +603,6 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -640,7 +635,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 1
@@ -782,7 +776,6 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 5
@@ -901,7 +894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1e1281eb1714b11b050fcd73ceaff01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dummyProcessRequestResponseEvent: {fileID: 11400000, guid: f89bb39369a344fb396d5ea6936cf6ef, type: 2}
+  _dummyProcessTransaction: {fileID: 11400000, guid: f89bb39369a344fb396d5ea6936cf6ef, type: 2}
   _label: {fileID: 997036012}
 --- !u!1 &1084375796
 GameObject:
@@ -931,7 +924,6 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 721469857}
   m_RootOrder: 0
@@ -1067,7 +1059,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 132396973}
   m_Father: {fileID: 2132396288}
@@ -1121,19 +1112,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1315041296}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 11400000, guid: fa03b1745e08b49b9bc1f688976d6e8b, type: 2}
-        m_TargetAssemblyTypeName: Kadinche.Kassets.EventSystem.GameEvent, Kassets
-        m_MethodName: Raise
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1315041296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1199,7 +1178,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 4
@@ -1221,7 +1199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ada11cb20b3b4be4bd834580aaf0341, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _dummyProcessRequestResponseEvent: {fileID: 11400000, guid: f89bb39369a344fb396d5ea6936cf6ef, type: 2}
+  _dummyProcessTransaction: {fileID: 11400000, guid: f89bb39369a344fb396d5ea6936cf6ef, type: 2}
 --- !u!1 &1895155635
 GameObject:
   m_ObjectHideFlags: 0
@@ -1250,7 +1228,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2132396288}
   m_RootOrder: 0
@@ -1449,7 +1426,6 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1895155636}
   - {fileID: 983118127}
