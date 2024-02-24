@@ -5,7 +5,7 @@
     "name": "Kadinche, Corp. & Ripandy Adha",
     "url": "https://github.com/kadinche/Kassets"
   },
-  "version": "2.6.0",
+  "version": "2.6.1",
   "unity": "2020.3",
   "description": "Scriptable Object Architecture extendable with UniRx and/or UniTask",
   "keywords": [
@@ -41,14 +41,14 @@
       "path": "Samples~/CollectionSamples"
     },
     {
-      "displayName": "RequestResponse Event Samples",
-      "description": "Contains sample usage of Kassets RequestResponseEvent System",
-      "path": "Samples~/RequestResponseSamples"
+      "displayName": "Transaction Samples",
+      "description": "Contains sample usage of Kassets Transaction System",
+      "path": "Samples~/TransactionSamples"
     },
     {
-      "displayName": "RequestResponse Event UniTask Samples",
-      "description": "Contains sample usage of Kassets RequestResponseEvent System Asynchronously with UniTask",
-      "path": "Samples~/RequestResponseUniTaskSamples"
+      "displayName": "Transaction UniTask Samples",
+      "description": "Contains sample usage of Kassets Transaction System Asynchronously with UniTask",
+      "path": "Samples~/TransactionUniTaskSamples"
     },
     {
       "displayName": "UnityEvent Binder Samples",
