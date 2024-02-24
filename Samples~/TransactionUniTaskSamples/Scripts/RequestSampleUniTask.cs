@@ -1,3 +1,4 @@
+using Kadinche.Kassets.Transaction;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
 {
     public class RequestSampleUniTask : MonoBehaviour
     {
-        [SerializeField] private FloatRequestResponseEvent _dummyProcessRequestResponseEvent;
+        [SerializeField] private FloatTransaction _dummyProcessTransaction;
         [SerializeField] private Button _button;
         [SerializeField] private TMP_Text _processValue;
         private TMP_Text _buttonLabel;
@@ -33,7 +34,7 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
             _button.interactable = false;
             _buttonLabel.text = "Waiting for Response..";
             
-            var responseValue = await _dummyProcessRequestResponseEvent.RequestAsync(Random.value * 3f);
+            var responseValue = await _dummyProcessTransaction.RequestAsync(Random.value * 3f);
             
             _button.interactable = true;
             _buttonLabel.text = "Request";

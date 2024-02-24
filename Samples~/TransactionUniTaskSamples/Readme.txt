@@ -1,9 +1,9 @@
-Kassets RequestResponseEvent (UniTask) Samples.
+Kassets Transaction (UniTask) Samples.
 
-In this sample, the usage of RequestResponseEvent using UniTask is demonstrated.
+In this sample, the usage of Transaction using UniTask is demonstrated.
 This sample requires UniTask to be imported in the project.
 
-RequestResponseUniTask.scene
+TransactionUniTask.scene
 
 1. Press "Request" button to process a request.
 2. Response-side will process the request and return time required to process the request.

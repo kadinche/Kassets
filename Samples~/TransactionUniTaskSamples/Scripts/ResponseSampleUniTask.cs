@@ -1,4 +1,5 @@
 using System;
+using Kadinche.Kassets.Transaction;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,14 +11,14 @@ namespace Kadinche.Kassets.RequestResponseSystem.Sample
 {
     public class ResponseSampleUniTask : MonoBehaviour
     {
-        [SerializeField] private FloatRequestResponseEvent _dummyProcessRequestResponseEvent;
+        [SerializeField] private FloatTransaction _dummyProcessTransaction;
 
 #if KASSETS_UNITASK
         private IDisposable _subscription;
 
         private void Start()
         {
-            _subscription = _dummyProcessRequestResponseEvent.RegisterResponse(ProcessRequest);
+            _subscription = _dummyProcessTransaction.RegisterResponse(ProcessRequest);
         }
 
         private async UniTask<float> ProcessRequest(float requestValue)
