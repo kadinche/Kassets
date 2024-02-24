@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.6.1] - 2024-02-25
+
 ### Added
 
 - Add `UnityEventBatchBinder` that binds multiple GameEvents into `UnityEvent`.
@@ -13,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Mark `GameEventCollection` as Obsolete.
+- Fix refactoring file rename leak.
+- Fix unexpected behavior when editor's domain reload is disabled.
+- Rename `RequestResponseEventUniTaskSample` and its contents to `TransactionUniTaskSample`.
+
+### Removed
+
+- Removed `SaveAndRefreshHelper`. It is considered unnecessary and can be a heavy process on larger project.
 
 ## [2.6.0] - 2024-01-08
 
@@ -275,7 +284,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.6.0...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.6.1...HEAD
+[2.6.1]: https://github.com/kadinche/Kassets/compare/2.6.0...2.6.1
 [2.6.0]: https://github.com/kadinche/Kassets/compare/2.5.10...2.6.0
 [2.5.10]: https://github.com/kadinche/Kassets/compare/2.5.9...2.5.10
 [2.5.9]: https://github.com/kadinche/Kassets/compare/2.5.8...2.5.9

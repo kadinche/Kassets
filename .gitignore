@@ -64,6 +64,5 @@ crashlytics-build.properties
 # Paid optional Assets
 [Aa]ssets/[Pp]lugins/[Ss]irenix*
 
-# Documentation meta data
-/[Dd]ocumentation.meta
-/[Dd]ocumentation/**/*.meta
+# Ignore .meta files on root
+/*.meta

@@ -1,5 +1,5 @@
 {
-    "name": "Kassets.RequestResponseUniTaskSample",
+    "name": "Kassets.TransactionUniTaskSample",
     "rootNamespace": "",
     "references": [
         "GUID:a103b2c428b5f4f4899d34aaafc78992",

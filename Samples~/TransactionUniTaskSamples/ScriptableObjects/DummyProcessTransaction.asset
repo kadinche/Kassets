@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1075c3c1f67149b7a001ddffbb076df4, type: 3}
-  m_Name: DummyProcessRequestResponseEvent
+  m_Script: {fileID: 11500000, guid: bb22ad120531494eb441eb6e5b9c7d9c, type: 3}
+  m_Name: DummyProcessTransaction
   m_EditorClassIdentifier: 
-  _defaultSubscribeBehavior: 1
+  defaultSubscribeBehavior: 1
   _value: 0
   responseValue: 0
