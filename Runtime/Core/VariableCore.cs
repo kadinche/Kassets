@@ -83,10 +83,10 @@ namespace Kadinche.Kassets.Variable
 
         public override string ToString() => Value.ToString();
 
-        protected override void OnEnable()
+        protected override void Initialize()
         {
             InitialValue = Value;
-            base.OnEnable();
+            base.Initialize();
         }
     }
 }
