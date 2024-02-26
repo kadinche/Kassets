@@ -6,17 +6,7 @@ sidebar_position: 2
 
 Kassets is an event-based system that encourages the use of the Pub/Sub pattern.
 As a fundamental principle, consider the instance of the [ScriptableObject] and its `name` property as a 'key' or 'Topic'.
-You can then create a pair between the publisher and the subscriber using this 'key'.
-
-## Core
-
-Main features of Kassets are:
-
-- Command
-- Event
-- Variable
-- Collection
-- Transaction
+You can then create a pair between the publisher and the subscriber using this 'key'. Here's an overview of Kassets features.
 
 ### Command
 
@@ -48,99 +38,20 @@ Every time a request is sent, registered response event will process the request
 One response event can be registered at a time.
 Useful when you want to wait for event done.
 
-## Base Classes
+### Base Classes
 
-Kassets provides default base classes that is usable immediately.
-
-### GameEvents
-
-- `GameEvent`: Default Type-less GameEvent.
-- `BoolGameEvent`
-- `ByteGameEvent`
-- `ByteArrayGameEvent`
-- `IntGameEvent`
-- `FloatGameEvent`
-- `LongGameEvent`
-- `DoubleGameEvent`
-- `StringGameEvent`
-- `Vector2GameEvent`
-- `Vector3GameEvent`
-- `QuaternionGameEvent`
-- `PoseGameEvent`
-- `Texture2DGameEvent`
-- `GameObjectGameEvent`
-
-### Variables
-
-- `BoolVariable`
-- `ByteVariable`
-- `IntVariable`
-- `FloatVariable`
-- `LongVariable`
-- `DoubleVariable`
-- `StringVariable`
-- `Vector2Variable`
-- `Vector3Variable`
-- `QuaternionVariable`
-- `PoseVariable`
-- `Texture2DVariable`
-- `GameObjectVariable`
-
-### Collections
-
-- `BoolCollection`
-- `ByteCollection`
-- `IntCollection`
-- `FloatCollection`
-- `LongCollection`
-- `DoubleCollection`
-- `StringCollection`
-- `Vector2Collection`
-- `Vector3Collection`
-- `QuaternionCollection`
-- `PoseCollection`
-- `TransformCollection`
-
-### Transactions
-
-- `BoolTransaction`
-- `ByteTransaction`
-- `IntTransaction`
-- `FloatTransaction`
-- `LongTransaction`
-- `DoubleTransaction`
-- `StringTransaction`
-- `Vector2Transaction`
-- `Vector3Transaction`
-- `QuaternionTransaction`
-- `PoseTransaction`
+Kassets provides default base classes that is usable immediately. You can access them from from the `Create/Kassets/` context menu or from `Assets/Create/Kassets/` menu bar.
+Note that Base Classes use a different `.asmdef`. If you manage your own `.asmdef` references, you may need to add a reference to `Kassets.Base` in your project.
 
 ### Unity Event Binder
 
 A Component that forwards events raised by a `GameEvent` into `UnityEvent`.
-Also known as `EventListener`.
-
-- `UnityEventBinder`: Default Type-less event binder.
-- `UnityEventBatchBinder`: Accepts multiple GameEvents as a trigger.
-- `BoolUnityEventBinder`
-- `ByteUnityEventBinder`
-- `IntUnityEventBinder`
-- `FloatUnityEventBinder`
-- `LongUnityEventBinder`
-- `DoubleUnityEventBinder`
-- `StringUnityEventBinder`
-- `Vector2UnityEventBinder`
-- `Vector3UnityEventBinder`
-- `QuaternionUnityEventBinder`
-- `PoseUnityEventBinder`
-
-## Utility
-
-Kassets are provided with a few helpful tools:
+Also known as `EventListener` in Scriptable Object Architecture's terms.
 
 ### Json Extension
 
 An Editor tools to convert Kassets' Variables into a json string or local json file.
+You can access them from Kassets variable's inspector window.
 
 [ScriptableObject]: https://docs.unity3d.com/Manual/class-ScriptableObject.html
 [UniRx]: https://github.com/neuecc/UniRx
