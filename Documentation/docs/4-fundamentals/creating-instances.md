@@ -18,4 +18,4 @@ For Variables instances, select any of available types from `Create/Kassets/Vari
 
 Kassets' Variable instance on Inspector window
 
-<img width="551" alt="Screenshot 2023-06-12 at 16 34 50" src="https://github.com/kadinche/Kassets/assets/1290720/3d6d1a6d-6b95-4395-8b94-a9426185ae14">
+<img width="551" alt="Screenshot 2023-06-12 at 16 34 50" src="https://github.com/kadinche/Kassets/assets/1290720/3d6d1a6d-6b95-4395-8b94-a9426185ae14"></img>
