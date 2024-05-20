@@ -16,6 +16,14 @@ The new instance will be automatically assigned to the field.
 
 ![Screenshot 2024-05-20 at 4 08 51](https://github.com/kadinche/Kassets/assets/1290720/99812122-b7c7-42ff-a2e2-8985ff90b77e)
 
+## Modify Kassets Instances from referencing Components
+
+An editor extension is provided to modify the Kassets instances directly from the referencing components.
+There's a dropdown to toggle and view the scriptable object's fields.
+This reduces the need to select the scriptable object asset in the project view.
+
+![Screenshot 2024-05-21 at 4 43 28](https://github.com/kadinche/Kassets/assets/1290720/7cb7669a-958a-4b91-82af-9e17c833fb34)
+
 ## Raise Events from Inspector
 
 Instances of `GameEvent` and its derived classes can have their events raised directly from the inspector.
