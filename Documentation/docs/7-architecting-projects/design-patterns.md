@@ -5,7 +5,7 @@ sidebar_position: 2
 # Design Patterns
 
 There are several design patterns that fits well with Scriptable Object Architecture, such as Observer, Command, and some architectural patterns like MVC, MVP, and MVVM.
-The definition and implementation of design patterns varies for each person, so you can adjust the implementation to fit your needs.
+The implementation of design patterns varies for each person, so you can adjust the implementation to fit your needs.
 You can always use any other design patterns that you see fits.
 
 ## Observer Pattern
@@ -71,20 +71,44 @@ However, this will looks very similar to Observer pattern, and it is recommended
 
 ## Architectural Patterns
 
+As a Software Engineer, we might heard about architectural design patterns such as MVC, MVP, MVVM, etc.
+Each have a different approach and different components.
+However, each of them had the same purpose to separate the model and the view.
+The main difference is how to tie them up together.
+
 ### [Model-View-Controller (MVC)]
 
-[Model-View-Controller (MVC)] is a design pattern that separates the application into three main components: Model, View, and Controller.
+[Model-View-Controller (MVC)] separates the application into three main components: Model, View, and Controller.
+The Controller acts as connector to both view and model.
+Controller accepts input from the user, modify the model, then convert and forward the modified model into visible and readable form to the view.
+
+Pros:
+- Implementation is simple
+
+Cons:
+- Tight coupling
+- Do not comply with Single Responsibility Principle of SOLID.
 
 ### [Model-View-Presenter (MVP)]
 
-[Model-View-Presenter (MVP)] is a design pattern that separates the application into three main components: Model, View, and Presenter.
-You can utilize Kassets' `Variable` and `GameEvent` instances as the Model, then create a `MonoBehaviour` as the Presenter,
-and Unity's Components or UI elements, such as Button, Text, or Image, as the View.
+[Model-View-Presenter (MVP)] separates the application into three main components: Model, View, and Presenter.
+
+Pros:
+- One way, good separation of concerns
+
+Cons:
+- Ideally only handles output, a bit difficult to handle input as it might requires breaking some good principles.
+- Some difference whether the view is "Passive" or "Active", relative to the direction of dependency.
 
 ### [Model-View-ViewModel (MVVM)]
 
-[Model-View-ViewModel (MVVM)] is a design pattern that separates the application into three main components: Model, View, and ViewModel.
+[Model-View-ViewModel (MVVM)] separates the application into three main components: Model, View, and ViewModel.
 
+Pros:
+- Design to updates both data and model semi-automatically.
+
+Cons:
+- Has unmentioned 4th element Binder, which enables the "auto-update".
 
 [Command pattern]: https://gameprogrammingpatterns.com/command.html
 [Model-View-Controller (MVC)]: https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller
