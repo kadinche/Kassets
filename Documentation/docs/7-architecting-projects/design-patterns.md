@@ -76,6 +76,9 @@ Each have a different approach and different components.
 However, each of them had the same purpose to separate the model and the view.
 The main difference is how to tie them up together.
 
+Below are simple explanation for each patterns.
+For usage with Kassets, will be explained in the next section.
+
 ### [Model-View-Controller (MVC)]
 
 [Model-View-Controller (MVC)] separates the application into three main components: Model, View, and Controller.
