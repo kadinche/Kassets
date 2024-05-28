@@ -113,6 +113,16 @@ Pros:
 Cons:
 - Has unmentioned 4th element Binder, which enables the "auto-update".
 
+## Utilize with Kassets
+
+Kassets fits quite well with MVC or MVP design pattern.
+You can utilize Kassets' `Variable` and `GameEvent` instances as the Model in which data comes from.
+Create a `MonoBehaviour` as the Controller or the Presenter that processes the model.
+Then provide the data to Unity's Components or UI elements, such as Button, Text, or Image, as the View.
+As you can see below, you can get a proper separation of concerns.
+
+![image](https://github.com/kadinche/Kassets/assets/1290720/fd9cd496-e964-4927-b410-908818c6ddc2)
+
 [Command pattern]: https://gameprogrammingpatterns.com/command.html
 [Model-View-Controller (MVC)]: https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller
 [Model-View-Presenter (MVP)]: https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93presenter
