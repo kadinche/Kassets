@@ -22,7 +22,8 @@ This library is under the [MIT License](https://github.com/kadinche/Kassets/blob
 
 ## Getting Started
 
-- [Installation](/getting-started/installation)
+- [Installation](../2-getting-started/installation.md)
+- [Quick Start](../2-getting-started/quick-start.md)
 
 [Kassets]: https://github.com/kadinche/Kassets
 [UniRx]: https://github.com/neuecc/UniRx
