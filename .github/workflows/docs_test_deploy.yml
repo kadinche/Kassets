@@ -10,14 +10,16 @@ jobs:
   test-deploy:
     name: Test deployment
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: Documentation~
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
+          
+      - name: Rename and change folder
+        run:  |
+          mv Documentation~ Documentation
+          cd Documentation
+      
       - name: Debug - Print current directory
         run: pwd
 
@@ -28,7 +30,6 @@ jobs:
         with:
           node-version: 18
           cache: npm
-        working-directory: Documentation~
 
       - name: Install dependencies
         run: npm ci
