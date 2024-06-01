@@ -12,11 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./Documentation~
+        working-directory: ./Documentation
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      
+      - name: Rename folder
+        run: mv Documentation~ Documentation
+        
       - uses: actions/setup-node@v4
         with:
           node-version: 18
