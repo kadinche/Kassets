@@ -10,15 +10,16 @@ jobs:
   build:
     name: Build Docusaurus
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Documentation
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Rename and change folder
-        run:  |
-          mv Documentation~ Documentation
-          cd Documentation
+      - name: Rename folder
+        run: mv Documentation~ Documentation
 
       - name: Debug - Print current directory
         run: pwd
@@ -56,11 +57,12 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Documentation
     steps:
-      - name: Rename and change folder
-        run:  |
-          mv Documentation~ Documentation
-          cd Documentation
+      - name: Rename folder
+        run: mv Documentation~ Documentation
       
       - name: Debug - Print current directory
         run: pwd
