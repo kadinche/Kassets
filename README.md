@@ -2,28 +2,31 @@
 
 [![openupm](https://img.shields.io/npm/v/com.kadinche.kassets?label=openupm&registry_uri=https://package.openupm.com)](https://openupm.com/packages/com.kadinche.kassets/)
 
-Kassets is an implementation of Scriptable Object Architecture. Scriptable Object Architecture provides a clean and decoupled code architecture. It is implemented based on [Ryan Hipple talk on Unite Austin 2017](https://youtu.be/raQ3iHhE_Kk).
+Kassets is an implementation of [Scriptable Object](https://docs.unity3d.com/Manual/class-ScriptableObject.html) Architecture.
+Scriptable Object Architecture provides a clean and decoupled code architecture.
+It is implemented based on [Ryan Hipple's talk at Unite Austin 2017](https://youtu.be/raQ3iHhE_Kk).
 
-Kassets can be used independently. However, Kassets was originally made as an attempt to extend functionality of UniRx and UniTask into ScriptableObjectArchitecture. So, it is recommended and would be more effective to use Kassets along with [UniRx], [UniTask], or both. To use them, simply import any or both of these library along with Kassets.
+Though Kassets can function independently,
+it was originally developed to extend the functionality of the libraries [UniRx] and [UniTask] into the Scriptable Object Architecture.
+Therefore, it is recommended for enhanced functionality to use Kassets in conjunction with either or both the [UniRx] and [UniTask].
+To do so, simply import any or both of these libraries along with Kassets.
 
-[UniRx](https://github.com/neuecc/UniRx) is a Reactive Extensions for Unity. 
+[UniRx] is a Reactive Extensions for Unity. 
 
-[UniTask](https://github.com/Cysharp/UniTask) provides an efficient allocation free async/await integration to Unity.
+[UniTask] provides an efficient allocation free async/await integration to Unity.
 
 ### Unity Version
 - Unity 2020.3+
 - Note that this github project cannot be opened directly in Unity Editor. See [Installation](https://github.com/kadinche/Kassets#Installation) for cloning.
 
-### Dependencies
-- [UniRx](https://github.com/neuecc/UniRx) [Optional]
-- [UniTask](https://github.com/Cysharp/UniTask) [Optional]
+__For further details, see [Documentation]__
 
 # Getting Started
 
 ## Installation
 
 <details>
-<summary>Add from OpenUPM | <em>import via scoped registry, update from Package Manager</em></summary>
+<summary>Add from OpenUPM | <em>Import via scoped registry. Update from Package Manager.</em></summary>
 
 To add OpenUPM to your project:
 
@@ -46,20 +49,24 @@ Scope(s):
 </details>
 
 <details>
-<summary>Add from GitHub | <em><s>cannot updates through Package Manager</s> Updates are now possible on Unity 2021.2 or later!</em></summary>
+<summary>Add from GitHub | <em>Use github link to import. Update from Package Manager on Unity 2021.2 or later.</em></summary>
 
-Add package directly from GitHub on Unity 2019.4+.
-You won't be able to receive updates through Package Manager this way, you'll have to update manually.
+The package can be added directly from GitHub on Unity 2019.4 and later versions.
+To update to the main branch, use the Package Manager in Unity 2021.2 or later.
+Otherwise, you need to update manually by removing and then adding back the package.
 
-- open Package Manager
-- click <kbd>+</kbd>
-- select <kbd>Add from Git URL</kbd>
-- paste `https://github.com/kadinche/Kassets.git`
-- click <kbd>Add</kbd>
+- Open the Package Manager
+- Click the `+` icon
+- Select the `Add from Git URL` option
+- Paste the following URL: `https://github.com/kadinche/Kassets.git`
+- Click `Add`
+
+To install a specific version, you can refer to Kassets' release tags.
+For example: `https://github.com/kadinche/Kassets.git#2.6.0`
 </details>
 
 <details>
-<summary>Clone to Packages Folder | <em>for those who want to make and manage changes</em></summary>
+<summary>Clone to Packages Folder | <em>For those who want to make and manage changes.</em></summary>
 
 Clone this repository to Unity Project's Packages directory.
 
@@ -67,9 +74,7 @@ Modify source codes from containing Unity Project.
 Update changes to/from github directly just like usual github project.
 You can also clone the project as Submodule.
 
-- clone this project using https: https://github.com/kadinche/Kassets.git
-- clone this project using ssh: git@github.com:kadinche/Kassets.git
-- clone this project to YourUnityProject/Packages/
+- clone this project to `YourUnityProject/Packages/`
 </details>
 
 <details>
@@ -107,10 +112,10 @@ Kassets' Variable instance on Inspector window
 
 ### Create Other Instances
 
-Other available Kassets' Scriptable Object are
-- Command. Class that contains an executable method.
+Other available Kassets' ScriptableObjects are
+- Command. An Abstract class that contains an `Execute()` method.
 - Collection. Can be either a List or Dictionary.
-- ExchangeEvent. A Request-Response event.
+- Transaction. A Request-Response event.
 
 ## Using Kassets' ScriptableObject Instances
 
@@ -178,16 +183,22 @@ Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` na
 
 <img width="514" alt="Screenshot 2023-06-12 at 16 49 31" src="https://github.com/kadinche/Kassets/assets/1290720/dea3da9d-cc3e-45a2-82a5-e590cfca84ee">
 
+# [Documentation]
+
 # References:
-- [https://github.com/neuecc/UniRx](https://github.com/neuecc/UniRx)
-- [https://github.com/Cysharp/UniTask](https://github.com/Cysharp/UniTask)
-- [https://speakerdeck.com/torisoup/unitask2020](https://speakerdeck.com/torisoup/unitask2020) (Japanese/日本語)
 - [https://github.com/roboryantron/Unite2017](https://github.com/roboryantron/Unite2017)
 - [https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects](https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects)
 - [https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/](https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/) (Japanese/日本語)
+- [https://github.com/neuecc/UniRx](https://github.com/neuecc/UniRx)
+- [https://github.com/Cysharp/UniTask](https://github.com/Cysharp/UniTask)
+- [https://speakerdeck.com/torisoup/unitask2020](https://speakerdeck.com/torisoup/unitask2020) (Japanese/日本語)
 
 # LICENSE
 
 - Kassets is Licensed under [MIT License](https://github.com/kadinche/Kassets/blob/main/LICENSE.txt)
-- UniRx is Licensed under  [MIT License](https://github.com/neuecc/UniRx/blob/master/LICENSE)
-- UniTask is Licensed under  [MIT License](https://github.com/Cysharp/UniTask/blob/master/LICENSE)
+- [UniRx] is Licensed under  [MIT License](https://github.com/neuecc/UniRx/blob/master/LICENSE)
+- [UniTask] is Licensed under  [MIT License](https://github.com/Cysharp/UniTask/blob/master/LICENSE)
+
+[UniRx]: https://github.com/neuecc/UniRx
+[UniTask]: https://github.com/Cysharp/UniTask
+[Documentation]: https://Kadinche.github.io/Kassets/
