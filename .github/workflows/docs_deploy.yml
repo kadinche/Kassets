@@ -20,17 +20,17 @@ jobs:
           
       - name: Rename folder
         run: mv Documentation~ Documentation
-        
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: npm
 
       - name: Debug - Print current directory
         run: pwd
 
       - name: Debug - List files in current directory
         run: ls -la
+        
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
