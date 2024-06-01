@@ -2,6 +2,7 @@
 
 defaults:
   run:
+    shell: bash
     working-directory: ./Documentations~
     
 on:
