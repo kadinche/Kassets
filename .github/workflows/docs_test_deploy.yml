@@ -17,12 +17,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
-      - name: Debug - Print current directory
-        run: pwd
-
-      - name: Debug - List files in current directory
-        run: ls -la
         
       - uses: actions/setup-node@v4
         with:
