@@ -5,6 +5,9 @@ on:
     branches: ["docs/main"]
     # Review gh actions docs if you want to further define triggers, paths, etc
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
+    
+  # Allows to run this workflow manually from github Actions tab
+  workflow_dispatch:
 
 jobs:
   test-deploy:
