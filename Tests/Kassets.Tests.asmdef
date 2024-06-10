@@ -1,0 +1,18 @@
+{
+    "name": "Kassets.Tests",
+    "rootNamespace": "",
+    "references": [
+        "GUID:a103b2c428b5f4f4899d34aaafc78992"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
