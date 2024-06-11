@@ -23,26 +23,6 @@ namespace Kadinche.Kassets.EventSystem
         void IObserver<T>.OnNext(T value) => Raise(value);
         IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => _valueSubject.Subscribe(observer);
     }
-
-    public partial class GameEventCollection
-    {
-        private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
-        
-        public IDisposable Subscribe(Action onAnyEvent, bool withBuffer)
-        {
-            foreach (IGameEventHandler gameEvent in _gameEvents)
-            {
-                gameEvent.Subscribe(onAnyEvent).AddTo(_compositeDisposable);
-            }
-
-            if (withBuffer)
-            {
-                onAnyEvent.Invoke();
-            }
-
-            return _compositeDisposable;
-        }
-    }
     
 #if KASSETS_UNITASK
     public partial class GameEvent
