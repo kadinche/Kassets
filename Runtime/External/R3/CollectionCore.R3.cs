@@ -54,6 +54,49 @@ namespace Kadinche.Kassets.Collection
         #endregion
     }
     
+#if KASSETS_UNIRX
+    public abstract partial class Collection<T>
+    {
+        #region Event Handling
+        
+        public IObservable<T> OnAddSystemObservable() => _onAddSubject.AsSystemObservable();
+        public IObservable<T> OnRemoveSystemObservable() => _onRemoveSubject.AsSystemObservable();
+        public IObservable<object> OnClearSystemObservable() => _onClearSubject.AsSystemObservable();
+        public IObservable<int> CountSystemObservable() => _countSubject.AsSystemObservable();
+
+        public IObservable<T> ValueAtSystemObservable(int index)
+        {
+            if (!_valueSubjects.TryGetValue(index, out var elementSubject))
+            {
+                elementSubject = new Subject<T>();
+                _valueSubjects.Add(index, elementSubject);
+            }
+
+            return elementSubject.AsSystemObservable();
+        }
+
+        #endregion
+    }
+
+    public abstract partial class Collection<TKey, TValue>
+    {
+        #region Event Handling
+        
+        public IObservable<TValue> ValueAtSystemObservable(TKey key)
+        {
+            if (!_valueSubjects.TryGetValue(key, out var elementSubject))
+            {
+                elementSubject = new Subject<TValue>();
+                _valueSubjects.Add(key, elementSubject);
+            }
+
+            return elementSubject.AsSystemObservable();
+        }
+
+        #endregion
+    }
+#endif
+    
 #if KASSETS_UNITASK
     public abstract partial class Collection<T>
     {
