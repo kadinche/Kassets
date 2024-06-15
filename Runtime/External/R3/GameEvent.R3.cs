@@ -21,6 +21,24 @@ namespace Kadinche.Kassets.EventSystem
         public IAsyncEnumerable<T> ToAsyncEnumerable(CancellationToken cancellationToken = default) => _valueSubject.ToAsyncEnumerable(cancellationToken: cancellationToken);
     }
     
+#if KASSETS_UNIRX
+    public partial class GameEvent : IObserver<object>, IObservable<object>
+    {
+        void IObserver<object>.OnCompleted() => _subject.OnCompleted();
+        void IObserver<object>.OnError(Exception error) => _subject.OnCompleted(error);
+        void IObserver<object>.OnNext(object value) => Raise();
+        IDisposable IObservable<object>.Subscribe(IObserver<object> observer) => _subject.AsSystemObservable().Subscribe(observer);
+    }
+
+    public abstract partial class GameEvent<T> : IObserver<T>, IObservable<T>
+    {
+        void IObserver<T>.OnCompleted() => _valueSubject.OnCompleted();
+        void IObserver<T>.OnError(Exception error) => _valueSubject.OnCompleted(error);
+        void IObserver<T>.OnNext(T value) => Raise(value);
+        IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => AsSystemObservable().Subscribe(observer);
+    }
+#endif
+    
 #if KASSETS_UNITASK
     public partial class GameEvent
     {
