@@ -1,5 +1,10 @@
-﻿using System;
+﻿#if !KASSETS_UNIRX && !KASSETS_UNITASK && !KASSETS_R3
+#define KASSETS_STANDALONE
+
 using System.Collections.Generic;
+#endif
+
+using System;
 using Kadinche.Kassets.CommandSystem;
 using UnityEngine;
 
@@ -38,7 +43,7 @@ namespace Kadinche.Kassets.EventSystem
         }
     }
 
-#if !KASSETS_UNIRX && !KASSETS_UNITASK
+#if KASSETS_STANDALONE
     public partial class GameEvent
     {
         [Tooltip("Whether to listen to previous event upon subscription.")]

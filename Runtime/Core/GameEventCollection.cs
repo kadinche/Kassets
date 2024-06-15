@@ -25,7 +25,7 @@ namespace Kadinche.Kassets.EventSystem
         }
     }
     
-#if !KASSETS_UNIRX
+#if !KASSETS_UNIRX && !KASSETS_R3
     public partial class GameEventCollection
     {
         private readonly CompositeDisposable _compositeDisposable = new CompositeDisposable();
