@@ -10,6 +10,13 @@ namespace Kadinche.Kassets.Transaction
         private readonly Subject<TResponse> _responseSubject = new Subject<TResponse>();
     }
     
+#if KASSETS_UNIRX
+    public abstract partial class TransactionCore<TRequest, TResponse> : IObservable<TResponse>
+    {
+        public IDisposable Subscribe(IObserver<TResponse> observer) => _responseSubject.AsSystemObservable().Subscribe(observer);
+    }
+#endif
+    
 #if KASSETS_UNITASK
     public abstract partial class TransactionCore<TRequest, TResponse>
     {
