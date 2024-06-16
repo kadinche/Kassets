@@ -8,6 +8,8 @@ namespace Kadinche.Kassets.Transaction
     {
         private readonly Subject<object> _requestSubject = new Subject<object>();
         private readonly Subject<TResponse> _responseSubject = new Subject<TResponse>();
+        
+        public Observable<TResponse> ResponseAsObservable() => _responseSubject;
     }
     
 #if KASSETS_UNIRX
@@ -20,12 +22,12 @@ namespace Kadinche.Kassets.Transaction
 #if KASSETS_UNITASK
     public abstract partial class TransactionCore<TRequest, TResponse>
     {
-        private void TryRespond_UniRx()
+        private void TryRespond_R3()
         {
-            _requestSubject.OnNext(this);
+            _requestSubject.OnNext(default);
         }
         
-        public void Response_UniRx(Func<TRequest, TResponse> responseFunc)
+        public void Response_R3(Func<TRequest, TResponse> responseFunc)
         {
             if (_requests.Count <= 0) return;
 
@@ -36,27 +38,37 @@ namespace Kadinche.Kassets.Transaction
             _responseSubject.OnNext(response);
         }
         
-        private IDisposable HandleSubscribe_UniRx(Func<TRequest, TResponse> responseFunc)
+        private IDisposable HandleSubscribe_R3(Func<TRequest, TResponse> responseFunc)
         {
             return _requestSubject.Subscribe(_ => Response(responseFunc));
         }
         
-        private IDisposable HandleSubscribeToResponse_UniRx(Action action)
+        private IDisposable HandleSubscribeToResponse_R3(Action action)
         {
             return _responseSubject.Subscribe(_ => action.Invoke());
         }
         
-        private IDisposable HandleSubscribeToResponse_UniRx(Action<TResponse> action)
+        private IDisposable HandleSubscribeToResponse_R3(Action<TResponse> action)
         {
             return _responseSubject.Subscribe(action);
         }
 
-        protected override void Dispose_UniRx()
+        protected override void Dispose_R3()
         {
             _requestSubject.Dispose();
             _responseSubject.Dispose();
-            base.Dispose_UniRx();
+            base.Dispose_R3();
         }
+    }
+    
+    public abstract partial class TransactionCore<TRequest, TResponse>
+    {
+        private void TryRespond_UniRx() => TryRespond_R3();
+        public void Response_UniRx(Func<TRequest, TResponse> responseFunc) => Response_R3(responseFunc);
+        private IDisposable HandleSubscribe_UniRx(Func<TRequest, TResponse> responseFunc) => HandleSubscribe_R3(responseFunc);
+        private IDisposable HandleSubscribeToResponse_UniRx(Action action) => HandleSubscribeToResponse_R3(action);
+        private IDisposable HandleSubscribeToResponse_UniRx(Action<TResponse> action) => HandleSubscribeToResponse_R3(action);
+        protected void Dispose_UniRx() => Dispose_R3();
     }
 #else
     public abstract partial class TransactionCore<TRequest, TResponse>
