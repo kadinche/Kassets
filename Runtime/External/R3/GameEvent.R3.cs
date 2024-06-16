@@ -42,9 +42,9 @@ namespace Kadinche.Kassets.EventSystem
 #if KASSETS_UNITASK
     public partial class GameEvent
     {
-        protected void Raise_UniRx() => _subject.OnNext(this);
-        private IDisposable Subscribe_UniRx(Action action) => this.Subscribe(_ => action.Invoke());
-        protected virtual void Dispose_UniRx() => _subject.Dispose();
+        protected void Raise_R3() => _subject.OnNext(this);
+        private IDisposable Subscribe_R3(Action action) => _subject.Subscribe(_ => action.Invoke());
+        protected virtual void Dispose_R3() => _subject.Dispose();
     }
     
     public abstract partial class GameEvent<T>
@@ -53,20 +53,33 @@ namespace Kadinche.Kassets.EventSystem
         /// Raise the event with parameter.
         /// </summary>
         /// /// <param name="param"></param>
-        private void Raise_UniRx(T param)
+        private void Raise_R3(T param)
         {
             _value = param;
-            base.Raise_UniRx();
+            base.Raise_R3();
             _valueSubject.OnNext(param);
         }
 
-        private IDisposable Subscribe_UniRx(Action<T> action) => ObservableExtensions.Subscribe(this, action);
+        private IDisposable Subscribe_R3(Action<T> action) => _valueSubject.Subscribe(action);
         
-        protected override void Dispose_UniRx()
+        protected override void Dispose_R3()
         {
             _valueSubject.Dispose();
-            base.Dispose_UniRx();
+            base.Dispose_R3();
         }
+    }
+    
+    public partial class GameEvent
+    {
+        private void Raise_UniRx() => Raise_R3();
+        private IDisposable Subscribe_UniRx(Action action) => Subscribe_R3(action);
+        private void Dispose_UniRx() => Dispose_R3();
+    }
+
+    public abstract partial class GameEvent<T>
+    {
+        private void Raise_UniRx(T param) => Raise_R3(param);
+        private IDisposable Subscribe_UniRx(Action<T> action) => Subscribe_R3(action);
     }
 #else
     public partial class GameEvent
