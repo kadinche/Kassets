@@ -10,8 +10,10 @@
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "R3.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [
