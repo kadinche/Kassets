@@ -1,7 +1,7 @@
-#if KASSETS_UNIRX && !KASSETS_R3
+#if KASSETS_R3
 using System;
 using System.Collections.Generic;
-using UniRx;
+using R3;
 
 namespace Kadinche.Kassets.Collection
 {
@@ -15,12 +15,12 @@ namespace Kadinche.Kassets.Collection
         private readonly Subject<int> _countSubject = new Subject<int>();
         private readonly IDictionary<int, Subject<T>> _valueSubjects = new Dictionary<int, Subject<T>>();
 
-        public IObservable<T> OnAddObservable() => _onAddSubject;
-        public IObservable<T> OnRemoveObservable() => _onRemoveSubject;
-        public IObservable<object> OnClearObservable() => _onClearSubject;
-        public IObservable<int> CountObservable() => _countSubject;
+        public Observable<T> OnAddObservable() => _onAddSubject;
+        public Observable<T> OnRemoveObservable() => _onRemoveSubject;
+        public Observable<object> OnClearObservable() => _onClearSubject;
+        public Observable<int> CountObservable() => _countSubject;
 
-        public IObservable<T> ValueAtObservable(int index)
+        public Observable<T> ValueAtObservable(int index)
         {
             if (!_valueSubjects.TryGetValue(index, out var elementSubject))
             {
@@ -40,7 +40,7 @@ namespace Kadinche.Kassets.Collection
         
         private readonly IDictionary<TKey, Subject<TValue>> _valueSubjects = new Dictionary<TKey, Subject<TValue>>();
         
-        public IObservable<TValue> ValueAtObservable(TKey key)
+        public Observable<TValue> ValueAtObservable(TKey key)
         {
             if (!_valueSubjects.TryGetValue(key, out var elementSubject))
             {
@@ -53,6 +53,49 @@ namespace Kadinche.Kassets.Collection
 
         #endregion
     }
+    
+#if KASSETS_UNIRX
+    public abstract partial class Collection<T>
+    {
+        #region Event Handling
+        
+        public IObservable<T> OnAddSystemObservable() => _onAddSubject.AsSystemObservable();
+        public IObservable<T> OnRemoveSystemObservable() => _onRemoveSubject.AsSystemObservable();
+        public IObservable<object> OnClearSystemObservable() => _onClearSubject.AsSystemObservable();
+        public IObservable<int> CountSystemObservable() => _countSubject.AsSystemObservable();
+
+        public IObservable<T> ValueAtSystemObservable(int index)
+        {
+            if (!_valueSubjects.TryGetValue(index, out var elementSubject))
+            {
+                elementSubject = new Subject<T>();
+                _valueSubjects.Add(index, elementSubject);
+            }
+
+            return elementSubject.AsSystemObservable();
+        }
+
+        #endregion
+    }
+
+    public abstract partial class Collection<TKey, TValue>
+    {
+        #region Event Handling
+        
+        public IObservable<TValue> ValueAtSystemObservable(TKey key)
+        {
+            if (!_valueSubjects.TryGetValue(key, out var elementSubject))
+            {
+                elementSubject = new Subject<TValue>();
+                _valueSubjects.Add(key, elementSubject);
+            }
+
+            return elementSubject.AsSystemObservable();
+        }
+
+        #endregion
+    }
+#endif
     
 #if KASSETS_UNITASK
     public abstract partial class Collection<T>

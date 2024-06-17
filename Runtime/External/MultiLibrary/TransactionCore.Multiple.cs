@@ -1,4 +1,4 @@
-#if KASSETS_UNIRX && KASSETS_UNITASK
+#if (KASSETS_R3 || KASSETS_UNIRX) && KASSETS_UNITASK
 using System;
 using Cysharp.Threading.Tasks;
 
@@ -62,8 +62,6 @@ namespace Kadinche.Kassets.Transaction
             };
         }
 
-        public IObservable<TRequest> RequestAsObservable() => this;
-        public IObservable<TResponse> ResponseAsObservable() => this;
         public IUniTaskAsyncEnumerable<TRequest> RequestAsAsyncEnumerable() => this;
         public IUniTaskAsyncEnumerable<TResponse> ResponseAsAsyncEnumerable() => this;
 
@@ -77,7 +75,7 @@ namespace Kadinche.Kassets.Transaction
         }
     }
     
-#if !KASSETS_UNIRX
+#if !KASSETS_R3 && !KASSETS_UNIRX
     public abstract partial class TransactionCore<TRequest, TResponse>
     {
         private void TryRespond_UniRx()

@@ -54,7 +54,7 @@ namespace Kadinche.Kassets.EventSystem
         }
     }
     
-#if KASSETS_UNIRX
+#if KASSETS_R3 || KASSETS_UNIRX
     public partial class GameEvent
     {
         /// <summary>

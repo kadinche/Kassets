@@ -1,7 +1,7 @@
-﻿#if KASSETS_UNIRX && !KASSETS_R3
+﻿#if KASSETS_R3
 
 using System;
-using UniRx;
+using R3;
 
 namespace Kadinche.Kassets.EventSystem
 {

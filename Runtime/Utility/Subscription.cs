@@ -1,4 +1,4 @@
-﻿#if !KASSETS_UNIRX && !KASSETS_UNITASK
+﻿#if !KASSETS_UNIRX && !KASSETS_UNITASK && !KASSETS_R3
 
 using System;
 using System.Collections.Generic;
