@@ -12,7 +12,9 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "R3.dll"
+        "R3.dll",
+        "ObservableCollections.dll",
+        "ObservableCollections.R3.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],
@@ -31,6 +33,11 @@
             "name": "com.cysharp.r3",
             "expression": "",
             "define": "KASSETS_R3"
+        },
+        {
+            "name": "org.nuget.observablecollections",
+            "expression": "",
+            "define": "KASSETS_OBSERVABLE_COLLECTIONS"
         }
     ],
     "noEngineReferences": false
