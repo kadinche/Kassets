@@ -1,4 +1,4 @@
-#if (KASSETS_R3 || KASSETS_UNITASK) && KASSETS_UNITASK
+#if (KASSETS_R3 || KASSETS_UNIRX) && KASSETS_UNITASK
 
 using System;
 using Cysharp.Threading.Tasks;
