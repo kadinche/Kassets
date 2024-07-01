@@ -28,11 +28,6 @@
             "define": "KASSETS_UNITASK"
         },
         {
-            "name": "org.nuget.r3",
-            "expression": "",
-            "define": "KASSETS_R3"
-        },
-        {
             "name": "com.cysharp.r3",
             "expression": "",
             "define": "KASSETS_R3"
