@@ -10,7 +10,7 @@
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": true,
+    "overrideReferences": false,
     "precompiledReferences": [
         "R3.dll"
     ],
@@ -26,11 +26,6 @@
             "name": "com.cysharp.unitask",
             "expression": "",
             "define": "KASSETS_UNITASK"
-        },
-        {
-            "name": "org.nuget.r3",
-            "expression": "",
-            "define": "KASSETS_R3"
         },
         {
             "name": "com.cysharp.r3",
