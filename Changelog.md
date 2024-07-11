@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add integration support for Cysharp's [R3].
+
+### Changed
+
+- Refactor handling multiple library in regard to R3 integration support.
+- Forwards all [UniRx] related methods to [R3].
+  - [UniRx](https://github.com/neuecc/UniRx) is now considered obsolete, as its support is no longer maintained.
+- Separates `GameEventCollection` class (obsolete) into its own file.
+- Separates `Subscription` class into its own file.
+
+### Internal Changes
+
+- Add Documentation source files
+- Add Actions for deploying documentation static website.
+- Published Documentation static website on GitHub Pages.
+
 ## [2.6.1] - 2024-02-25
 
 ### Added
@@ -314,3 +332,6 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 [2.0.0]: https://github.com/kadinche/Kassets/compare/1.0.1...2.0.0
 [1.0.1]: https://github.com/kadinche/Kassets/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/kadinche/Kassets/releases/tag/1.0.0
+[R3]: https://github.com/Cysharp/R3
+[UniRx]: https://github.com/neuecc/UniRx
+[UniTask]: https://github.com/Cysharp/UniTask
