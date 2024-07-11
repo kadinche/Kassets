@@ -1,5 +1,13 @@
 This package contains third-party software components governed by the license(s) indicated below:
 
+### R3
+
+Component Name: R3
+
+License Type: "MIT"
+
+[R3 License](https://github.com/Cysharp/R3/blob/master/LICENSE)
+
 ### UniRx
 
 Component Name: UniRx
