@@ -14,6 +14,12 @@ it was originally developed to extend the functionality of the libraries [UniRx]
 Therefore, it is recommended for enhanced functionality to use Kassets in conjunction with either or both the [UniRx] and [UniTask].
 To do so, simply import any or both of these libraries along with Kassets.
 
+
+Later, [R3] were released, as a replacement for [UniRx].
+Being marked as public archive, [UniRx] is considered obsolete and no longer maintained.
+Beginning v2.7.0, Kassets has been updated to support [R3], and most functionality of [UniRx] is being forwarded to [R3].
+For v2.7.0 or newer, it is recommended to import [R3] instead of [UniRx] and [UniTask].
+
 https://github.com/kadinche/Kassets
 
 ## License
@@ -26,5 +32,6 @@ This library is under the [MIT License](https://github.com/kadinche/Kassets/blob
 - [Quick Start](../2-getting-started/quick-start.md)
 
 [Kassets]: https://github.com/kadinche/Kassets
+[R3]: https://github.com/Cysharp/R3
 [UniRx]: https://github.com/neuecc/UniRx
 [UniTask]: https://github.com/Cysharp/UniTask

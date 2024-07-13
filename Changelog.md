@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.0] - 2024-07-12
+
+### Added
+
+- Add integration support for Cysharp's [R3].
+
+### Changed
+
+- Updated minimum Unity version to 2021.3 (LTS).
+- Refactor handling multiple library in regard to R3 integration support.
+- Forwards all [UniRx] related methods to [R3].
+  - [UniRx](https://github.com/neuecc/UniRx) is now considered obsolete, as its support is no longer maintained.
+- Separates `GameEventCollection` class (obsolete) into its own file.
+- Separates `Subscription` class into its own file.
+
+### Internal Changes
+
+- Add Documentation source files
+- Add Actions for deploying documentation static website.
+- Published Documentation static website on GitHub Pages.
+
 ## [2.6.1] - 2024-02-25
 
 ### Added
@@ -284,7 +305,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.6.1...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.7.0...HEAD
+[2.7.0]: https://github.com/kadinche/Kassets/compare/2.6.1...2.7.0
 [2.6.1]: https://github.com/kadinche/Kassets/compare/2.6.0...2.6.1
 [2.6.0]: https://github.com/kadinche/Kassets/compare/2.5.10...2.6.0
 [2.5.10]: https://github.com/kadinche/Kassets/compare/2.5.9...2.5.10
@@ -314,3 +336,6 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 [2.0.0]: https://github.com/kadinche/Kassets/compare/1.0.1...2.0.0
 [1.0.1]: https://github.com/kadinche/Kassets/compare/1.0.0...1.0.1
 [1.0.0]: https://github.com/kadinche/Kassets/releases/tag/1.0.0
+[R3]: https://github.com/Cysharp/R3
+[UniRx]: https://github.com/neuecc/UniRx
+[UniTask]: https://github.com/Cysharp/UniTask

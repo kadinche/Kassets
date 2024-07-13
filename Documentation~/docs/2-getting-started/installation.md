@@ -17,15 +17,18 @@ Name: OpenUPM
 URL:  https://package.openupm.com/
 Scope(s):
   - com.kadinche
-  - com.neuecc.unirx (optional)
+  - com.cysharp.r3 (optional)
   - com.cysharp.unitask (optional)
 ```
 - click Save
 - open Package Manager
 - Select ``My Registries`` in top left dropdown
 - Select ``Kassets`` and click ``Install``
-- Select ``UniRx`` and click ``Install`` (Optional)
+- Select ``R3`` and click ``Install`` (Optional) (see: Note)
 - Select ``UniTask`` and click ``Install`` (Optional)
+
+> [!NOTE]
+> Installation for [R3] requires dependency imports from NuGet. See [R3 Unity Installation](https://github.com/Cysharp/R3?tab=readme-ov-file#unity) for further detail.
 
 ## GitHub URL
 
@@ -42,7 +45,7 @@ Otherwise, you need to update manually by removing and then adding back the pack
 - Click `Add`
 
 To install a specific version, you can refer to Kassets' release tags.
-For example: `https://github.com/kadinche/Kassets.git#2.6.0`
+For example: `https://github.com/kadinche/Kassets.git#2.6.1`
 
 ## Clone to Packages Folder
 
@@ -54,18 +57,8 @@ You can also clone the project as Submodule.
 
 - clone this project to `YourUnityProject/Packages/`
 
-## Importing UniRx and/or UniTask
-
-Both UniRx and UniTask can be added either from OpenUPM or GitHub.
-
-- scope on openupm:
-    - [com.neuecc.unirx](https://openupm.com/packages/com.neuecc.unirx/)
-    - [com.cysharp.unitask](https://openupm.com/packages/com.cysharp.unitask/)
-- package link on github:
-    - https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts
-    - https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask
-- for more detailed information, please look at the respective github pages.
 
 [Kassets]: https://github.com/kadinche/Kassets
+[R3]: https://github.com/Cysharp/R3
 [UniRx]: https://github.com/neuecc/UniRx
 [UniTask]: https://github.com/Cysharp/UniTask
