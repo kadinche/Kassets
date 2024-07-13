@@ -1,4 +1,4 @@
-#if KASSETS_UNIRX && KASSETS_UNITASK
+#if (KASSETS_R3 || KASSETS_UNIRX) && KASSETS_UNITASK
 
 using System;
 using Cysharp.Threading.Tasks;
@@ -56,14 +56,47 @@ namespace Kadinche.Kassets.EventSystem
             };
         }
         
-        public IObservable<T> AsObservable() => this;
-        public IUniTaskAsyncEnumerable<T> AsAsyncEnumerable() => this;
+        public IUniTaskAsyncEnumerable<T> ToUniTaskAsyncEnumerable() => this;
     }
 
-#if !KASSETS_UNIRX
+#if !KASSETS_R3
     public partial class GameEvent
     {
-        protected const string ErrMsgUniRx = "KASSETS_MULTI_LIBRARY was defined, but UniRx not found. Could you forget to import UniRx?";
+        protected const string ErrMsgR3 = "KASSETS_R3 is undefined. Could you forget to import R3?";
+        private void Raise_R3()
+        {
+            throw new Exception(ErrMsgR3);
+        }
+
+        private IDisposable Subscribe_R3(Action action)
+        {
+            throw new Exception(ErrMsgR3);
+        }
+
+        private void Dispose_R3()
+        {
+            throw new Exception(ErrMsgR3);
+        }
+    }
+
+    public abstract partial class GameEvent<T>
+    {
+        private void Raise_R3(T param)
+        {
+            throw new Exception(ErrMsgR3);
+        }
+
+        private IDisposable Subscribe_R3(Action<T> action)
+        {
+            throw new Exception(ErrMsgR3);
+        }
+    }
+#endif
+    
+#if !KASSETS_R3 && !KASSETS_UNIRX
+    public partial class GameEvent
+    {
+        protected const string ErrMsgUniRx = "KASSETS_UNIRX is undefined. Could you forget to import UniRx?";
         private void Raise_UniRx()
         {
             throw new Exception(ErrMsgUniRx);
@@ -97,7 +130,7 @@ namespace Kadinche.Kassets.EventSystem
 #if !KASSETS_UNITASK
     public partial class GameEvent
     {
-        protected const string ErrMsgUniTask = "KASSETS_MULTI_LIBRARY was defined, but UniTask not found. Could you forget to import UniTask?";
+        protected const string ErrMsgUniTask = "KASSETS_UNITASK is undefined. Could you forget to import UniTask?";
         private void Raise_UniTask()
         {
             throw new Exception(ErrMsgUniTask);

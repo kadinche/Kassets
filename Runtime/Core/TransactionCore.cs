@@ -1,3 +1,7 @@
+#if !KASSETS_UNIRX && !KASSETS_UNITASK && !KASSETS_R3
+#define KASSETS_STANDALONE
+#endif
+
 using System;
 using System.Collections.Generic;
 using Kadinche.Kassets.EventSystem;
@@ -76,7 +80,7 @@ namespace Kadinche.Kassets.Transaction
     }
 #endif
 
-#if !KASSETS_UNIRX && !KASSETS_UNITASK
+#if KASSETS_STANDALONE
     public abstract partial class TransactionCore<TRequest, TResponse>
     {
         protected readonly List<IDisposable> responseSubscribers = new List<IDisposable>();

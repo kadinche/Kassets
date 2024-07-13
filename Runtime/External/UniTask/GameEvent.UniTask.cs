@@ -53,34 +53,8 @@ namespace Kadinche.Kassets.EventSystem
             return onEventRaise.GetAsyncEnumerator(token);
         }
     }
-
-    public partial class GameEventCollection
-    {
-        protected CancellationTokenSource cts = new CancellationTokenSource();
-
-        public void Subscribe(Action onAnyEvent, CancellationToken cancellationToken)
-        {
-            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
-            foreach (var gameEvent in _gameEvents)
-            {
-                gameEvent.Subscribe(onAnyEvent, token);
-            }
-        }
-
-        public UniTask AnyEventAsync(CancellationToken cancellationToken = default)
-        {
-            var token = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, cts.Token).Token;
-            return UniTask.WhenAny(_gameEvents.Select(gameEvent => gameEvent.EventAsync(token)));
-        }
-        
-        public void Dispose()
-        {
-            _compositeDisposable.Dispose();
-            cts.CancelAndDispose();
-        }
-    }
     
-#if KASSETS_UNIRX
+#if KASSETS_R3 || KASSETS_UNIRX
     public partial class GameEvent
     {
         /// <summary>

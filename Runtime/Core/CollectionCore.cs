@@ -1,3 +1,7 @@
+#if !KASSETS_UNIRX && !KASSETS_UNITASK && !KASSETS_R3
+#define KASSETS_STANDALONE
+#endif
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -247,7 +251,7 @@ namespace Kadinche.Kassets.Collection
         public static implicit operator SerializedKeyValuePair<TKey, TValue>(KeyValuePair<TKey, TValue> keyValuePair) => new SerializedKeyValuePair<TKey, TValue>(keyValuePair.Key, keyValuePair.Value);
     }
 
-#if !KASSETS_UNIRX && !KASSETS_UNITASK
+#if KASSETS_STANDALONE
     public abstract partial class Collection<T>
     {
         private readonly IList<IDisposable> _onAddSubscriptions = new List<IDisposable>();

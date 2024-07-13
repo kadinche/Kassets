@@ -11,13 +11,20 @@ it was originally developed to extend the functionality of the libraries [UniRx]
 Therefore, it is recommended for enhanced functionality to use Kassets in conjunction with either or both the [UniRx] and [UniTask].
 To do so, simply import any or both of these libraries along with Kassets.
 
+> [!NOTE]
+> From v2.7.0, Kassets also supports [R3] as an alternative to [UniRx].
+> Being marked as public archive, [UniRx] is now considered obsolete.
+> Hence, all functionality of [UniRx] is now being forwarded to [R3].
+
+[R3] The new future of dotnet/reactive and UniRx.
+
 [UniRx] is a Reactive Extensions for Unity. 
 
 [UniTask] provides an efficient allocation free async/await integration to Unity.
 
 ### Unity Version
-- Unity 2020.3+
-- Note that this github project cannot be opened directly in Unity Editor. See [Installation](https://github.com/kadinche/Kassets#Installation) for cloning.
+- Unity 2021.3+
+- Note that this GitHub project cannot be opened directly in Unity Editor. See [Installation](https://github.com/kadinche/Kassets#Installation) for cloning.
 
 __For further details, see [Documentation]__
 
@@ -37,15 +44,19 @@ Name: OpenUPM
 URL:  https://package.openupm.com/
 Scope(s):
   - com.kadinche
-  - com.neuecc.unirx (optional)
+  - com.cysharp.r3 (optional)
   - com.cysharp.unitask (optional)
 ```
 - click <kbd>Save</kbd>
 - open Package Manager
 - Select ``My Registries`` in top left dropdown
 - Select ``Kassets`` and click ``Install``
-- Select ``UniRx`` and click ``Install`` (Optional)
+- Select ``R3`` and click ``Install`` (Optional) (see: Note)
 - Select ``UniTask`` and click ``Install`` (Optional)
+
+> [!NOTE]
+> Installation for [R3] requires dependency imports from NuGet. See [R3 Unity Installation](https://github.com/Cysharp/R3?tab=readme-ov-file#unity) for further detail.
+
 </details>
 
 <details>
@@ -62,7 +73,7 @@ Otherwise, you need to update manually by removing and then adding back the pack
 - Click `Add`
 
 To install a specific version, you can refer to Kassets' release tags.
-For example: `https://github.com/kadinche/Kassets.git#2.6.0`
+For example: `https://github.com/kadinche/Kassets.git#2.6.1`
 </details>
 
 <details>
@@ -76,21 +87,6 @@ You can also clone the project as Submodule.
 
 - clone this project to `YourUnityProject/Packages/`
 </details>
-
-<details>
-<summary><em>Importing UniRx and/or UniTask</em></summary>
-
-Both UniRx and UniTask can be added either from OpenUPM or GitHub.
-
-- scope on openupm:
-  - [com.neuecc.unirx](https://openupm.com/packages/com.neuecc.unirx/)
-  - [com.cysharp.unitask](https://openupm.com/packages/com.cysharp.unitask/)
-- package link on github:
-  - https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts
-  - https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask
-- for more detailed information, please look at the respective github pages.
-</details>
-
 
 ## Creating Kassets' ScriptableObjects
 
@@ -149,13 +145,48 @@ Kassets’s instance is a ScriptableObject asset. It can be referenced to UnityE
 
 ![UnityEventDynamic](https://user-images.githubusercontent.com/1290720/138039041-0b42cbe8-254f-40ef-a2df-a45a19883c98.gif)
 
-# Reactive with UniRx
+# Reactive with <s>UniRx</s> R3
 
-If you had UniRx imported, you can use Reactive on Kassets' instances. First, make sure to import UniRx to your project. Upon import, Kassets will adjust internally to support UniRx using scripting define `KASSETS_UNIRX`. It would normally be defined when UniRx is imported using package manager. If somehow `KASSETS_UNIRX` is undefined, add it to `Scripting Define Symbols` on Project Settings.
+> [!NOTE]
+> Being marked as public archive, [UniRx] is now considered obsolete.
+> If [UniRx] are imported together with [R3], All functionality of [UniRx] is being forwarded to [R3].
+> Use `AsSystemObservable()` to convert to `IObservable` and continue using [UniRx].
 
-When importing UniRx, Kassets' GameEvent becomes `Observable`. To use Kassets reactively, simply `Subscribe` to a GameEvent instances or its derivation.
+If you had R3 imported, you can use Reactive on Kassets' instances.
+First, make sure to import R3 to your project. Upon import, Kassets will adjust internally to support R3 using scripting define `KASSETS_R3`. It would normally be defined when R3 is imported using package manager. If somehow `KASSETS_R3` is undefined, add it to `Scripting Define Symbols` on Project Settings.
 
-![Screen Shot 2021-10-18 at 11 19 20](https://user-images.githubusercontent.com/1290720/137659609-61510ee1-44b3-4286-bc2a-993a6e369b59.png)
+To use Kassets reactively, simply `Subscribe` to a GameEvent instances or its derivation.
+
+```csharp
+public class HealthBarUI : MonoBehavior
+{
+    [SerializeField] private FloatVariable health;
+    [SerializeField] private FloatVariable maxHealth;
+    [SerializeField] private Image healthBar;
+    
+    private IDisposable subscription;
+
+    private void Start()
+    {
+        subscription = health.Subscribe(UpdateHealthBar);
+    }
+
+    private void UpdateHealthBar(float currentHealth)
+    {
+        var rt = healthBar.rectTransform;
+        
+        var sizeDelta = rt.sizeDelta;
+        sizeDelta.x = 2 * (currentHealth / maxHealth);
+        
+        rt.sizeDelta = sizeDelta;
+    }    
+    
+    private void OnDestroy()
+    {
+        subscription?.Dispose();
+    }
+}
+```
 
 # Asynchronous with UniTask
 
@@ -163,13 +194,47 @@ If you had UniTask imported, you can use Asynchronous on Kassets' instances. Fir
 
 To use Kassets Asynchronously, use the method `EventAsync()` and add `await` in front of it. Any Kassets' instances that derived from GameEvent can be used asynchronously. (For Command, use method `ExecuteAsync()`)
 
-![Screen Shot 2021-10-18 at 11 40 16](https://user-images.githubusercontent.com/1290720/137661440-9f5800c9-3081-4e9a-b61a-90edd4573d40.png)
+```csharp
+public class CounterAttackSkill: MonoBehaviour
+{
+    [SerializeField] private GameEvent counterActivateEvent;
+    [SerializeField] private FloatGameEvent attackGameEvent;
+    [SerializeField] private FloatVariable health;
+    
+    private IDisposable subscription;
+    
+    private void Start()
+    {
+        // When using subscribe await, next event raise will wait for current activated counter to end.
+        subscription = counterActivateEvent.SubscribeAwait(async _ => await OnCounterActivate());
+    }
+    
+    // Activate counter.
+    private async UniTask OnCounterActivate()
+    {
+        var currentHealth = health.Value;
+        
+        // asynchronously wait until damaged, which indicated by health value changed event.
+        var afterDamaged = await health.EventAsync(cancellationToken);
+        
+        var damage = currentHealth - afterDamaged;
+        
+        // raise attack event with damage value of damage received.
+        attackGameEvent.Raise(damage):
+    }
+    
+    private void OnDestroy()
+    {
+        subscription?.Dispose();
+    }
+}
+```
 
 In the example above, an asynchronous operation `EventAsync()` on variable means to wait for its value to change. GameEvent in general, will wait for an event to fire.
 
 According to this [slide (Japanese)](https://speakerdeck.com/torisoup/unitask2020?slide=52), It is a best practice to always use cancellation token on every UniTask's asynchronous operation. Since Unity is not asynchronous, any asynchronous operation can be left behind waiting infinitely when the process is not stopped.
 
-# Using UniTask.Linq and its Usages with UniRx
+# Using UniTask.Linq and its Usages with R3
 
 UniTask v2 has support for Asynchronous LINQ. Asynchronous LINQ is an extension to `IUniTaskAsyncEnumerable<T>` and its usage can be very similar to UniRx, but the process behind it is different (UniRx is push-based while UniTask is pull-based).
 
@@ -179,15 +244,20 @@ As an example, the sample class `CounterAttackSkill` above used `SubscribeAwait`
 
 When both UniRx and UniTask are imported together, It can be confusing which of the `Subscription` behavior is in effect (pull-based or push-based?). To use Kassets' instance as `IObservable`, use `AsObservable()`. To use Kassets' instance as `IUniTaskAsyncEnumerable` use `AsAsyncEnumerable()`. Unless referenced by interface, Kassets instances Default Subscribe Behavior can be selected from the inspector window.
 
-Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` namespace. To use, add `UniTask.Linq` as reference to your project's Assembly Definition.
-
 <img width="514" alt="Screenshot 2023-06-12 at 16 49 31" src="https://github.com/kadinche/Kassets/assets/1290720/dea3da9d-cc3e-45a2-82a5-e590cfca84ee">
+
+> [!NOTE]
+> UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` namespace. To use, add `UniTask.Linq` as reference to your project's Assembly Definition. 
+
+> [!NOTE]
+> From v2.7.0, Upon importing [R3], handling pull/push based can be done by converting Kassets instances using `AsObservable()` for push-based, and `ToAsyncEnumerable()` for pull-based.
 
 # [Documentation]
 
 # References:
 - [https://github.com/roboryantron/Unite2017](https://github.com/roboryantron/Unite2017)
 - [https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects](https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects)
+- [R3 — A New Modern Reimplementation of Reactive Extensions for C#](https://neuecc.medium.com/r3-a-new-modern-reimplementation-of-reactive-extensions-for-c-cf29abcc5826)
 - [https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/](https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/) (Japanese/日本語)
 - [https://github.com/neuecc/UniRx](https://github.com/neuecc/UniRx)
 - [https://github.com/Cysharp/UniTask](https://github.com/Cysharp/UniTask)
@@ -196,9 +266,11 @@ Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` na
 # LICENSE
 
 - Kassets is Licensed under [MIT License](https://github.com/kadinche/Kassets/blob/main/LICENSE.txt)
+- [R3] is Licensed under [MIT License](https://github.com/Cysharp/R3/blob/main/LICENSE)
 - [UniRx] is Licensed under  [MIT License](https://github.com/neuecc/UniRx/blob/master/LICENSE)
 - [UniTask] is Licensed under  [MIT License](https://github.com/Cysharp/UniTask/blob/master/LICENSE)
 
+[R3]: https://github.com/Cysharp/R3
 [UniRx]: https://github.com/neuecc/UniRx
 [UniTask]: https://github.com/Cysharp/UniTask
 [Documentation]: https://Kadinche.github.io/Kassets/

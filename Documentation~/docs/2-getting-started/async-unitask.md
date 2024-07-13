@@ -8,7 +8,41 @@ If you had UniTask imported, you can use Asynchronous on Kassets' instances. Fir
 
 To use Kassets Asynchronously, use the method `EventAsync()` and add `await` in front of it. Any Kassets' instances that derived from GameEvent can be used asynchronously. (For Command, use method `ExecuteAsync()`)
 
-![Screen Shot 2021-10-18 at 11 40 16](https://user-images.githubusercontent.com/1290720/137661440-9f5800c9-3081-4e9a-b61a-90edd4573d40.png)
+```csharp
+public class CounterAttackSkill: MonoBehaviour
+{
+    [SerializeField] private GameEvent counterActivateEvent;
+    [SerializeField] private FloatGameEvent attackGameEvent;
+    [SerializeField] private FloatVariable health;
+    
+    private IDisposable subscription;
+    
+    private void Start()
+    {
+        // When using subscribe await, next event raise will wait for current activated counter to end.
+        subscription = counterActivateEvent.SubscribeAwait(async _ => await OnCounterActivate());
+    }
+    
+    // Activate counter.
+    private async UniTask OnCounterActivate()
+    {
+        var currentHealth = health.Value;
+        
+        // asynchronously wait until damaged, which indicated by health value changed event.
+        var afterDamaged = await health.EventAsync(cancellationToken);
+        
+        var damage = currentHealth - afterDamaged;
+        
+        // raise attack event with damage value of damage received.
+        attackGameEvent.Raise(damage):
+    }
+    
+    private void OnDestroy()
+    {
+        subscription?.Dispose();
+    }
+}
+```
 
 In the example above, an asynchronous operation `EventAsync()` on variable means to wait for its value to change. GameEvent in general, will wait for an event to fire.
 

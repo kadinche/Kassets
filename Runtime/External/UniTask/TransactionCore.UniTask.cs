@@ -131,7 +131,7 @@ namespace Kadinche.Kassets.Transaction
         }
     }
     
-#if KASSETS_UNIRX
+#if KASSETS_R3 || KASSETS_UNIRX
     public abstract partial class TransactionCore<TRequest, TResponse>
     {
         private void TryRespond_UniTask()

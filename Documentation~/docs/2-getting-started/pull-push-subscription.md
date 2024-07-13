@@ -21,7 +21,12 @@ To use Kassets' instance as `IObservable`, use `AsObservable()`.
 To use Kassets' instance as `IUniTaskAsyncEnumerable` use `AsAsyncEnumerable()`.
 Unless referenced by interface, Kassets instances Default Subscribe Behavior can be selected from the inspector window.
 
-Note that UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` namespace.
-To use, add `UniTask.Linq` as reference to your project's Assembly Definition.
-
 <img width="514" alt="Screenshot 2023-06-12 at 16 49 31" src="https://github.com/kadinche/Kassets/assets/1290720/dea3da9d-cc3e-45a2-82a5-e590cfca84ee"></img>
+
+> [!NOTE]
+> UniTask Asynchronous LINQ is part of `Cysharp.Threading.Tasks.Linq` namespace. To use, add `UniTask.Linq` as reference to your project's Assembly Definition.
+
+> [!NOTE]
+> From v2.7.0, Upon importing [R3], handling pull/push based can be done by converting Kassets instances using `AsObservable()` for push-based, and `ToAsyncEnumerable()` for pull-based.
+
+Reference: [Pull IAsyncEnumerable vs Push Observable](https://neuecc.medium.com/r3-a-new-modern-reimplementation-of-reactive-extensions-for-c-cf29abcc5826#:~:text=Pull%20IAsyncEnumerable%20vs%20Push%20Observable)
