@@ -39,7 +39,13 @@ public class HealthBarUI : MonoBehavior
 }
 ```
 
-> [!NOTE]
-> Being marked as public archive, [UniRx] is now considered obsolete.
-> If [UniRx] are imported together with [R3], All functionality of [UniRx] is being forwarded to [R3].
-> Use `AsSystemObservable()` to convert to `IObservable` and continue using [UniRx].
+:::note
+
+Being marked as public archive, [UniRx] is now considered obsolete.
+If [UniRx] are imported together with [R3], All functionality of [UniRx] is being forwarded to [R3].
+Use `AsSystemObservable()` to convert to `IObservable` and continue using [UniRx].
+
+:::
+
+[R3]: https://github.com/Cysharp/R3
+[UniRx]: https://github.com/neuecc/UniRx

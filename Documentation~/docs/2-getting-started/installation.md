@@ -27,8 +27,11 @@ Scope(s):
 - Select ``R3`` and click ``Install`` (Optional) (see: Note)
 - Select ``UniTask`` and click ``Install`` (Optional)
 
-> [!NOTE]
-> Installation for [R3] requires dependency imports from NuGet. See [R3 Unity Installation](https://github.com/Cysharp/R3?tab=readme-ov-file#unity) for further detail.
+:::note
+
+Installation for [R3] requires dependency imports from NuGet. See [R3 Unity Installation](https://github.com/Cysharp/R3?tab=readme-ov-file#unity) for further detail.
+
+:::
 
 ## GitHub URL
 
