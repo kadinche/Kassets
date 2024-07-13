@@ -121,11 +121,21 @@ Create a `MonoBehavior` Script and add Kassets' instance as a serialized field.
 
 `Player.cs` :
 
-<img width="431" alt="Screen Shot 2020-11-16 at 20 47 36 copy" src="https://user-images.githubusercontent.com/1290720/99601499-dda94c00-2a42-11eb-8c4c-5378a38f5602.png">
+```csharp
+public class Player : MonoBehavior
+{
+    public FloatVariable health;
+}
+```
 
 `HealthBarUI.cs` :
 
-<img width="396" alt="Screen Shot 2020-11-16 at 21 06 10 copy" src="https://user-images.githubusercontent.com/1290720/99601502-df730f80-2a42-11eb-9c1f-0fa1bfad086a.png">
+```csharp
+public class HealthBarUI : MonoBehavior
+{
+    public FloatVariable health;
+}
+```
 
 Drag and drop `PlayerHealth` (`FloatVariable`) to `Player`'s `Health` field :
 
