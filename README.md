@@ -149,15 +149,44 @@ Kassets’s instance is a ScriptableObject asset. It can be referenced to UnityE
 
 > [!NOTE]
 > Being marked as public archive, [UniRx] is now considered obsolete.
-> Hence, all functionality of [UniRx] is now being forwarded to [R3].
-> Public APIs are mostly the same, but some internal APIs are different. 
+> If [UniRx] are imported together with [R3], All functionality of [UniRx] is being forwarded to [R3].
+> Use `AsSystemObservable()` to convert to `IObservable` and continue using [UniRx].
 
 If you had R3 imported, you can use Reactive on Kassets' instances.
 First, make sure to import R3 to your project. Upon import, Kassets will adjust internally to support R3 using scripting define `KASSETS_R3`. It would normally be defined when R3 is imported using package manager. If somehow `KASSETS_R3` is undefined, add it to `Scripting Define Symbols` on Project Settings.
 
 To use Kassets reactively, simply `Subscribe` to a GameEvent instances or its derivation.
 
-![Screen Shot 2021-10-18 at 11 19 20](https://user-images.githubusercontent.com/1290720/137659609-61510ee1-44b3-4286-bc2a-993a6e369b59.png)
+```csharp
+public class HealthBarUI : MonoBehavior
+{
+    [SerializeField] private FloatVariable health;
+    [SerializeField] private FloatVariable maxHealth;
+    [SerializeField] private Image healthBar;
+    
+    private IDisposable subscription;
+
+    private void Start()
+    {
+        subscription = health.Subscribe(UpdateHealthBar);
+    }
+
+    private void UpdateHealthBar(float currentHealth)
+    {
+        var rt = healthBar.rectTransform;
+        
+        var sizeDelta = rt.sizeDelta;
+        sizeDelta.x = 2 * (currentHealth / maxHealth);
+        
+        rt.sizeDelta = sizeDelta;
+    }    
+    
+    private void OnDestroy()
+    {
+        subscription?.Dispose();
+    }
+}
+```
 
 # Asynchronous with UniTask
 
@@ -165,13 +194,47 @@ If you had UniTask imported, you can use Asynchronous on Kassets' instances. Fir
 
 To use Kassets Asynchronously, use the method `EventAsync()` and add `await` in front of it. Any Kassets' instances that derived from GameEvent can be used asynchronously. (For Command, use method `ExecuteAsync()`)
 
-![Screen Shot 2021-10-18 at 11 40 16](https://user-images.githubusercontent.com/1290720/137661440-9f5800c9-3081-4e9a-b61a-90edd4573d40.png)
+```csharp
+public class CounterAttackSkill: MonoBehaviour
+{
+    [SerializeField] private GameEvent counterActivateEvent;
+    [SerializeField] private FloatGameEvent attackGameEvent;
+    [SerializeField] private FloatVariable health;
+    
+    private IDisposable subscription;
+    
+    private void Start()
+    {
+        // When using subscribe await, next event raise will wait for current activated counter to end.
+        subscription = counterActivateEvent.SubscribeAwait(async _ => await OnCounterActivate());
+    }
+    
+    // Activate counter.
+    private async UniTask OnCounterActivate()
+    {
+        var currentHealth = health.Value;
+        
+        // asynchronously wait until damaged, which indicated by health value changed event.
+        var afterDamaged = await health.EventAsync(cancellationToken);
+        
+        var damage = currentHealth - afterDamaged;
+        
+        // raise attack event with damage value of damage received.
+        attackGameEvent.Raise(damage):
+    }
+    
+    private void OnDestroy()
+    {
+        subscription?.Dispose();
+    }
+}
+```
 
 In the example above, an asynchronous operation `EventAsync()` on variable means to wait for its value to change. GameEvent in general, will wait for an event to fire.
 
 According to this [slide (Japanese)](https://speakerdeck.com/torisoup/unitask2020?slide=52), It is a best practice to always use cancellation token on every UniTask's asynchronous operation. Since Unity is not asynchronous, any asynchronous operation can be left behind waiting infinitely when the process is not stopped.
 
-# Using UniTask.Linq and its Usages with UniRx
+# Using UniTask.Linq and its Usages with R3
 
 UniTask v2 has support for Asynchronous LINQ. Asynchronous LINQ is an extension to `IUniTaskAsyncEnumerable<T>` and its usage can be very similar to UniRx, but the process behind it is different (UniRx is push-based while UniTask is pull-based).
 
@@ -194,6 +257,7 @@ When both UniRx and UniTask are imported together, It can be confusing which of 
 # References:
 - [https://github.com/roboryantron/Unite2017](https://github.com/roboryantron/Unite2017)
 - [https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects](https://www.slideshare.net/RyanHipple/game-architecture-with-scriptable-objects)
+- [R3 — A New Modern Reimplementation of Reactive Extensions for C#](https://neuecc.medium.com/r3-a-new-modern-reimplementation-of-reactive-extensions-for-c-cf29abcc5826)
 - [https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/](https://forpro.unity3d.jp/unity_pro_tips/2019/07/27/57/) (Japanese/日本語)
 - [https://github.com/neuecc/UniRx](https://github.com/neuecc/UniRx)
 - [https://github.com/Cysharp/UniTask](https://github.com/Cysharp/UniTask)
