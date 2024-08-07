@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.7.1] - 2024-08-08
+
+### Changed
+
+- Restore Ignored `.meta` files.
+
 ## [2.7.0] - 2024-07-12
 
 ### Added
@@ -305,7 +311,8 @@ Major version upgrade. Not backward compatible with version 1.0.x.
 - Raise Button on Inspector. Click the button to simulate GameEvent Raise from inspector.
 - CancellationTokenUtility. Helper class for cancelling and refreshing CancellationToken.
 
-[Unreleased]: https://github.com/kadinche/Kassets/compare/2.7.0...HEAD
+[Unreleased]: https://github.com/kadinche/Kassets/compare/2.7.1...HEAD
+[2.7.1]: https://github.com/kadinche/Kassets/compare/2.7.0...2.7.1
 [2.7.0]: https://github.com/kadinche/Kassets/compare/2.6.1...2.7.0
 [2.6.1]: https://github.com/kadinche/Kassets/compare/2.6.0...2.6.1
 [2.6.0]: https://github.com/kadinche/Kassets/compare/2.5.10...2.6.0
