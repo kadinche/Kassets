@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using Kadinche.Kassets.Variable;
 using UnityEngine;
 
 namespace Kadinche.Kassets
@@ -38,21 +40,21 @@ namespace Kadinche.Kassets
         /// <param name="jsonString"></param>
         public static void FromJsonString(this IVariable variable, string jsonString)
         {
-            // Get the type of variable
-            var variableType = variable.GetType();
+            // Fetch base classes up to VariableCore<>
+            var variableType = variable.FetchVariableCoreType();
             
-            while (!(variableType is { IsGenericType: true })) 
-                variableType = variableType?.BaseType;
-
             // Get the generic type of variable
             var genericType = variableType.GetGenericArguments()[0];
             var propertyInfo = variableType.GetProperty("Value");
             // Get the Value property of variable using reflection
             var value = propertyInfo?.GetValue(variable);
 
-            var simpleType = genericType.IsSimpleType();
-            
-            if (simpleType)
+            var requiresWrapping = genericType.IsSimpleType() ||
+                                   genericType.IsArray ||
+                                   genericType.IsGenericType &&
+                                   genericType.GetGenericTypeDefinition() == typeof(List<>);
+
+            if (requiresWrapping)
             {
                 // Create an instance of JsonableWrapper<T> with the value of variable
                 var wrapped = Activator.CreateInstance(typeof(JsonableWrapper<>).MakeGenericType(genericType), value);
@@ -94,21 +96,22 @@ namespace Kadinche.Kassets
         /// <returns></returns>
         public static string ToJsonString(this IVariable variable)
         {
-            // Get the type of variable
-            var variableType = variable.GetType();
-            
-            while (!(variableType is { IsGenericType: true })) 
-                variableType = variableType?.BaseType;
+            // Fetch base classes up to VariableCore<>
+            var variableType = variable.FetchVariableCoreType();
 
             // Get the generic type of variable
             var genericType = variableType.GetGenericArguments()[0];
             // Get the Value property of variable using reflection
             var value = variableType.GetProperty("Value")?.GetValue(variable);
 
-            var simpleType = genericType.IsSimpleType();
+            var requiresWrapping = genericType.IsSimpleType() ||
+                                   genericType.IsArray ||
+                                   genericType.IsGenericType &&
+                                   genericType.GetGenericTypeDefinition() == typeof(List<>);
+            
             string jsonString;
             
-            if (simpleType)
+            if (requiresWrapping)
             {
                 // Create an instance of JsonableWrapper<T> with the value of variable
                 var wrapped = Activator.CreateInstance(typeof(JsonableWrapper<>).MakeGenericType(genericType), value);
@@ -121,6 +124,18 @@ namespace Kadinche.Kassets
             }
 
             return jsonString;
+        }
+        
+        private static Type FetchVariableCoreType(this IVariable var)
+        {
+            var type = var.GetType();
+            while (type != typeof(KassetsCore))
+            {
+                while (!(type is { IsGenericType: true })) type = type?.BaseType;
+                if (type.GetGenericTypeDefinition() == typeof(VariableCore<>)) return type;
+                type = type.BaseType;
+            }
+            throw new Exception("Failed to fetch VariableCore type.");
         }
 
         /// <summary>
