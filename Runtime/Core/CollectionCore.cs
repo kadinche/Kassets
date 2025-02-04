@@ -40,6 +40,7 @@ namespace Kadinche.Kassets.Collection
 
         public virtual void Copy(IEnumerable<T> others)
         {
+            if (ReferenceEquals(_value, others)) return;
             _value.Clear();
             _value.AddRange(others);
         }
