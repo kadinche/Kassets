@@ -158,6 +158,7 @@ namespace Kadinche.Kassets.Transaction
     {
         private TransactionCore<TRequest, TResponse> _source;
         private Func<TRequest, TResponse> _responseFunc;
+        private bool _disposed;
         
         public ResponseSubscription(
             TransactionCore<TRequest, TResponse> source,
@@ -171,6 +172,9 @@ namespace Kadinche.Kassets.Transaction
         
         public void Dispose()
         {
+            if (_disposed) return;
+            _disposed = true;
+            
             _responseFunc = null;
             _source.responseSubscription = null;
             _source = null;
