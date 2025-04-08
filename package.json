@@ -5,7 +5,7 @@
     "name": "Kadinche, Corp. & Ripandy Adha",
     "url": "https://github.com/kadinche/Kassets"
   },
-  "version": "2.7.2",
+  "version": "2.7.3",
   "unity": "2021.3",
   "description": "Scriptable Object Architecture extendable with R3 and/or UniTask",
   "keywords": [
