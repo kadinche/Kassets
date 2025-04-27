@@ -16,6 +16,7 @@ namespace Custom.Variable
     {
     }
 
+    [Serializable]
     public struct Health
     {
         public float current;
@@ -26,3 +27,6 @@ namespace Custom.Variable
 
 Creating custom class is encouraged as you can setup the namespace in accordance to your projects.
 This is beneficial if you try to track references, so that you don't ended up in a general Kassets' namespace.
+
+**Serializable**
+It is important to note that your custom struct or class needs to have the Serializable attribute. Otherwise you will see null reference exceptions as the editor inspector cannot find the value of the class.
