@@ -22,6 +22,7 @@ namespace Kadinche.Kassets
         
         public void Dispose()
         {
+            if (_disposables == null) return;
             if (_disposables.Contains(this))
             {
                 _disposables.Remove(this);
@@ -49,13 +50,12 @@ namespace Kadinche.Kassets
         
         public void Dispose()
         {
-            _action = null;
             if (_disposables == null) return;
             if (_disposables.Contains(this))
             {
                 _disposables.Remove(this);
             }
-
+            _action = null;
             _disposables = null;
         }
     }
